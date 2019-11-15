@@ -1,3 +1,6 @@
+DROP DATABASE SuperRentDB;
+CREATE DATABASE   SuperRentDB;
+USE               SuperRentDB;
 
 DROP TABLE IF EXISTS Reservations;
 DROP TABLE IF EXISTS Rentals;
