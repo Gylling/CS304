@@ -1,23 +1,22 @@
 package model;
 
+import java.sql.Time;
+import java.sql.Timestamp;
+
 public class ReservationModel {
     private final int confNo;
     private final String vtName;
     private final String dLicense;
-    private final String fromDate;
-    private final String fromTime;
-    private final String toDate;
-    private final String toTime;
+    private final Timestamp fromDate;
+    private final Timestamp toDate;
 
 
-    public ReservationModel(int confNo, String vtName, String dLicense, String fromDate, String fromTime, String toDate, String toTime) {
+    public ReservationModel(int confNo, String vtName, String dLicense, Timestamp fromDate, Timestamp toDate) {
         this.vtName = vtName;
         this.confNo = confNo;
         this.dLicense = dLicense;
         this.fromDate = fromDate;
-        this.fromTime = fromTime;
         this.toDate = toDate;
-        this.toTime = toTime;
     }
 
     public int getConfNo() {
@@ -32,19 +31,12 @@ public class ReservationModel {
         return dLicense;
     }
 
-    public String getFromDate() {
+    public Timestamp getFromDate() {
         return fromDate;
     }
 
-    public String getFromTime() {
-        return fromTime;
-    }
-
-    public String getToDate() {
+    public Timestamp getToDate() {
         return toDate;
     }
 
-    public String getToTime() {
-        return toTime;
-    }
 }
