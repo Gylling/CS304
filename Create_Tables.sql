@@ -7,8 +7,6 @@ drop table Reservations;
 drop table Vehicles;
 drop table VehicleTypes;
 drop table Customers;
--- drop table Returns;
--- drop table TimePeriod;
 drop table Branch;
 
 
@@ -47,10 +45,8 @@ CREATE TABLE Reservations (
     confNo INTEGER,
     vtName VARCHAR(20),
     dLicense VARCHAR(20),
-    fromDate VARCHAR (20),
-    fromTime VARCHAR (20),
-    toDate VARCHAR (20),
-    toTime VARCHAR (20),
+    fromDate TIMESTAMP,
+    toDate TIMESTAMP,
     PRIMARY KEY (confNo),
     FOREIGN KEY (vtname) REFERENCES VehicleTypes,
     FOREIGN KEY (dLicense) REFERENCES Customers ON DELETE CASCADE
@@ -60,15 +56,16 @@ CREATE TABLE Rentals(
     rid INTEGER,
     vid INTEGER,
     dLicense VARCHAR(20),
-    fromDate VARCHAR(20),
-    fromTime VARCHAR(20),
-    toDate VARCHAR(20),
-    toTime VARCHAR(20),
+    fromDate TIMESTAMP,
+    toDate TIMESTAMP,
     odometer INTEGER,
     cardName VARCHAR(20),
     cardNo INTEGER,
     expDate VARCHAR(20),
     confNo INTEGER,
+    rOdometer INTEGER,
+    rFullTank VARCHAR(20),
+    value INTEGER,
     PRIMARY KEY (rid),
     FOREIGN KEY (dLicense) REFERENCES Customers (dLicense) ON DELETE CASCADE,
     FOREIGN KEY (confNo) REFERENCES Reservations (confNo)
@@ -92,6 +89,7 @@ CREATE TABLE Rentals(
       FOREIGN KEY (vtname) REFERENCES VehicleTypes (vtname) ON DELETE CASCADE,
       FOREIGN KEY (location, city) REFERENCES Branch (location, city) ON DELETE CASCADE
   );
+
 
 -- Customers
 
@@ -142,7 +140,7 @@ insert into Customers
 
 -- VehicleTypes
 insert into VehicleTypes
-   values('Economy', 'No Heated-seats', 750, 160, 8, 50, 10, 1, 1);
+   values('Economy', 'No Heated-seats', 750, 160, 10, 50, 10, 1, 1);
 insert into VehicleTypes
    values('Compact', 'Heated-seats', 750, 160, 8, 50, 10, 1, 1);
 insert into VehicleTypes
@@ -158,27 +156,27 @@ insert into VehicleTypes
 
 --Reservations
 insert into Reservations
-   values(2456, 'Standard', 'J9456GH', '2019/12/22', '13:00', '2019/12/29', '13:00');
+   values(2456, 'Standard', 'J9456GH', '2019-12-22 13:00:00', '2019-12-29 13:00:00');
 insert into Reservations
-   values(9656, 'Truck', 'J4449KZ', '2020/01/02', '20:00', '2020/01/18', '11:00');
+   values(9656, 'Truck', 'J4449KZ', '2020-01-02 20:00:00', '2020-01-18 11:00:00');
 insert into Reservations
-   values(4201, 'SUV', 'Y3456YZ', '2020/01/02', '20:00', '2020/01/10', '9:00');
+   values(4201, 'SUV', 'Y3456YZ', '2020-01-02 20:00:00', '2020-01-10 9:00:00');
 insert into Reservations
-   values(8230, 'SUV', 'A1443BA', '2019/11/29', '14:00', '2020/01/02', '8:00');
+   values(8230, 'SUV', 'A1443BA', '2019-11-29 14:00:00', '2020-01-02 8:00:00');
 insert into Reservations
-   values(8234, 'Compact', 'A1443BA', '2020/03/15', '13:00', '2020/03/27', '10:00');
+   values(8234, 'Compact', 'A1443BA', '2020-03-15 13:00:00', '2020-03-27 10:00:00');
 insert into Reservations
-   values(3230, 'Economy', 'Z2366BZ', '2019/11/29', '13:00', '2019/12/25', '14:00');
+   values(3230, 'Economy', 'Z2366BZ', '2019-11-29 13:00:00', '2019-12-25 14:00:00');
 insert into Reservations
-   values(4269, 'Economy', 'W4456GZ', '2020/01/19', '12:00', '2020/01/27', '21:00');
+   values(4269, 'Economy', 'W4456GZ', '2020-01-19 12:00:00', '2020-01-27 21:00:00');
 insert into Reservations
-   values(2275, 'Truck', 'X4956ZZ', '2020/02/19', '12:00', '2020/02/25', '21:00');
+   values(2275, 'Truck', 'X4956ZZ', '2020-02-19 12:00:00', '2020-02-25 21:00:00');
 insert into Reservations
-   values(2455, 'Compact', 'J2356BJ', '2020/02/19', '9:00', '2020/02/23', '8:00');
+   values(2455, 'Compact', 'J2356BJ', '2020-02-19 9:00:00', '2020-02-23 8:00:00');
 insert into Reservations
-   values(8445, 'Full-size', 'A1456BZ', '2020/04/02', '10:00', '2020/04/07', '12:00');
+   values(8445, 'Full-size', 'A1456BZ', '2020-04-02 10:00:00', '2020-04-07 12:00:00');
 insert into Reservations
-   values(9021, 'Mid-size', 'X1956XZ', '2020/01/03', '9:00', '2020/01/10', '12:00');
+   values(9021, 'Mid-size', 'X1956XZ', '2020-01-03 9:00:00', '2020-01-10 12:00:00');
 
 -- Branch
   insert into Branch values('A', 'Abbotsford' );
@@ -338,3 +336,25 @@ insert into Reservations
      values(990092, 'TL2 50X', 'Toyota', '4Runner', '2018', 'Black', 24200, 'Available', 'SUV', 'W', 'West Vancouver');
  insert into Vehicles
      values(990091, 'TL1 50X', 'Toyota', '4Runner', '2018', 'Black', 43200, 'Available', 'SUV', 'W', 'West Vancouver');
+
+--Truck
+insert into Vehicles
+    values(998990, 'TD1 50Z', 'Toyota', 'Tacoma', '2019', 'Silver', 3100, 'Available', 'Truck', 'A', 'Abbotsford');
+insert into Vehicles
+    values(990999, 'TL9 50Z', 'Toyota', 'Tacoma', '2018', 'Blue', 7820, 'Available', 'Truck', 'A', 'Abbotsford');
+insert into Vehicles
+    values(990998, 'TL8 50Z', 'Toyota', 'Tacoma', '2018', 'Silver', 26500, 'Rented', 'Truck', 'C', 'Chilliwack');
+insert into Vehicles
+    values(990997, 'TL7 50Z', 'Toyota', 'Tacoma', '2018', 'Grey', 6000, 'Available', 'Truck', 'C', 'Chilliwack');
+insert into Vehicles
+    values(990996, 'TL6 50Z', 'Toyota', 'Tacoma', '2017', 'Silver', 45000, 'Rented', 'Truck', 'V', 'Vancouver');
+insert into Vehicles
+    values(990995, 'TL5 50Z', 'Toyota', 'Tacoma', '2018', 'Silver', 25450, 'In Shop', 'Truck', 'V', 'Vancouver');
+insert into Vehicles
+    values(990994, 'TL4 50Z', 'Toyota', 'Tacoma', '2016', 'Red', 62000, 'Available', 'Truck', 'N', 'North Vancouver');
+insert into Vehicles
+    values(990993, 'TL3 50Z', 'Toyota', 'Tacoma', '2017', 'Black', 31200, 'Available', 'Truck', 'N', 'North Vancouver');
+insert into Vehicles
+    values(990992, 'TL2 50Z', 'Toyota', 'Tacoma', '2018', 'Black', 24200, 'Available', 'Truck', 'W', 'West Vancouver');
+insert into Vehicles
+    values(990991, 'TL1 50Z', 'Toyota', 'Tacoma', '2018', 'Black', 43200, 'Available', 'Truck', 'W', 'West Vancouver');
