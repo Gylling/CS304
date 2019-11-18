@@ -3,6 +3,9 @@ package ui;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.Year;
 
 import delegates.TerminalTransactionsDelegate;
 import model.BranchModel;
@@ -39,7 +42,7 @@ public class TerminalTransactions {
 			System.out.println("2. Reservation");
 			System.out.println("3. Vehicles");
 			System.out.println("4. Quit");
-			System.out.print("Please choose one of the above 5 options: ");
+			System.out.println("Please choose one of the above 5 options: ");
 
 			choice = readInteger(false);
 
@@ -54,7 +57,7 @@ public class TerminalTransactions {
 							System.out.println("2. Delete branch");
 							System.out.println("3. Show branch");
 							System.out.println("4. Quit");
-							System.out.print("Please choose one of the above 4 options: ");
+							System.out.println("Please choose one of the above 4 options: ");
 
 							choice = readInteger(false);
 
@@ -88,7 +91,7 @@ public class TerminalTransactions {
 							System.out.println("2. Delete reservation");
 							System.out.println("3. Show reservation");
 							System.out.println("4. Quit");
-							System.out.print("Please choose one of the above 4 options: ");
+							System.out.println("Please choose one of the above 4 options: ");
 
 							choice = readInteger(false);
 
@@ -120,7 +123,7 @@ public class TerminalTransactions {
                             System.out.println();
                             System.out.println("1. Search for car");
                             System.out.println("4. Quit");
-                            System.out.print("Please choose one of the above 2 options: ");
+                            System.out.println("Please choose one of the above 2 options: ");
 
                             choice = readInteger(false);
 
@@ -159,9 +162,9 @@ public class TerminalTransactions {
 		String location = null;
 
 		while (location == null || city == null || location.length() <= 0 || city.length() <= 0) {
-			System.out.print("Please enter the location of the branch you wish to delete: ");
+			System.out.println("Please enter the location of the branch you wish to delete: ");
 			location = readLine().trim();
-            System.out.print("Please enter the city of the branch you wish to delete: ");
+            System.out.println("Please enter the city of the branch you wish to delete: ");
             city = readLine().trim();
 			if (city != null && location != null && location.length() > 0 && city.length() > 0) {
 				delegate.deleteBranch(location, city);
@@ -172,7 +175,7 @@ public class TerminalTransactions {
 	private void reservationDeleteOption() {
 		int confNo = INVALID_INPUT;
 		while (confNo == INVALID_INPUT) {
-			System.out.print("Please enter the confirmation number you wish to delete: ");
+			System.out.println("Please enter the confirmation number you wish to delete: ");
 			confNo = readInteger(false);
 			if (confNo != INVALID_INPUT) {
 				delegate.deleteReservation(confNo);
@@ -183,53 +186,63 @@ public class TerminalTransactions {
 	private void reservationInsertOption() {
 		int confNo = INVALID_INPUT;
 		while (confNo == INVALID_INPUT) {
-			System.out.print("Please enter the confirmation number you wish to insert: ");
+			System.out.println("Please enter the confirmation number you wish to insert: ");
 			confNo = readInteger(false);
 		}
 
 		String vtName = null;
 		while (vtName == null || vtName.length() <= 0) {
-			System.out.print("Please enter the vehicletype you wish to insert: ");
+			System.out.println("Please enter the vehicletype you wish to insert: ");
 			vtName = readLine().trim();
 		}
 
 		String dLicense = null;
 		while (dLicense == null || dLicense.length() <= 0) {
-			System.out.print("Please enter the driver´s license you wish to insert: ");
+			System.out.println("Please enter the driver´s license you wish to insert: ");
 			dLicense = readLine().trim();
 		}
 
-		String fromDate = null;
-		while (fromDate == null || fromDate.length() <= 0) {
-			System.out.print("Please enter the start date you wish to insert: ");
-			fromDate = readLine().trim();
+		Timestamp fromDate = null;
+		while (fromDate == null) {
+			System.out.println("Please enter the start date you wish to insert: ");
+			System.out.println("Year: YYYY");
+			String year = readLine().trim();
+			System.out.println("Month: MM");
+			String month = readLine().trim();
+			System.out.println("Day: DD");
+			String day = readLine().trim();;
+			System.out.println("Hour: HH");
+			String hour = readLine().trim();
+			System.out.println("Minute: MM");
+			String minute = readLine().trim();
+
+			fromDate = Timestamp.valueOf(year+"-"+month+"-"+day+" "+hour+":"+minute+":00");
 		}
 
-		String fromTime = null;
-		while (fromTime == null) {
-			System.out.print("Please enter the start time you wish to insert: ");
-			fromTime = readLine().trim();
+
+		Timestamp toDate = null;
+		while (toDate == null) {
+			System.out.println("Please enter the end date you wish to insert: ");
+			System.out.println("Year: YYYY");
+			String year = readLine().trim();
+			System.out.println("Month: MM");
+			String month = readLine().trim();
+			System.out.println("Day: DD");
+			String day = readLine().trim();;
+			System.out.println("Hour: HH");
+			String hour = readLine().trim();
+			System.out.println("Minute: MM");
+			String minute = readLine().trim();
+
+			toDate = Timestamp.valueOf(year+"-"+month+"-"+day+" "+hour+":"+minute+":00");
 		}
 
-		String toDate = null;
-		while (toDate == null || toDate.length() <= 0) {
-			System.out.print("Please enter the end date you wish to insert: ");
-			toDate = readLine().trim();
-		}
-
-		String toTime = null;
-		while (toTime == null) {
-			System.out.print("Please enter the end time you wish to insert: ");
-			toTime = readLine().trim();
-		}
 
 		ReservationModel model = new ReservationModel(confNo,
 				vtName,
 				dLicense,
 				fromDate,
-				fromTime,
-				toDate,
-				toTime);
+				toDate);
 		delegate.insertReservation(model);
 	}
 	
@@ -248,8 +261,7 @@ public class TerminalTransactions {
 			city = readLine().trim();
 		}
 
-		BranchModel model = new BranchModel(location,
-											city);
+		BranchModel model = new BranchModel(location, city);
 		delegate.insertBranch(model);
 	}
 
@@ -261,23 +273,68 @@ public class TerminalTransactions {
         System.out.println("Please enter the loctaion you wish to search for (Press enter for all locations): ");
         String location = readLine().trim();
 
-
         System.out.println("Please enter the city you wish to search for (Press enter for all cities): ");
         String city = readLine().trim();
 
         System.out.println("Please enter the start date you wish to search for (Press enter for all dates): ");
-        String fromDate = readLine().trim();
+		System.out.println("Year: YYYY");
+		String year = readLine().trim();
+		if(year.equals("")){
+			year="1970";
+		}
+		System.out.println("Month: MM");
+		String month = readLine().trim();
+		if(month.equals("")){
+			month="01";
+		}
+		System.out.println("Day: DD");
+		String day = readLine().trim();
+		if(day.equals("")){
+			day="01";
+		}
+		System.out.println("Hour: HH");
+		String hour = readLine().trim();
+		if(hour.equals("")){
+			hour="00";
+		}
+		System.out.println("Minute: MM");
+		String minute = readLine().trim();
+		if(minute.equals("")){
+			minute="01";
+		}
 
-        System.out.println("Please enter the start time you wish to search for (Press enter for all times): ");
-        String fromTime = readLine().trim();
+		Timestamp fromDate = Timestamp.valueOf(year+"-"+month+"-"+day+" "+hour+":"+minute+":00");
 
         System.out.println("Please enter the end date you wish to search for (Press enter for all dates): ");
-        String toDate = readLine().trim();
+		System.out.println("Year: YYYY");
+		year = readLine().trim();
+		if(year.equals("")){
+			year="2200";
+		}
+		System.out.println("Month: MM");
+		month = readLine().trim();
+		if(month.equals("")){
+			month="12";
+		}
+		System.out.println("Day: DD");
+		day = readLine().trim();
+		if(day.equals("")){
+			day="31";
+		}
+		System.out.println("Hour: HH");
+		hour = readLine().trim();
+		if(hour.equals("")){
+			hour="23";
+		}
+		System.out.println("Minute: MM");
+		minute = readLine().trim();
+		if(minute.equals("")){
+			minute="59";
+		}
 
-        System.out.println("Please enter the end time you wish to search for (Press enter for all times): ");
-        String toTime = readLine().trim();
+		Timestamp toDate = Timestamp.valueOf(year+"-"+month+"-"+day+" "+hour+":"+minute+":00");
 
-        delegate.showVehicles(vtName, location, city, fromDate, fromTime, toDate, toTime);
+        delegate.showVehicles(vtName, location, city, fromDate, toDate);
 
 
     }

@@ -10,6 +10,8 @@ import  model.VehiclesModel;
 import  ui.LoginWindow;
 import  ui.TerminalTransactions;
 
+import java.sql.Timestamp;
+
 /**
  * This is the main controller class that will orchestrate everything.
  */
@@ -88,9 +90,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
             System.out.printf("%-20.20s", model.getVtName());
             System.out.printf("%-20.20s", model.getdLicense());
             System.out.printf("%-20.20s", model.getFromDate());
-            System.out.printf("%-20.20s", model.getFromTime());
             System.out.printf("%-20.20s", model.getToDate());
-            System.out.printf("%-20.20s", model.getToTime());
             System.out.println();
         }
     }
@@ -132,9 +132,9 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
         }
     }
 
-    public void showVehicles(String vtname, String location, String city, String fromDate, String fromTime, String toDate, String toTime) {
-        VehiclesModel[] models = dbHandler.getVehiclesInfo(vtname, location, city, fromDate, fromTime, toDate, toTime);
-
+    public void showVehicles(String vtname, String location, String city, Timestamp fromDate, Timestamp toDate) {
+        VehiclesModel[] models = dbHandler.getVehiclesInfo(vtname, location, city, fromDate, toDate);
+        System.out.println(models.length);
         for (int i = 0; i < models.length; i++) {
             VehiclesModel model = models[i];
 

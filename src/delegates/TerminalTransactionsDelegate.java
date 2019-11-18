@@ -3,6 +3,8 @@ package delegates;
 import model.BranchModel;
 import model.ReservationModel;
 
+import java.sql.Timestamp;
+
 /**
  * This interface uses the delegation design pattern where instead of having
  * the TerminalTransactions class try to do everything, it will only
@@ -21,7 +23,7 @@ public interface TerminalTransactionsDelegate {
 	public void insertBranch(BranchModel model);
 	public void showBranch();
 
-	public void showVehicles(String vtname, String location, String city, String fromDate, String fromTime, String toDate, String toTime);
+	public void showVehicles(String vtname, String location, String city, Timestamp fromDate, Timestamp toDate);
 	
 	public void terminalTransactionsFinished();
 }

@@ -1,13 +1,9 @@
 package database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import model.BranchModel;
 import model.ReservationModel;
 import model.VehiclesModel;
@@ -63,14 +59,12 @@ public class DatabaseConnectionHandler {
 
 	public void insertReservation(ReservationModel model) {
 		try {
-			PreparedStatement ps = connection.prepareStatement("INSERT INTO Reservation VALUES (?,?,?,?,?,?,?)");
+			PreparedStatement ps = connection.prepareStatement("INSERT INTO Reservation VALUES (?,?,?,?,?)");
 			ps.setInt(1, model.getConfNo());
 			ps.setString(2, model.getVtName());
 			ps.setString(3, model.getdLicense());
-			ps.setString(4, model.getFromDate());
-			ps.setString(5, model.getFromTime());
-			ps.setString(6, model.getToDate());
-			ps.setString(7, model.getToTime());
+			ps.setTimestamp(4, model.getFromDate());
+			ps.setTimestamp(5, model.getToDate());
 
 			ps.executeUpdate();
 			connection.commit();
@@ -103,10 +97,8 @@ public class DatabaseConnectionHandler {
 				ReservationModel model = new ReservationModel(rs.getInt("confNo"),
 						rs.getString("vtName"),
 						rs.getString("dLicense"),
-						rs.getString("fromDate"),
-						rs.getString("fromTime"),
-						rs.getString("toDate"),
-						rs.getString("toTime"));
+						rs.getTimestamp("fromDate"),
+						rs.getTimestamp("toDate"));
 				result.add(model);
 			}
 
@@ -189,19 +181,19 @@ public class DatabaseConnectionHandler {
 		return result.toArray(new BranchModel[result.size()]);
 	}
 
-    public VehiclesModel[] getVehiclesInfo(String vtname, String location, String city, String fromDate, String fromTime, String toDate, String toTime) {
+    public VehiclesModel[] getVehiclesInfo(String vtname, String location, String city, Timestamp fromDate, Timestamp toDate) {
         ArrayList<VehiclesModel> result = new ArrayList<VehiclesModel>();
-        String query = "SELECT * FROM VEHICLES WHERE ";
+        String query = "SELECT * FROM VEHICLES";
         Boolean checkAnd = false;
         if(!vtname.equals("")){
-            query += "'" + vtname + "'" + " = " + "vtname";
+            query += " WHERE '" + vtname + "'" + " = " + "VTNAME";
             checkAnd = true;
         }
         if(!location.equals("")){
             if(checkAnd){
                 query += " AND " + "'" + location + "'" + " = " + "location";
             } else {
-                query += "'" +location + "'" + " = " + "location";
+                query += " WHERE '" +location + "'" + " = " + "location";
             }
             checkAnd = true;
         }
@@ -209,38 +201,32 @@ public class DatabaseConnectionHandler {
             if(checkAnd){
                 query += " AND " + "'" + city + "'" + " = " + "city";
             } else {
-                query += "'" + city + "'" + " = " + "city";
+                query += " WHERE '" + city + "'" + " = " + "city";
             }
-            checkAnd = true;
+            checkAnd=true;
         }
-//        if(!fromDate.equals("")){
-//            query += fromDate + " == " + "vtname AND ";
-//        }
-//        if(!fromTime.equals("")){
-//            query += vtname + " == " + "vtname AND ";
-//        }
-//        if(!toDate.equals("")){
-//            query += vtname + " == " + "vtname AND ";
-//        }
-//        if(!toTime.equals("")){
-//            query += vtname + " = " + "vtname AND ";
-//        }
-        try {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
 
-//    		// get info on ResultSet
-//    		ResultSetMetaData rsmd = rs.getMetaData();
-//
-//    		System.out.println(" ");
-//
-//    		// display column names;
-//    		for (int i = 0; i < rsmd.getColumnCount(); i++) {
-//    			// get column name and print it
-//    			System.out.printf("%-15s", rsmd.getColumnName(i + 1));
-//    		}
+		if(checkAnd){
+			query += " AND VLICENSE NOT IN " + "(SELECT R.VLICENSE FROM rentals R " +
+					"WHERE (TIMESTAMP '"+fromDate.toString()+"' < R.fromDate AND R.fromDate < TIMESTAMP '"+toDate.toString()+"') " +
+					"OR (TIMESTAMP '"+fromDate.toString()+"' < R.toDate AND R.toDate < TIMESTAMP '"+toDate.toString()+"'))";
+		} else {
+			query += " WHERE VLICENSE NOT IN " + "(SELECT R.VLICENSE FROM rentals R " +
+					"WHERE (TIMESTAMP '"+fromDate.toString()+"' < R.fromDate AND R.fromDate < TIMESTAMP '"+toDate.toString()+"') " +
+					"OR (TIMESTAMP '"+fromDate.toString()+"' < R.toDate AND R.toDate < TIMESTAMP '"+toDate.toString()+"'))";
+		}
+		try {
+//			PreparedStatement ps = connection.prepareStatement(query);
+//			ps.setString(1,"'"+fromDate.toString()+"'");
+//			ps.setString(2,"'"+toDate.toString()+"'");
+//			ps.setString(3,"'"+fromDate.toString()+"'");
+//			ps.setString(4,"'"+toDate.toString()+"'");
 
-            while(rs.next()) {
+			Statement stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+
+
+			while(rs.next()) {
                 VehiclesModel model = new VehiclesModel(
                         rs.getInt("vid"),
                         rs.getString("vLicense"),
@@ -255,12 +241,13 @@ public class DatabaseConnectionHandler {
                         rs.getString("city"));
                 result.add(model);
             }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-        }
+			connection.commit();
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
 
         return result.toArray(new VehiclesModel[result.size()]);
     }
