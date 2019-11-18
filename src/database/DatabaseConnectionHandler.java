@@ -183,37 +183,88 @@ public class DatabaseConnectionHandler {
 
     public VehiclesModel[] getVehiclesInfo(String vtname, String location, String city, Timestamp fromDate, Timestamp toDate) {
         ArrayList<VehiclesModel> result = new ArrayList<VehiclesModel>();
-        String query = "SELECT * FROM VEHICLES";
+
+
+        //Build the query for the vehicles, which meet the vehicletype and branch criteria.
+        String query = "SELECT * FROM VEHICLES Ve";
         Boolean checkAnd = false;
         if(!vtname.equals("")){
-            query += " WHERE '" + vtname + "'" + " = " + "VTNAME";
+            query += " WHERE '" + vtname + "'" + " = " + "Ve.VTNAME";
             checkAnd = true;
         }
         if(!location.equals("")){
             if(checkAnd){
-                query += " AND " + "'" + location + "'" + " = " + "location";
+                query += " AND " + "'" + location + "'" + " = " + "Ve.location";
             } else {
-                query += " WHERE '" +location + "'" + " = " + "location";
+                query += " WHERE '" +location + "'" + " = " + "Ve.location";
             }
             checkAnd = true;
         }
         if(!city.equals("")){
             if(checkAnd){
-                query += " AND " + "'" + city + "'" + " = " + "city";
+                query += " AND " + "'" + city + "'" + " = " + "Ve.city";
             } else {
-                query += " WHERE '" + city + "'" + " = " + "city";
+                query += " WHERE '" + city + "'" + " = " + "Ve.city";
             }
             checkAnd=true;
         }
-
+		//remove vehicletypes that are fullybooked in timeinterval from the table with vehicles, which meet the vehicletype and branch criteria.
+		//fullybooked means all the vehicles are rented or reserved for a given timeperiod.
 		if(checkAnd){
-			query += " AND VLICENSE NOT IN " + "(SELECT R.VLICENSE FROM rentals R " +
-					"WHERE (TIMESTAMP '"+fromDate.toString()+"' < R.fromDate AND R.fromDate < TIMESTAMP '"+toDate.toString()+"') " +
-					"OR (TIMESTAMP '"+fromDate.toString()+"' < R.toDate AND R.toDate < TIMESTAMP '"+toDate.toString()+"'))";
+			query += " AND Ve.VTNAME NOT IN (" +
+					"SELECT VT.VTNAME " +
+					"FROM VEHICLETYPES VT " +
+					"WHERE " +
+					"(SELECT COUNT(*) " +
+					"FROM vehicles V " +
+					"WHERE V.VTNAME = VT.VTNAME AND V.VLICENSE NOT IN (" +
+					"SELECT Re.VLICENSE " +
+					"FROM rentals Re " +
+					"WHERE (TIMESTAMP '"+fromDate.toString()+"' < Re.fromDate " +
+					"AND Re.fromDate < TIMESTAMP '"+toDate.toString()+"')" +
+					" OR (TIMESTAMP '"+fromDate.toString()+"' < Re.toDate " +
+					"AND Re.toDate < TIMESTAMP '"+toDate.toString()+"'))) " +
+					"= " +
+					"(SELECT COUNT(*) " +
+					"FROM reservations Rs " +
+					"WHERE Rs.VTNAME = VT.VTNAME))";
 		} else {
-			query += " WHERE VLICENSE NOT IN " + "(SELECT R.VLICENSE FROM rentals R " +
-					"WHERE (TIMESTAMP '"+fromDate.toString()+"' < R.fromDate AND R.fromDate < TIMESTAMP '"+toDate.toString()+"') " +
-					"OR (TIMESTAMP '"+fromDate.toString()+"' < R.toDate AND R.toDate < TIMESTAMP '"+toDate.toString()+"'))";
+			query += " WHERE Ve.VTNAME NOT IN (" +
+					"SELECT VT.VTNAME " +
+					"FROM VEHICLETYPES VT " +
+					"WHERE " +
+					"(SELECT COUNT(*) " +
+					"FROM vehicles V " +
+					"WHERE V.VTNAME = VT.VTNAME AND V.VLICENSE NOT IN (" +
+					"SELECT Re.VLICENSE " +
+					"FROM rentals Re " +
+					"WHERE (TIMESTAMP '"+fromDate.toString()+"' < Re.fromDate " +
+					"AND Re.fromDate < TIMESTAMP '"+toDate.toString()+"')" +
+					" OR (TIMESTAMP '"+fromDate.toString()+"' < Re.toDate " +
+					"AND Re.toDate < TIMESTAMP '"+toDate.toString()+"'))) " +
+					"= " +
+					"(SELECT COUNT(*) " +
+					"FROM reservations Rs " +
+					"WHERE Rs.VTNAME = VT.VTNAME))";
+		}
+
+        //remove vehicles that are rented in timeinterval from the table with vehicles, which meet the vehicletype and branch criteria
+		if(checkAnd){
+			query += " AND Ve.VLICENSE NOT IN " +
+					"(SELECT R.VLICENSE " +
+					"FROM rentals R " +
+					"WHERE (TIMESTAMP '"+fromDate.toString()+"' < R.fromDate " +
+					"AND R.fromDate < TIMESTAMP '"+toDate.toString()+"') " +
+					"OR (TIMESTAMP '"+fromDate.toString()+"' < R.toDate " +
+					"AND R.toDate < TIMESTAMP '"+toDate.toString()+"'))";
+		} else {
+			query += " WHERE Ve.VLICENSE NOT IN " +
+					"(SELECT R.VLICENSE " +
+					"FROM rentals R " +
+					"WHERE (TIMESTAMP '"+fromDate.toString()+"' < R.fromDate " +
+					"AND R.fromDate < TIMESTAMP '"+toDate.toString()+"') " +
+					"OR (TIMESTAMP '"+fromDate.toString()+"' < R.toDate " +
+					"AND R.toDate < TIMESTAMP '"+toDate.toString()+"'))";
 		}
 		try {
 //			PreparedStatement ps = connection.prepareStatement(query);
@@ -221,6 +272,7 @@ public class DatabaseConnectionHandler {
 //			ps.setString(2,"'"+toDate.toString()+"'");
 //			ps.setString(3,"'"+fromDate.toString()+"'");
 //			ps.setString(4,"'"+toDate.toString()+"'");
+
 
 			Statement stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery(query);

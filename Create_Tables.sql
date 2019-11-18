@@ -206,7 +206,7 @@ insert into Reservations
  insert into Vehicles
      values(283333, 'GU6 29K', 'Toyota', 'Prius', '2017', 'Black', 10200, 'Rented', 'Economy', 'N', 'North Vancouver');
  insert into Vehicles
-     values(493333, 'YT6 22G', 'Toyota', 'Prius', '2018', 'Black', 9200, 'In Shop', 'Economy', 'W', 'West Vancouver');
+     values(493333, 'YT6 22G', 'Toyota', 'Prius', '2018', 'Black', 9200, 'Avaiable', 'Economy', 'W', 'West Vancouver');
  insert into Vehicles
      values(433339, 'GH6 52G', 'Hyundai', 'Kona', '2018', 'Black', 7500, 'Rented', 'Economy', 'W', 'West Vancouver');
  -- Compact
@@ -221,13 +221,13 @@ insert into Reservations
  insert into Vehicles
      values(991562, 'TG3 45H', 'Kia', 'Soul', '2017', 'Silver', 23000, 'Rented', 'Compact', 'V', 'Vancouver');
  insert into Vehicles
-     values(491442, 'HQ9 43H', 'Hyundai', 'Elantra', '2018', 'Silver', 30450, 'In Shop', 'Compact', 'V', 'Vancouver');
+     values(491442, 'HQ9 43H', 'Hyundai', 'Elantra', '2018', 'Silver', 30450, 'Avaiable', 'Compact', 'V', 'Vancouver');
  insert into Vehicles
      values(224345, 'AA9 89K', 'Honda', 'Civic', '2016', 'Red', 51200, 'Available', 'Compact', 'N', 'North Vancouver');
  insert into Vehicles
      values(999333, 'AP3 49K', 'Toyota', 'Carolla', '2017', 'Black', 19200, 'Available', 'Compact', 'N', 'North Vancouver');
  insert into Vehicles
-     values(493443, 'XT6 45G', 'Toyota', 'Carolla', '2018', 'Black', 23200, 'In Shop', 'Compact', 'W', 'West Vancouver');
+     values(493443, 'XT6 45G', 'Toyota', 'Carolla', '2018', 'Black', 23200, 'Avaiable', 'Compact', 'W', 'West Vancouver');
  insert into Vehicles
      values(434449, 'XX6 69X', 'Hyundai', 'Elantra', '2018', 'Black', 10200, 'Available', 'Compact', 'W', 'West Vancouver');
  -- Mid-Size
@@ -240,7 +240,7 @@ insert into Reservations
  insert into Vehicles
      values(293435, 'XX2 69P', 'Kia', 'Optima', '2018', 'Grey', 9500, 'Available', 'Mid-size', 'C', 'Chilliwack');
  insert into Vehicles
-     values(694201, 'RR3 45H', 'Kia', 'Optima', '2017', 'Silver', 45000, 'In Shop', 'Mid-size', 'V', 'Vancouver');
+     values(694201, 'RR3 45H', 'Kia', 'Optima', '2017', 'Silver', 45000, 'Avaiable', 'Mid-size', 'V', 'Vancouver');
  insert into Vehicles
      values(491420, 'FF9 43H', 'Nissan', 'Altima', '2018', 'Silver', 22450, 'Available', 'Mid-size', 'V', 'Vancouver');
  insert into Vehicles
@@ -248,7 +248,7 @@ insert into Reservations
  insert into Vehicles
      values(929223, 'DD3 49K', 'Ford', 'Fusion', '2017', 'Black', 15200, 'Available', 'Mid-size', 'N', 'North Vancouver');
  insert into Vehicles
-     values(493223, 'QQ6 45G', 'Ford', 'Fusion', '2018', 'Black', 40200, 'In Shop', 'Mid-size', 'W', 'West Vancouver');
+     values(493223, 'QQ6 45G', 'Ford', 'Fusion', '2018', 'Black', 40200, 'Avaiable', 'Mid-size', 'W', 'West Vancouver');
  insert into Vehicles
      values(432229, 'TT6 69X', 'Nissan', 'Altima', '2018', 'Black', 19200, 'Rented', 'Mid-size', 'W', 'West Vancouver');
  -- Standard
@@ -269,7 +269,7 @@ insert into Reservations
  insert into Vehicles
      values(900003, 'DD3 49C', 'Mazda', '3', '2017', 'Black', 21200, 'Available', 'Standard', 'N', 'North Vancouver');
  insert into Vehicles
-     values(900002, 'QQ6 45B', 'Mazda', '3', '2018', 'Black', 34200, 'In Shop', 'Standard', 'W', 'West Vancouver');
+     values(900002, 'QQ6 45B', 'Mazda', '3', '2018', 'Black', 34200, 'Avaiable', 'Standard', 'W', 'West Vancouver');
  insert into Vehicles
      values(900001, 'TT6 69A', 'Mazda', '3', '2018', 'Black', 33200, 'Available', 'Standard', 'W', 'West Vancouver');
  --Mid-Size
@@ -306,7 +306,7 @@ insert into Reservations
  insert into Vehicles
      values(990006, 'LL6 50X', 'Dodge', 'Charger', '2017', 'Silver', 45000, 'Rented', 'Full-size', 'V', 'Vancouver');
  insert into Vehicles
-     values(990005, 'LL5 50X', 'Dodge', 'Charger', '2018', 'Silver', 25450, 'In Shop', 'Full-size', 'V', 'Vancouver');
+     values(990005, 'LL5 50X', 'Dodge', 'Charger', '2018', 'Silver', 25450, 'Avaiable', 'Full-size', 'V', 'Vancouver');
  insert into Vehicles
      values(990004, 'LL4 50X', 'Dodge', 'Charger', '2016', 'Red', 62000, 'Available', 'Full-size', 'N', 'North Vancouver');
  insert into Vehicles
@@ -326,9 +326,9 @@ insert into Reservations
  insert into Vehicles
      values(990097, 'TL7 50X', 'Toyota', '4Runner', '2018', 'Grey', 6000, 'Available', 'SUV', 'C', 'Chilliwack');
  insert into Vehicles
-     values(990096, 'TL6 50X', 'Toyota', '4Runner', '2017', 'Silver', 45000, 'Rented', 'SUV', 'V', 'Vancouver');
+     values(990096, 'TL6 50X', 'Toyota', '4Runner', '2017', 'Silver', 45000, 'Available', 'SUV', 'V', 'Vancouver');
  insert into Vehicles
-     values(990095, 'TL5 50X', 'Toyota', '4Runner', '2018', 'Silver', 25450, 'In Shop', 'SUV', 'V', 'Vancouver');
+     values(990095, 'TL5 50X', 'Toyota', '4Runner', '2018', 'Silver', 25450, 'Avaiable', 'SUV', 'V', 'Vancouver');
  insert into Vehicles
      values(990094, 'TL4 50X', 'Toyota', '4Runner', '2016', 'Red', 62000, 'Available', 'SUV', 'N', 'North Vancouver');
  insert into Vehicles
@@ -350,7 +350,7 @@ insert into Vehicles
 insert into Vehicles
     values(990996, 'TL6 50Z', 'Toyota', 'Tacoma', '2017', 'Silver', 45000, 'Rented', 'Truck', 'V', 'Vancouver');
 insert into Vehicles
-    values(990995, 'TL5 50Z', 'Toyota', 'Tacoma', '2018', 'Silver', 25450, 'In Shop', 'Truck', 'V', 'Vancouver');
+    values(990995, 'TL5 50Z', 'Toyota', 'Tacoma', '2018', 'Silver', 25450, 'Avaiable', 'Truck', 'V', 'Vancouver');
 insert into Vehicles
     values(990994, 'TL4 50Z', 'Toyota', 'Tacoma', '2016', 'Red', 62000, 'Available', 'Truck', 'N', 'North Vancouver');
 insert into Vehicles
@@ -359,5 +359,7 @@ insert into Vehicles
     values(990992, 'TL2 50Z', 'Toyota', 'Tacoma', '2018', 'Black', 24200, 'Available', 'Truck', 'W', 'West Vancouver');
 insert into Vehicles
     values(990991, 'TL1 50Z', 'Toyota', 'Tacoma', '2018', 'Black', 43200, 'Available', 'Truck', 'W', 'West Vancouver');
+
+-- Rentals
 insert into Rentals
     values(2,'TL8 50X', 'A1456BZ', TIMESTAMP '2019-11-29 12:00:00', TIMESTAMP '2019-12-29 12:00:00',0,'Megan Tumaro',2,12,null,0,0,0);
