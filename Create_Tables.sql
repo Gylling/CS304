@@ -190,21 +190,21 @@ insert into Reservations
    values(9021, 'MID-SIZE', 'X1956XZ', TIMESTAMP '2020-01-03 9:00:00', TIMESTAMP '2020-01-10 12:00:00');
 
 -- Branch
-  insert into Branch values('A', 'Abbotsford' );
-  insert into Branch values('C', 'Chilliwack' );
-  insert into Branch values('V', 'Vancouver' );
+  insert into Branch values('A', 'ABBOTSFORD' );
+  insert into Branch values('C', 'CHILLIWACK' );
+  insert into Branch values('V', 'VANCOUVER' );
 
 
  -- Vehicles
- --Economy
+ --ECONOMY
  insert into Vehicles
      values(228975, 'AG3 45H', 'Toyota', 'Prius', '2019', 'Silver', 3000, 'AVAILABLE', 'ECONOMY', 'A', 'ABBOTSFORD');
  insert into Vehicles
      values(328975, 'BF3 43H', 'Toyota', 'Prius', '2018', 'Blue', 3090, 'AVAILABLE', 'ECONOMY', 'A', 'ABBOTSFORD');
  insert into Vehicles
-     values(228975, 'JG9 69Z', 'Hyundai', 'Kona', '2018', 'Silver', 4500, 'AVAILABLE', 'ECONOMY', 'C', 'CHILLIWACK');
+     values(228976, 'JG9 69Z', 'Hyundai', 'Kona', '2018', 'Silver', 4500, 'AVAILABLE', 'ECONOMY', 'C', 'CHILLIWACK');
  insert into Vehicles
-     values(228975, 'TG3 95H', 'Chevrolet', 'Bolt', '2018', 'Grey', 5000, 'AVAILABLE', 'ECONOMY', 'C', 'CHILLIWACK');
+     values(228977, 'TG3 95H', 'Chevrolet', 'Bolt', '2018', 'Grey', 5000, 'AVAILABLE', 'ECONOMY', 'C', 'CHILLIWACK');
  insert into Vehicles
      values(391452, 'XG3 42H', 'Ford', 'Focus', '2017', 'Silver', 10000, 'AVAILABLE', 'ECONOMY', 'V', 'VANCOUVER');
  insert into Vehicles
@@ -212,18 +212,18 @@ insert into Reservations
 insert into Vehicles
     values(128975, 'AG3 45R', 'Toyota', 'Prius', '2019', 'Silver', 2000, 'RENTED', 'ECONOMY', 'A', 'ABBOTSFORD');
 insert into Vehicles
-    values(128975, 'BF3 43R', 'Toyota', 'Prius', '2018', 'Blue', 3190, 'RENTED', 'ECONOMY', 'A', 'ABBOTSFORD');
+    values(128976, 'BF3 43R', 'Toyota', 'Prius', '2018', 'Blue', 3190, 'RENTED', 'ECONOMY', 'A', 'ABBOTSFORD');
 insert into Vehicles
-    values(128975, 'JG9 69R', 'Hyundai', 'Kona', '2018', 'Silver', 4200, 'RENTED', 'ECONOMY', 'C', 'CHILLIWACK');
+    values(128977, 'JG9 69R', 'Hyundai', 'Kona', '2018', 'Silver', 4200, 'RENTED', 'ECONOMY', 'C', 'CHILLIWACK');
 insert into Vehicles
-    values(128975, 'TG3 95R', 'Chevrolet', 'Bolt', '2018', 'Grey', 4000, 'RENTED', 'ECONOMY', 'C', 'CHILLIWACK');
+    values(128978, 'TG3 95R', 'Chevrolet', 'Bolt', '2018', 'Grey', 4000, 'RENTED', 'ECONOMY', 'C', 'CHILLIWACK');
 insert into Vehicles
     values(191452, 'XG3 42R', 'Ford', 'Focus', '2017', 'Silver', 20000, 'RENTED', 'ECONOMY', 'V', 'VANCOUVER');
 insert into Vehicles
-    values(191452, 'HG9 42R', 'Ford', 'Focus', '2018', 'Silver', 14000, 'RENTED', 'ECONOMY', 'V', 'VANCOUVER');
+    values(191457, 'HG9 42R', 'Ford', 'Focus', '2018', 'Silver', 14000, 'RENTED', 'ECONOMY', 'V', 'VANCOUVER');
 
 
- -- Compact
+ -- COMPACT
  insert into Vehicles
      values(848975, 'GH9 45H', 'Toyota', 'Carolla', '2019', 'Silver', 4000, 'AVAILABLE', 'COMPACT', 'A', 'ABBOTSFORD');
  insert into Vehicles
@@ -250,7 +250,7 @@ insert into Vehicles
 insert into Vehicles
     values(191442, 'HQ9 43R', 'Hyundai', 'Elantra', '2018', 'Silver', 30450, 'RENTED', 'COMPACT', 'V', 'VANCOUVER');
 
---Mid-Size
+--MID-SIZE
 insert into Vehicles
     values(998000, 'LD1 33J', 'Hyundai', 'Sonata', '2019', 'Silver', 4100, 'AVAILABLE', 'MID-SIZE', 'A', 'ABBOTSFORD');
 insert into Vehicles
@@ -277,7 +277,7 @@ insert into Vehicles
 insert into Vehicles
     values(190005, 'RL5 43E', 'Hyundai', 'Sonata', '2018', 'Silver', 23450, 'RENTED', 'MID-SIZE', 'V', 'VANCOUVER');
 
--- Standard
+-- STANDARD
  insert into Vehicles
      values(998235, 'GG3 33J', 'Mazda', '3', '2019', 'Silver', 4100, 'AVAILABLE', 'STANDARD', 'A', 'ABBOTSFORD');
  insert into Vehicles
@@ -304,7 +304,7 @@ insert into Vehicles
 insert into Vehicles
     values(100005, 'RF9 43E', 'Mazda', '3', '2018', 'Silver', 23450, 'RENTED', 'STANDARD', 'V', 'VANCOUVER');
 
- --Full-Size
+ --FULL-SIZE
  insert into Vehicles
      values(998000, 'LD1 50X', 'Dodge', 'Charger', '2019', 'Silver', 3100, 'AVAILABLE', 'FULL-SIZE', 'A', 'ABBOTSFORD');
  insert into Vehicles
@@ -358,7 +358,7 @@ insert into Vehicles
 insert into Vehicles
     values(190095, 'TL5 50R', 'Toyota', '4Runner', '2018', 'Silver', 25450, 'RENTED', 'SUV', 'V', 'VANCOUVER');
 
---Truck
+--TRUCK
 insert into Vehicles
     values(998990, 'TR1 50Z', 'Toyota', 'Tacoma', '2019', 'Silver', 3100, 'AVAILABLE', 'TRUCK', 'A', 'ABBOTSFORD');
 insert into Vehicles
@@ -373,17 +373,17 @@ insert into Vehicles
     values(990995, 'TR5 50Z', 'Toyota', 'Tacoma', '2018', 'Silver', 25450, 'AVAILABLE', 'TRUCK', 'V', 'VANCOUVER');
 
 insert into Vehicles
-    values(198990, 'TR1 50Z', 'Toyota', 'Tacoma', '2019', 'Silver', 3100, 'RENTED', 'TRUCK', 'A', 'ABBOTSFORD');
+    values(198990, 'TR1 51Z', 'Toyota', 'Tacoma', '2019', 'Silver', 3100, 'RENTED', 'TRUCK', 'A', 'ABBOTSFORD');
 insert into Vehicles
-    values(190999, 'TR9 50Z', 'Toyota', 'Tacoma', '2018', 'Blue', 7820, 'RENTED', 'TRUCK', 'A', 'ABBOTSFORD');
+    values(190999, 'TR9 51Z', 'Toyota', 'Tacoma', '2018', 'Blue', 7820, 'RENTED', 'TRUCK', 'A', 'ABBOTSFORD');
 insert into Vehicles
-    values(190998, 'TR8 50Z', 'Toyota', 'Tacoma', '2018', 'Silver', 26500, 'RENTED', 'TRUCK', 'C', 'CHILLIWACK');
+    values(190998, 'TR8 51Z', 'Toyota', 'Tacoma', '2018', 'Silver', 26500, 'RENTED', 'TRUCK', 'C', 'CHILLIWACK');
 insert into Vehicles
-    values(190997, 'TR7 50Z', 'Toyota', 'Tacoma', '2018', 'Grey', 6000, 'RENTED', 'TRUCK', 'C', 'CHILLIWACK');
+    values(190997, 'TR7 51Z', 'Toyota', 'Tacoma', '2018', 'Grey', 6000, 'RENTED', 'TRUCK', 'C', 'CHILLIWACK');
 insert into Vehicles
-    values(190996, 'TR6 50Z', 'Toyota', 'Tacoma', '2017', 'Silver', 45000, 'RENTED', 'TRUCK', 'V', 'VANCOUVER');
+    values(190996, 'TR6 51Z', 'Toyota', 'Tacoma', '2017', 'Silver', 45000, 'RENTED', 'TRUCK', 'V', 'VANCOUVER');
 insert into Vehicles
-    values(190995, 'TR5 50Z', 'Toyota', 'Tacoma', '2018', 'Silver', 25450, 'RENTED', 'TRUCK', 'V', 'VANCOUVER');
+    values(190995, 'TR5 51Z', 'Toyota', 'Tacoma', '2018', 'Silver', 25450, 'RENTED', 'TRUCK', 'V', 'VANCOUVER');
 
 
 
@@ -396,6 +396,5 @@ insert into Rentals
        'mastercard', 51812375, '2020/02/22', NULL, NULL, NULL, NULL, NULL);
 --Returns for today
 insert into Rentals
-    values(0011, 'TL5 50Z', 'A1456BZ', SYSDATE - 5, SYSDATE, 2800,
+    values(0011, 'TR5 51Z', 'A1456BZ', SYSDATE - 5, SYSDATE, 2800,
        'mastercard', 51812375, '2020/02/22', NULL, 3100, 'yes', 550, SYSDATE);
-

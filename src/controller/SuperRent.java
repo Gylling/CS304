@@ -66,7 +66,6 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
                 break;
             }
         }
-        System.out.println(newCustomer);
         return newCustomer;
     }
 
@@ -76,12 +75,17 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     }
 
     public void insertReservation(ReservationModel model) {
-        dbHandler.insertReservation(model);
-        System.out.println("Your confirmation number is: \t" + model.getConfNo());
-        System.out.println("Your driver´s license is: \t" + model.getdLicense());
-        System.out.println("The vehicle type is: \t" + model.getVtName());
-        System.out.println("Start date is: \t" + model.getFromDate());
-        System.out.println("End date is: \t" + model.getToDate());
+        VehiclesModel[] vehiclesModel = dbHandler.getVehiclesInfo(model.getVtName(),"", "", model.getFromDate(), model.getToDate());
+        if(vehiclesModel.length<1){
+            System.out.println("There is no vehicles available with the given vehicle type on the given dates.");
+        } else {
+            dbHandler.insertReservation(model);
+            System.out.println("Your confirmation number is: \t" + model.getConfNo());
+            System.out.println("Your driver´s license is: \t" + model.getdLicense());
+            System.out.println("The vehicle type is: \t" + model.getVtName());
+            System.out.println("Start date is: \t" + model.getFromDate());
+            System.out.println("End date is: \t" + model.getToDate());
+        }
     }
 
     public int lastConfNumber() {

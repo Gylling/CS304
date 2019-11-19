@@ -169,7 +169,6 @@ public class DatabaseConnectionHandler {
 			Statement stmt = connection.createStatement();
 
 			ResultSet rs = stmt.executeQuery("SELECT MAX(CONFNO) FROM RESERVATIONS");
-			System.out.println("Hi");
 			connection.commit();
 			if(rs.next()) {
 				res = rs.getInt("MAX(CONFNO)")+1;
