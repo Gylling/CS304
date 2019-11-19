@@ -4,10 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
-import model.BranchModel;
-import model.CustomerModel;
-import model.ReservationModel;
-import model.VehiclesModel;
+import model.*;
 
 /**
  * This class handles all database related transactions
@@ -128,22 +125,17 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
-	public ReservationModel[] getReservationInfo() {
+	public ReservationModel[] getReservationInfo(int confNo) {
 		ArrayList<ReservationModel> result = new ArrayList<ReservationModel>();
+		String query;
+		if(confNo<1)
+		    query="SELECT * FROM Reservations ORDER BY CONFNO";
+		else{
+		    query="SELECT * FROM Reservations WHERE "+confNo +" = CONFNO ORDER BY CONFNO";
+        }
 		try {
 			Statement stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM Reservations ORDER BY CONFNO");
-
-//    		// get info on ResultSet
-//    		ResultSetMetaData rsmd = rs.getMetaData();
-//
-//    		System.out.println(" ");
-//
-//    		// display column names;
-//    		for (int i = 0; i < rsmd.getColumnCount(); i++) {
-//    			// get column name and print it
-//    			System.out.printf("%-15s", rsmd.getColumnName(i + 1));
-//    		}
+			ResultSet rs = stmt.executeQuery(query);
 
 			while(rs.next()) {
 				ReservationModel model = new ReservationModel(rs.getInt("confNo"),
@@ -163,27 +155,6 @@ public class DatabaseConnectionHandler {
 		return result.toArray(new ReservationModel[result.size()]);
 	}
 
-	public int lastConfNumber(){
-		int res = -1;
-		try {
-			Statement stmt = connection.createStatement();
-
-			ResultSet rs = stmt.executeQuery("SELECT MAX(CONFNO) FROM RESERVATIONS");
-			connection.commit();
-			if(rs.next()) {
-				res = rs.getInt("MAX(CONFNO)")+1;
-			} else{
-				res=1;
-			}
-			rs.close();
-			stmt.close();
-		} catch (SQLException e) {
-			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-			rollbackConnection();
-		}
-
-		return res;
-	}
 
 	public void deleteBranch(String location, String city) {
 		try {
@@ -254,32 +225,38 @@ public class DatabaseConnectionHandler {
 		return result.toArray(new BranchModel[result.size()]);
 	}
 
-    public VehiclesModel[] getVehiclesInfo(String vtname, String location, String city, Timestamp fromDate, Timestamp toDate) {
+    public VehiclesModel[] getAvailableVehicles(String vLicense, String vtname, String location, String city, Timestamp fromDate, Timestamp toDate) {
         ArrayList<VehiclesModel> result = new ArrayList<VehiclesModel>();
 
 
         //Build the query for the vehicles, which meet the vehicletype and branch criteria.
         String query = "SELECT * FROM VEHICLES Ve";
-        Boolean checkAnd = false;
-        if(!vtname.equals("")){
-            query += " WHERE '" + vtname + "'" + " = " + "Ve.VTNAME";
+        boolean checkAnd = false;
+        if(!vLicense.equals("")){
+            query += " WHERE '" + vLicense + "'" + " = " + "Ve.VLICENSE";
             checkAnd = true;
         }
-        if(!location.equals("")){
-            if(checkAnd){
-                query += " AND " + "'" + location + "'" + " = " + "Ve.location";
-            } else {
-                query += " WHERE '" +location + "'" + " = " + "Ve.location";
+        else {
+            if (!vtname.equals("")) {
+                query += " WHERE '" + vtname + "'" + " = " + "Ve.VTNAME";
+                checkAnd = true;
             }
-            checkAnd = true;
-        }
-        if(!city.equals("")){
-            if(checkAnd){
-                query += " AND " + "'" + city + "'" + " = " + "Ve.city";
-            } else {
-                query += " WHERE '" + city + "'" + " = " + "Ve.city";
+            if (!location.equals("")) {
+                if (checkAnd) {
+                    query += " AND " + "'" + location + "'" + " = " + "Ve.location";
+                } else {
+                    query += " WHERE '" + location + "'" + " = " + "Ve.location";
+                }
+                checkAnd = true;
             }
-            checkAnd=true;
+            if (!city.equals("")) {
+                if (checkAnd) {
+                    query += " AND " + "'" + city + "'" + " = " + "Ve.city";
+                } else {
+                    query += " WHERE '" + city + "'" + " = " + "Ve.city";
+                }
+                checkAnd = true;
+            }
         }
 		//remove vehicletypes that are fullybooked in timeinterval from the table with vehicles, which meet the vehicletype and branch criteria.
 		//fullybooked means all the vehicles are rented or reserved for a given timeperiod.
@@ -297,7 +274,7 @@ public class DatabaseConnectionHandler {
 					"AND Re.fromDate < TIMESTAMP '"+toDate.toString()+"')" +
 					" OR (TIMESTAMP '"+fromDate.toString()+"' < Re.toDate " +
 					"AND Re.toDate < TIMESTAMP '"+toDate.toString()+"'))) " +
-					"= " +
+					"<=" +
 					"(SELECT COUNT(*) " +
 					"FROM reservations Rs " +
 					"WHERE Rs.VTNAME = VT.VTNAME))";
@@ -332,12 +309,6 @@ public class DatabaseConnectionHandler {
 
 		query += " ORDER BY Ve.VTNAME";
 		try {
-//			PreparedStatement ps = connection.prepareStatement(query);
-//			ps.setString(1,"'"+fromDate.toString()+"'");
-//			ps.setString(2,"'"+toDate.toString()+"'");
-//			ps.setString(3,"'"+fromDate.toString()+"'");
-//			ps.setString(4,"'"+toDate.toString()+"'");
-
 
 			Statement stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
@@ -368,7 +339,94 @@ public class DatabaseConnectionHandler {
 
         return result.toArray(new VehiclesModel[result.size()]);
     }
-	
+
+    public VehiclesModel[] getVehicles(String vLicense){
+        ArrayList<VehiclesModel> result = new ArrayList<VehiclesModel>();
+        String query;
+        if(vLicense.equals(""))
+            query="SELECT * FROM VEHICLES ORDER BY VTNAME";
+        else{
+            query="SELECT * FROM VEHICLES WHERE '"+ vLicense +"' = VLICENSE ORDER BY VTNAME";
+        }
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            System.out.println(query);
+            while(rs.next()) {
+                VehiclesModel model = new VehiclesModel(
+                        rs.getInt("vid"),
+                        rs.getString("vLicense"),
+                        rs.getString("make"),
+                        rs.getString("model"),
+                        rs.getInt("year"),
+                        rs.getString("color"),
+                        rs.getInt("odometer"),
+                        rs.getString("status"),
+                        rs.getString("vtname"),
+                        rs.getString("location"),
+                        rs.getString("city"));
+                result.add(model);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return result.toArray(new VehiclesModel[result.size()]);
+    }
+
+    public void insertRental(RentalModel model) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO RENTALS VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+            ps.setInt(1, model.getRid());
+            ps.setString(2, model.getvLicense());
+            ps.setString(3, model.getdLicense());
+            ps.setTimestamp(4, model.getFromDate());
+            ps.setTimestamp(5, model.getToDate());
+            ps.setInt(6, model.getOdometer());
+            ps.setString(7, model.getCardName());
+            ps.setInt(8, model.getCardNumber());
+            ps.setString(9, model.getExpDate());
+            ps.setInt(10, model.getConfNo());
+            ps.setInt(11, model.getrOdometer());
+            ps.setString(12, model.getrFulltank());
+            ps.setInt(13, model.getValue());
+            ps.setTimestamp(14, model.getrDate());
+
+            ps.executeUpdate();
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+    }
+
+    public int last(String col, String table){
+        int res = -1;
+        try {
+            Statement stmt = connection.createStatement();
+
+            ResultSet rs = stmt.executeQuery("SELECT MAX("+ col +") FROM "+table);
+            connection.commit();
+            if(rs.next()) {
+                res = rs.getInt("MAX("+col+")")+1;
+            } else{
+                res=1;
+            }
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+
+        return res;
+    }
+
 	public boolean login(String username, String password) {
 		try {
 			if (connection != null) {

@@ -1,8 +1,6 @@
 package delegates;
 
-import model.BranchModel;
-import model.CustomerModel;
-import model.ReservationModel;
+import model.*;
 
 import java.sql.Timestamp;
 
@@ -23,15 +21,20 @@ public interface TerminalTransactionsDelegate {
 
 	public void deleteReservation(int confNo);
 	public void insertReservation(ReservationModel model);
-	public void showReservation();
+	public ReservationModel[] showReservation(int confNo, boolean showDetails);
 	public int lastConfNumber();
 
 	public void deleteBranch(String location, String city);
 	public void insertBranch(BranchModel model);
 	public void showBranch();
 
-	public void showVehicles(String vtname, String location, String city, Timestamp fromDate, Timestamp toDate);
+	public void showAvailableVehicles(String vtname, String location, String city, Timestamp fromDate, Timestamp toDate);
 	public void showNumberVehicles(String vtname, String location, String city, Timestamp fromDate, Timestamp toDate);
-	
+	public VehiclesModel[] showVehicles(String vLicense, boolean show);
+	public boolean checkVLicense(String vLicense);
+
+	public int lastRid();
+	public void insertRental(RentalModel model);
+
 	public void terminalTransactionsFinished();
 }

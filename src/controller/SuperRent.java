@@ -4,14 +4,13 @@ package controller;
 import  database.DatabaseConnectionHandler;
 import  delegates.LoginWindowDelegate;
 import  delegates.TerminalTransactionsDelegate;
-import  model.BranchModel;
-import model.CustomerModel;
-import  model.ReservationModel;
-import  model.VehiclesModel;
+import model.*;
 import  ui.LoginWindow;
 import  ui.TerminalTransactions;
 
 import java.sql.Timestamp;
+
+import static java.sql.Types.NULL;
 
 /**
  * This is the main controller class that will orchestrate everything.
@@ -75,7 +74,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     }
 
     public void insertReservation(ReservationModel model) {
-        VehiclesModel[] vehiclesModel = dbHandler.getVehiclesInfo(model.getVtName(),"", "", model.getFromDate(), model.getToDate());
+        VehiclesModel[] vehiclesModel = dbHandler.getAvailableVehicles("",model.getVtName(),"", "", model.getFromDate(), model.getToDate());
         if(vehiclesModel.length<1){
             System.out.println("There is no vehicles available with the given vehicle type on the given dates.");
         } else {
@@ -89,7 +88,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     }
 
     public int lastConfNumber() {
-        return dbHandler.lastConfNumber();
+        return dbHandler.last("CONFNO","RESERVATIONS");
     }
 
 
@@ -99,20 +98,24 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 
 
 
-    public void showReservation() {
-        ReservationModel[] models = dbHandler.getReservationInfo();
+    public ReservationModel[] showReservation(int confNo, boolean showDetails) {
+        ReservationModel[] models = dbHandler.getReservationInfo(confNo);
 
-        for (int i = 0; i < models.length; i++) {
-            ReservationModel model = models[i];
+        if(showDetails) {
+            for (int i = 0; i < models.length; i++) {
+                ReservationModel model = models[i];
 
-            // simplified output formatting; truncation may occur
-            System.out.printf("%-20.20s", model.getConfNo());
-            System.out.printf("%-20.20s", model.getVtName());
-            System.out.printf("%-20.20s", model.getdLicense());
-            System.out.printf("%-20.20s", model.getFromDate());
-            System.out.printf("%-20.20s", model.getToDate());
-            System.out.println();
+                // simplified output formatting; truncation may occur
+                System.out.printf("%-20.20s", model.getConfNo());
+                System.out.printf("%-20.20s", model.getVtName());
+                System.out.printf("%-20.20s", model.getdLicense());
+                System.out.printf("%-20.20s", model.getFromDate());
+                System.out.printf("%-20.20s", model.getToDate());
+                System.out.println();
+            }
         }
+
+        return models;
     }
 
     /**
@@ -152,12 +155,24 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
         }
     }
     public void showNumberVehicles(String vtname, String location, String city, Timestamp fromDate, Timestamp toDate) {
-        VehiclesModel[] models = dbHandler.getVehiclesInfo(vtname, location, city, fromDate, toDate);
+        VehiclesModel[] models = dbHandler.getAvailableVehicles("",vtname, location, city, fromDate, toDate);
         System.out.println("Number of cars avaiable:\t"+models.length);
 
     }
-    public void showVehicles(String vtname, String location, String city, Timestamp fromDate, Timestamp toDate) {
-        VehiclesModel[] models = dbHandler.getVehiclesInfo(vtname, location, city, fromDate, toDate);
+    public void showAvailableVehicles(String vtname, String location, String city, Timestamp fromDate, Timestamp toDate) {
+        VehiclesModel[] models = dbHandler.getAvailableVehicles("",vtname, location, city, fromDate, toDate);
+        printVehicles(models);
+    }
+
+    public VehiclesModel[] showVehicles(String vLicense, boolean show) {
+        VehiclesModel[] models = dbHandler.getVehicles(vLicense);
+        if(show) {
+            printVehicles(models);
+        }
+        return models;
+    }
+
+    private void printVehicles(VehiclesModel[] models){
         System.out.println("Details:");
 
         for (int i = 0; i < models.length; i++) {
@@ -176,6 +191,45 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
             System.out.printf("%-10.10s", model.getLocation());
             System.out.printf("%-15.15s", model.getCity());
             System.out.println();
+        }
+    }
+    //Check if there is a vehicle with the vehicle license
+    public boolean checkVLicense(String vLicense){
+        VehiclesModel[] models = dbHandler.getVehicles(vLicense);
+        boolean check = false;
+        for (VehiclesModel a: models) {
+            if(a.getvLicense().equals(vLicense)){
+                check = true;
+                break;
+            }
+        }
+        return check;
+    }
+
+
+    //Get´s the highest rentalID
+    public int lastRid() {
+        return dbHandler.last("RID","RENTALS");
+    }
+
+    //Inserts the new rental
+    public void insertRental(RentalModel model){
+        VehiclesModel[] vehiclesModel = dbHandler.getAvailableVehicles(model.getvLicense(),"", "", "", model.getFromDate(), model.getToDate());
+        if(vehiclesModel.length<1){
+            System.out.println("There is no vehicles available with the given vehicle license on the given dates.");
+        } else {
+            dbHandler.insertRental(model);
+            System.out.println("Your rental number is: \t" + model.getRid());
+            System.out.println("The vehicle license is: \t" + model.getvLicense());
+            System.out.println("Your driver´s license is: \t" + model.getdLicense());
+            System.out.println("Start date is: \t" + model.getFromDate());
+            System.out.println("End date is: \t" + model.getToDate());
+            System.out.println("Odometer is: \t" + model.getOdometer());
+            System.out.println("Card name is: \t" + model.getCardName());
+            System.out.println("Card number is: \t" + model.getCardNumber());
+            if(model.getConfNo()!=NULL) {
+                System.out.println("Confirmation number is: \t" + model.getConfNo());
+            }
         }
     }
 
