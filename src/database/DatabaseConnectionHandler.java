@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import model.BranchModel;
+import model.CustomerModel;
 import model.ReservationModel;
 import model.VehiclesModel;
 
@@ -38,6 +39,57 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
+	public void insertCustomer(CustomerModel model) {
+		try {
+			PreparedStatement ps = connection.prepareStatement("INSERT INTO Customers VALUES (?,?,?)");
+			ps.setString(1, model.getdLicense());
+			ps.setString(2, model.getName());
+			ps.setString(3, model.getdLicense());
+
+			ps.executeUpdate();
+			connection.commit();
+
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+	}
+
+	public CustomerModel[] getCustomerInfo() {
+		ArrayList<CustomerModel> result = new ArrayList<CustomerModel>();
+		try {
+			Statement stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Customers");
+
+//    		// get info on ResultSet
+//    		ResultSetMetaData rsmd = rs.getMetaData();
+//
+//    		System.out.println(" ");
+//
+//    		// display column names;
+//    		for (int i = 0; i < rsmd.getColumnCount(); i++) {
+//    			// get column name and print it
+//    			System.out.printf("%-15s", rsmd.getColumnName(i + 1));
+//    		}
+
+			while(rs.next()) {
+				CustomerModel model = new CustomerModel(
+						rs.getString("dLicense"),
+						rs.getString("name"),
+						rs.getString("address"));
+				result.add(model);
+			}
+
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+
+		return result.toArray(new CustomerModel[result.size()]);
+	}
+
 	public void deleteReservation(int confNo) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("DELETE FROM Reservations WHERE confNo = ?");
@@ -59,7 +111,7 @@ public class DatabaseConnectionHandler {
 
 	public void insertReservation(ReservationModel model) {
 		try {
-			PreparedStatement ps = connection.prepareStatement("INSERT INTO Reservation VALUES (?,?,?,?,?)");
+			PreparedStatement ps = connection.prepareStatement("INSERT INTO Reservations VALUES (?,?,?,?,?)");
 			ps.setInt(1, model.getConfNo());
 			ps.setString(2, model.getVtName());
 			ps.setString(3, model.getdLicense());
@@ -80,7 +132,7 @@ public class DatabaseConnectionHandler {
 		ArrayList<ReservationModel> result = new ArrayList<ReservationModel>();
 		try {
 			Statement stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM Reservations");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Reservations ORDER BY CONFNO");
 
 //    		// get info on ResultSet
 //    		ResultSetMetaData rsmd = rs.getMetaData();
@@ -111,6 +163,28 @@ public class DatabaseConnectionHandler {
 		return result.toArray(new ReservationModel[result.size()]);
 	}
 
+	public int lastConfNumber(){
+		int res = -1;
+		try {
+			Statement stmt = connection.createStatement();
+
+			ResultSet rs = stmt.executeQuery("SELECT MAX(CONFNO) FROM RESERVATIONS");
+			System.out.println("Hi");
+			connection.commit();
+			if(rs.next()) {
+				res = rs.getInt("MAX(CONFNO)")+1;
+			} else{
+				res=1;
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+
+		return res;
+	}
 
 	public void deleteBranch(String location, String city) {
 		try {
@@ -249,23 +323,15 @@ public class DatabaseConnectionHandler {
 		}
 
         //remove vehicles that are rented in timeinterval from the table with vehicles, which meet the vehicletype and branch criteria
-		if(checkAnd){
-			query += " AND Ve.VLICENSE NOT IN " +
-					"(SELECT R.VLICENSE " +
-					"FROM rentals R " +
-					"WHERE (TIMESTAMP '"+fromDate.toString()+"' < R.fromDate " +
-					"AND R.fromDate < TIMESTAMP '"+toDate.toString()+"') " +
-					"OR (TIMESTAMP '"+fromDate.toString()+"' < R.toDate " +
-					"AND R.toDate < TIMESTAMP '"+toDate.toString()+"'))";
-		} else {
-			query += " WHERE Ve.VLICENSE NOT IN " +
-					"(SELECT R.VLICENSE " +
-					"FROM rentals R " +
-					"WHERE (TIMESTAMP '"+fromDate.toString()+"' < R.fromDate " +
-					"AND R.fromDate < TIMESTAMP '"+toDate.toString()+"') " +
-					"OR (TIMESTAMP '"+fromDate.toString()+"' < R.toDate " +
-					"AND R.toDate < TIMESTAMP '"+toDate.toString()+"'))";
-		}
+		query += " AND Ve.VLICENSE NOT IN " +
+				"(SELECT R.VLICENSE " +
+				"FROM rentals R " +
+				"WHERE (TIMESTAMP '"+fromDate.toString()+"' < R.fromDate " +
+				"AND R.fromDate < TIMESTAMP '"+toDate.toString()+"') " +
+				"OR (TIMESTAMP '"+fromDate.toString()+"' < R.toDate " +
+				"AND R.toDate < TIMESTAMP '"+toDate.toString()+"'))";
+
+		query += " ORDER BY Ve.VTNAME";
 		try {
 //			PreparedStatement ps = connection.prepareStatement(query);
 //			ps.setString(1,"'"+fromDate.toString()+"'");
