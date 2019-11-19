@@ -3,12 +3,11 @@ package ui;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.time.Year;
 
 import delegates.TerminalTransactionsDelegate;
 import model.BranchModel;
+import model.CustomerModel;
 import model.ReservationModel;
 
 /**
@@ -161,7 +160,7 @@ public class TerminalTransactions {
 		String city = null;
 		String location = null;
 
-		while (location == null || city == null || location.length() <= 0 || city.length() <= 0) {
+		while (location == null  || city == null || location.length() <= 0 || city.length() <= 0) {
 			System.out.println("Please enter the location of the branch you wish to delete: ");
 			location = readLine().trim();
             System.out.println("Please enter the city of the branch you wish to delete: ");
@@ -170,6 +169,23 @@ public class TerminalTransactions {
 				delegate.deleteBranch(location, city);
 			}
 		}
+	}
+
+	private void newCustomer(String dLicense){
+		String name=null;
+		while (name == null || name.length() <= 0) {
+			System.out.println("You´re a new customer please write your name:");
+			name = readLine().trim().toUpperCase();
+		}
+
+		String address=null;
+		while (address == null || address.length() <= 0) {
+			System.out.println("Please write your address:");
+			address = readLine().trim().toUpperCase();
+		}
+
+		CustomerModel model = new CustomerModel(dLicense,name,address);
+		delegate.insertCustomer(model);
 	}
 
 	private void reservationDeleteOption() {
@@ -184,11 +200,16 @@ public class TerminalTransactions {
 	}
 
 	private void reservationInsertOption() {
-		int confNo = INVALID_INPUT;
-		while (confNo == INVALID_INPUT) {
-			System.out.println("Please enter the confirmation number you wish to insert: ");
-			confNo = readInteger(false);
+		String dLicense = null;
+		while (dLicense == null || dLicense.length() <= 0) {
+			System.out.println("Please enter your driver´s license: ");
+			dLicense = readLine().trim();
 		}
+		if(delegate.checkCustomer(dLicense)){
+			newCustomer(dLicense);
+		}
+
+		int confNo = delegate.lastConfNumber();
 
 		String vtName = null;
 		while (vtName == null || vtName.length() <= 0) {
@@ -196,45 +217,18 @@ public class TerminalTransactions {
 			vtName = readLine().trim();
 		}
 
-		String dLicense = null;
-		while (dLicense == null || dLicense.length() <= 0) {
-			System.out.println("Please enter the driver´s license you wish to insert: ");
-			dLicense = readLine().trim();
-		}
 
-		Timestamp fromDate = null;
-		while (fromDate == null) {
-			System.out.println("Please enter the start date you wish to insert: ");
-			System.out.println("Year: YYYY");
-			String year = readLine().trim();
-			System.out.println("Month: MM");
-			String month = readLine().trim();
-			System.out.println("Day: DD");
-			String day = readLine().trim();;
-			System.out.println("Hour: HH");
-			String hour = readLine().trim();
-			System.out.println("Minute: MM");
-			String minute = readLine().trim();
-
-			fromDate = Timestamp.valueOf(year+"-"+month+"-"+day+" "+hour+":"+minute+":00");
+		Timestamp fromDate =null;
+		while (fromDate == null || fromDate.before(new Timestamp(System.currentTimeMillis()+24*60*60*1000))){
+			System.out.println("Please enter the start date you wish to insert (The start day has to be at least 24 from now):");
+			fromDate = createFromDate();
 		}
 
 
-		Timestamp toDate = null;
-		while (toDate == null) {
-			System.out.println("Please enter the end date you wish to insert: ");
-			System.out.println("Year: YYYY");
-			String year = readLine().trim();
-			System.out.println("Month: MM");
-			String month = readLine().trim();
-			System.out.println("Day: DD");
-			String day = readLine().trim();;
-			System.out.println("Hour: HH");
-			String hour = readLine().trim();
-			System.out.println("Minute: MM");
-			String minute = readLine().trim();
-
-			toDate = Timestamp.valueOf(year+"-"+month+"-"+day+" "+hour+":"+minute+":00");
+		Timestamp toDate =null;
+		while (toDate == null || toDate.before(new Timestamp(fromDate.getTime()+24*60*60*1000))){
+			System.out.println("Please enter the end date (A reservation has to be at least 24 hours):");
+			toDate = createToDate();
 		}
 
 
@@ -277,66 +271,21 @@ public class TerminalTransactions {
         String city = readLine().trim();
 
         System.out.println("Please enter the start date you wish to search for (Press enter for all dates): ");
-		System.out.println("Year: YYYY");
-		String year = readLine().trim();
-		if(year.equals("")){
-			year="1970";
-		}
-		System.out.println("Month: MM");
-		String month = readLine().trim();
-		if(month.equals("")){
-			month="01";
-		}
-		System.out.println("Day: DD");
-		String day = readLine().trim();
-		if(day.equals("")){
-			day="01";
-		}
-		System.out.println("Hour: HH");
-		String hour = readLine().trim();
-		if(hour.equals("")){
-			hour="00";
-		}
-		System.out.println("Minute: MM");
-		String minute = readLine().trim();
-		if(minute.equals("")){
-			minute="01";
-		}
-
-		Timestamp fromDate = Timestamp.valueOf(year+"-"+month+"-"+day+" "+hour+":"+minute+":00");
+		Timestamp fromDate = createFromDate();
 
         System.out.println("Please enter the end date you wish to search for (Press enter for all dates): ");
-		System.out.println("Year: YYYY");
-		year = readLine().trim();
-		if(year.equals("")){
-			year="2200";
-		}
-		System.out.println("Month: MM");
-		month = readLine().trim();
-		if(month.equals("")){
-			month="12";
-		}
-		System.out.println("Day: DD");
-		day = readLine().trim();
-		if(day.equals("")){
-			day="31";
-		}
-		System.out.println("Hour: HH");
-		hour = readLine().trim();
-		if(hour.equals("")){
-			hour="23";
-		}
-		System.out.println("Minute: MM");
-		minute = readLine().trim();
-		if(minute.equals("")){
-			minute="59";
-		}
+		Timestamp toDate = createToDate();
 
-		Timestamp toDate = Timestamp.valueOf(year+"-"+month+"-"+day+" "+hour+":"+minute+":00");
-
-        delegate.showVehicles(vtName, location, city, fromDate, toDate);
-
-
+        delegate.showNumberVehicles(vtName, location, city, fromDate, toDate);
+        String command = "";
+		while(!command.equals("SHOW") && !command.equals("EXIT")) {
+			System.out.println("Enter \"Show\" to show details of the cars.");
+			System.out.println("Enter \"Exit\" to exit search.");
+			command=readLine().trim().toUpperCase();
+			if (command.equals("SHOW")) {
+				delegate.showVehicles(vtName, location, city, fromDate, toDate);
+			}
+		}
     }
 
 	private void handleQuitOption() {
@@ -380,5 +329,74 @@ public class TerminalTransactions {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
 		return result;
+	}
+
+	private Timestamp createFromDate(){
+		System.out.println("Year: YYYY");
+		String year = readLine().trim().toUpperCase();
+		if(year.equals("")){
+			year="1970";
+		}
+		System.out.println("Month: MM");
+		String month = readLine().trim().toUpperCase();
+		if(month.equals("")){
+			month="01";
+		}
+		System.out.println("Day: DD");
+		String day = readLine().trim().toUpperCase();
+		if(day.equals("")){
+			day="01";
+		}
+		System.out.println("Hour: HH");
+		String hour = readLine().trim().toUpperCase();
+		if(hour.equals("")){
+			hour="00";
+		}
+		System.out.println("Minute: MM");
+		String minute = readLine().trim().toUpperCase();
+		if(minute.equals("")){
+			minute="01";
+		}
+
+		Timestamp fromDate = Timestamp.valueOf(year+"-"+month+"-"+day+" "+hour+":"+minute+":00");
+
+		if(fromDate.before(new Timestamp(System.currentTimeMillis()))){
+			fromDate= new Timestamp(System.currentTimeMillis());
+		}
+		return fromDate;
+	}
+
+	private Timestamp createToDate(){
+		System.out.println("Year: YYYY");
+		String year = readLine().trim().toUpperCase();
+		if(year.equals("")){
+			year="2200";
+		}
+		System.out.println("Month: MM");
+		String month = readLine().trim().toUpperCase();
+		if(month.equals("")){
+			month="12";
+		}
+		System.out.println("Day: DD");
+		String day = readLine().trim().toUpperCase();
+		if(day.equals("")){
+			day="31";
+		}
+		System.out.println("Hour: HH");
+		String hour = readLine().trim().toUpperCase();
+		if(hour.equals("")){
+			hour="23";
+		}
+		System.out.println("Minute: MM");
+		String minute = readLine().trim().toUpperCase();
+		if(minute.equals("")){
+			minute="59";
+		}
+		Timestamp toDate = Timestamp.valueOf(year+"-"+month+"-"+day+" "+hour+":"+minute+":00");
+
+		if(toDate.before(new Timestamp(System.currentTimeMillis()))){
+			toDate= new Timestamp(System.currentTimeMillis());
+		}
+		return toDate;
 	}
 }

@@ -5,6 +5,7 @@ import  database.DatabaseConnectionHandler;
 import  delegates.LoginWindowDelegate;
 import  delegates.TerminalTransactionsDelegate;
 import  model.BranchModel;
+import model.CustomerModel;
 import  model.ReservationModel;
 import  model.VehiclesModel;
 import  ui.LoginWindow;
@@ -55,30 +56,45 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
         }
     }
 
-    /**
-     * TermainalTransactionsDelegate Implementation
-     *
-     * Insert a branch with the given info
-     */
-    public void insertReservation(ReservationModel model) {
-        dbHandler.insertReservation(model);
+    //Check if customer is a new customer
+    public boolean checkCustomer(String dLicense){
+        boolean newCustomer = true;
+        CustomerModel[] models = dbHandler.getCustomerInfo();
+        for (CustomerModel a: models) {
+            if(a.getdLicense().equals(dLicense)){
+                newCustomer = false;
+                break;
+            }
+        }
+        System.out.println(newCustomer);
+        return newCustomer;
     }
 
-    /**
-     * TermainalTransactionsDelegate Implementation
-     *
-     * Delete branch with given branch ID.
-     */
+    //Insert new customer
+    public void insertCustomer(CustomerModel model){
+        dbHandler.insertCustomer(model);
+    }
+
+    public void insertReservation(ReservationModel model) {
+        dbHandler.insertReservation(model);
+        System.out.println("Your confirmation number is: \t" + model.getConfNo());
+        System.out.println("Your driver´s license is: \t" + model.getdLicense());
+        System.out.println("The vehicle type is: \t" + model.getVtName());
+        System.out.println("Start date is: \t" + model.getFromDate());
+        System.out.println("End date is: \t" + model.getToDate());
+    }
+
+    public int lastConfNumber() {
+        return dbHandler.lastConfNumber();
+    }
+
+
     public void deleteReservation(int confNo) {
         dbHandler.deleteReservation(confNo);
     }
 
 
-    /**
-     * TermainalTransactionsDelegate Implementation
-     *
-     * Displays information about varies SuperRent branches.
-     */
+
     public void showReservation() {
         ReservationModel[] models = dbHandler.getReservationInfo();
 
@@ -131,10 +147,15 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
             System.out.println();
         }
     }
+    public void showNumberVehicles(String vtname, String location, String city, Timestamp fromDate, Timestamp toDate) {
+        VehiclesModel[] models = dbHandler.getVehiclesInfo(vtname, location, city, fromDate, toDate);
+        System.out.println("Number of cars avaiable:\t"+models.length);
 
+    }
     public void showVehicles(String vtname, String location, String city, Timestamp fromDate, Timestamp toDate) {
         VehiclesModel[] models = dbHandler.getVehiclesInfo(vtname, location, city, fromDate, toDate);
-        System.out.println(models.length);
+        System.out.println("Details:");
+
         for (int i = 0; i < models.length; i++) {
             VehiclesModel model = models[i];
 
