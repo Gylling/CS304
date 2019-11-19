@@ -85,6 +85,7 @@ CREATE TABLE Rentals(
     rOdometer INTEGER,
     rFullTank VARCHAR(20),
     value INTEGER,
+    rDate TIMESTAMP,
     PRIMARY KEY (rid),
     FOREIGN KEY (dLicense) REFERENCES Customers (dLicense) ON DELETE CASCADE,
     FOREIGN KEY (vLicense) REFERENCES Vehicles (vLicense) ON DELETE CASCADE,
@@ -140,20 +141,29 @@ insert into Customers
    values('J9456GH','Lauren Taylor', '1294 150th Street, Abbotsford');
 
 -- VehicleTypes
+-- vtname VARCHAR(20),
+--     features VARCHAR(20),
+--     wrate INTEGER,
+--     drate INTEGER,
+--     hrate INTEGER,
+--     wirate INTEGER,
+--     dirate INTEGER,
+--     hirate INTEGER,
+--     krate INTEGER,
 insert into VehicleTypes
-   values('Economy', 'No Heated-seats', 750, 160, 10, 50, 10, 1, 1);
+   values('Economy', 'No Heated-seats', 300, 50, 4, 50, 10, 1, 1);
 insert into VehicleTypes
-   values('Compact', 'Heated-seats', 750, 160, 8, 50, 10, 1, 1);
+   values('Compact', 'Heated-seats', 350, 60, 4, 50, 10, 1, 1);
 insert into VehicleTypes
-   values('Standard', 'Heated-seats', 780, 165, 8, 50, 10, 1, 1);
+   values('Standard', 'Heated-seats', 400, 65, 4, 50, 10, 1, 1);
 insert into VehicleTypes
-   values('Mid-size', 'Heated-seats', 800, 165, 8, 50, 10, 1, 1);
+   values('Mid-size', 'Heated-seats', 420, 70, 4, 50, 10, 1, 1);
 insert into VehicleTypes
-   values('Full-size', 'Heated-seats', 875, 175, 10, 50, 10, 1, 1);
+   values('Full-size', 'Heated-seats', 450, 80, 6, 50, 10, 1, 1);
 insert into VehicleTypes
-   values('SUV', 'Heated-seats', 950, 180, 12, 55, 12, 1, 2);
+   values('SUV', 'Heated-seats', 500, 85, 10, 60, 10, 1, 2);
 insert into VehicleTypes
-   values('Truck', 'Heated-seats', 980, 185, 12, 60, 14, 1, 2);
+   values('Truck', 'Heated-seats', 580, 100, 10, 60, 10, 1, 2);
 
 --Reservations
 insert into Reservations
@@ -182,184 +192,210 @@ insert into Reservations
 -- Branch
   insert into Branch values('A', 'Abbotsford' );
   insert into Branch values('C', 'Chilliwack' );
-  insert into Branch values('N', 'North Vancouver' );
-  insert into Branch values('W', 'West Vancouver' );
   insert into Branch values('V', 'Vancouver' );
 
 
  -- Vehicles
  --Economy
  insert into Vehicles
-     values(228975, 'AG3 45H', 'Toyota', 'Prius', '2019', 'Silver', 3000, 'Available', 'Economy', 'A', 'Abbotsford');
+     values(228975, 'AG3 45H', 'Toyota', 'Prius', '2019', 'Silver', 3000, 'AVAILABLE', 'ECONOMY', 'A', 'ABBOTSFORD');
  insert into Vehicles
-     values(328975, 'BF3 43H', 'Toyota', 'Prius', '2018', 'Blue', 3090, 'Available', 'Economy', 'A', 'Abbotsford');
+     values(328975, 'BF3 43H', 'Toyota', 'Prius', '2018', 'Blue', 3090, 'AVAILABLE', 'ECONOMY', 'A', 'ABBOTSFORD');
  insert into Vehicles
-     values(228975, 'JG9 69Z', 'Hyundai', 'Kona', '2018', 'Silver', 4500, 'Available', 'Economy', 'C', 'Chilliwack');
+     values(228975, 'JG9 69Z', 'Hyundai', 'Kona', '2018', 'Silver', 4500, 'AVAILABLE', 'ECONOMY', 'C', 'CHILLIWACK');
  insert into Vehicles
-     values(228975, 'TG3 95H', 'Chevrolet', 'Bolt', '2018', 'Grey', 5000, 'Available', 'Economy', 'C', 'Chilliwack');
+     values(228975, 'TG3 95H', 'Chevrolet', 'Bolt', '2018', 'Grey', 5000, 'AVAILABLE', 'ECONOMY', 'C', 'CHILLIWACK');
  insert into Vehicles
-     values(391452, 'XG3 42H', 'Ford', 'Focus', '2017', 'Silver', 10000, 'Rented', 'Economy', 'V', 'Vancouver');
+     values(391452, 'XG3 42H', 'Ford', 'Focus', '2017', 'Silver', 10000, 'AVAILABLE', 'ECONOMY', 'V', 'VANCOUVER');
  insert into Vehicles
-     values(491452, 'HG9 42H', 'Ford', 'Focus', '2018', 'Silver', 10000, 'Rented', 'Economy', 'V', 'Vancouver');
- insert into Vehicles
-     values(289345, 'YU6 89K', 'Hyundai', 'Kona', '2016', 'Red', 20200, 'Available', 'Economy', 'N', 'North Vancouver');
- insert into Vehicles
-     values(283333, 'GU6 29K', 'Toyota', 'Prius', '2017', 'Black', 10200, 'Rented', 'Economy', 'N', 'North Vancouver');
- insert into Vehicles
-     values(493333, 'YT6 22G', 'Toyota', 'Prius', '2018', 'Black', 9200, 'Avaiable', 'Economy', 'W', 'West Vancouver');
- insert into Vehicles
-     values(433339, 'GH6 52G', 'Hyundai', 'Kona', '2018', 'Black', 7500, 'Rented', 'Economy', 'W', 'West Vancouver');
+     values(491452, 'HG9 42H', 'Ford', 'Focus', '2018', 'Silver', 10000, 'AVAILABLE', 'ECONOMY', 'V', 'VANCOUVER');
+insert into Vehicles
+    values(128975, 'AG3 45R', 'Toyota', 'Prius', '2019', 'Silver', 2000, 'RENTED', 'ECONOMY', 'A', 'ABBOTSFORD');
+insert into Vehicles
+    values(128975, 'BF3 43R', 'Toyota', 'Prius', '2018', 'Blue', 3190, 'RENTED', 'ECONOMY', 'A', 'ABBOTSFORD');
+insert into Vehicles
+    values(128975, 'JG9 69R', 'Hyundai', 'Kona', '2018', 'Silver', 4200, 'RENTED', 'ECONOMY', 'C', 'CHILLIWACK');
+insert into Vehicles
+    values(128975, 'TG3 95R', 'Chevrolet', 'Bolt', '2018', 'Grey', 4000, 'RENTED', 'ECONOMY', 'C', 'CHILLIWACK');
+insert into Vehicles
+    values(191452, 'XG3 42R', 'Ford', 'Focus', '2017', 'Silver', 20000, 'RENTED', 'ECONOMY', 'V', 'VANCOUVER');
+insert into Vehicles
+    values(191452, 'HG9 42R', 'Ford', 'Focus', '2018', 'Silver', 14000, 'RENTED', 'ECONOMY', 'V', 'VANCOUVER');
+
+
  -- Compact
  insert into Vehicles
-     values(848975, 'GH9 45H', 'Toyota', 'Carolla', '2019', 'Silver', 4000, 'Rented', 'Compact', 'A', 'Abbotsford');
+     values(848975, 'GH9 45H', 'Toyota', 'Carolla', '2019', 'Silver', 4000, 'AVAILABLE', 'COMPACT', 'A', 'ABBOTSFORD');
  insert into Vehicles
-     values(938275, 'PH9 43H', 'Honda', 'Civic', '2018', 'Blue', 9820, 'Available', 'Compact', 'A', 'Abbotsford');
+     values(938275, 'PH9 43H', 'Honda', 'Civic', '2018', 'Blue', 9820, 'AVAILABLE', 'COMPACT', 'A', 'ABBOTSFORD');
  insert into Vehicles
-     values(283941, 'JG9 89R', 'Honda', 'Civic', '2018', 'Silver', 2500, 'Available', 'Compact', 'C', 'Chilliwack');
+     values(283941, 'JG9 89R', 'Honda', 'Civic', '2018', 'Silver', 2500, 'AVAILABLE', 'COMPACT', 'C', 'CHILLIWACK');
  insert into Vehicles
-     values(293975, 'TG3 69P', 'Kia', 'Soul', '2018', 'Grey', 4500, 'Available', 'Compact', 'C', 'Chilliwack');
+     values(293975, 'TG3 69P', 'Kia', 'Soul', '2018', 'Grey', 4500, 'AVAILABLE', 'COMPACT', 'C', 'CHILLIWACK');
  insert into Vehicles
-     values(991562, 'TG3 45H', 'Kia', 'Soul', '2017', 'Silver', 23000, 'Rented', 'Compact', 'V', 'Vancouver');
+     values(991562, 'TG3 45H', 'Kia', 'Soul', '2017', 'Silver', 23000, 'AVAILABLE', 'COMPACT', 'V', 'VANCOUVER');
  insert into Vehicles
-     values(491442, 'HQ9 43H', 'Hyundai', 'Elantra', '2018', 'Silver', 30450, 'Avaiable', 'Compact', 'V', 'Vancouver');
+     values(491442, 'HQ9 43H', 'Hyundai', 'Elantra', '2018', 'Silver', 30450, 'AVAILABLE', 'COMPACT', 'V', 'VANCOUVER');
+
+insert into Vehicles
+    values(148975, 'GH9 45R', 'Toyota', 'Carolla', '2019', 'Silver', 4000, 'RENTED', 'COMPACT', 'A', 'ABBOTSFORD');
+insert into Vehicles
+    values(138275, 'PH9 43R', 'Honda', 'Civic', '2018', 'Blue', 9820, 'RENTED', 'COMPACT', 'A', 'ABBOTSFORD');
+insert into Vehicles
+    values(183941, 'JG9 8RR', 'Honda', 'Civic', '2018', 'Silver', 2500, 'RENTED', 'COMPACT', 'C', 'CHILLIWACK');
+insert into Vehicles
+    values(193975, 'TG3 69R', 'Kia', 'Soul', '2018', 'Grey', 4500, 'RENTED', 'COMPACT', 'C', 'CHILLIWACK');
+insert into Vehicles
+    values(191562, 'TG3 45R', 'Kia', 'Soul', '2017', 'Silver', 23000, 'RENTED', 'COMPACT', 'V', 'VANCOUVER');
+insert into Vehicles
+    values(191442, 'HQ9 43R', 'Hyundai', 'Elantra', '2018', 'Silver', 30450, 'RENTED', 'COMPACT', 'V', 'VANCOUVER');
+
+--Mid-Size
+insert into Vehicles
+    values(998000, 'LD1 33J', 'Hyundai', 'Sonata', '2019', 'Silver', 4100, 'AVAILABLE', 'MID-SIZE', 'A', 'ABBOTSFORD');
+insert into Vehicles
+    values(990009, 'LL9 22I', 'Hyundai', 'Sonata', '2018', 'Blue', 5820, 'AVAILABLE', 'MID-SIZE', 'A', 'ABBOTSFORD');
+insert into Vehicles
+    values(990008, 'LL8 99H', 'Hyundai', 'Sonata', '2018', 'Silver', 22500, 'AVAILABLE', 'MID-SIZE', 'C', 'CHILLIWACK');
+insert into Vehicles
+    values(990007, 'LL7 69G', 'Hyundai', 'Sonata', '2018', 'Grey', 9000, 'AVAILABLE', 'MID-SIZE', 'C', 'CHILLIWACK');
+insert into Vehicles
+    values(990006, 'LL6 45F', 'Hyundai', 'Sonata', '2017', 'Silver', 35000, 'AVAILABLE', 'MID-SIZE', 'V', 'VANCOUVER');
+insert into Vehicles
+    values(990005, 'LL5 43E', 'Hyundai', 'Sonata', '2018', 'Silver', 23450, 'AVAILABLE', 'MID-SIZE', 'V', 'VANCOUVER');
+
+insert into Vehicles
+    values(198000, 'RD1 33J', 'Hyundai', 'Sonata', '2019', 'Silver', 4100, 'RENTED', 'MID-SIZE', 'A', 'ABBOTSFORD');
+insert into Vehicles
+    values(190009, 'RL9 22I', 'Hyundai', 'Sonata', '2018', 'Blue', 5820, 'RENTED', 'MID-SIZE', 'A', 'ABBOTSFORD');
+insert into Vehicles
+    values(190008, 'RL8 99H', 'Hyundai', 'Sonata', '2018', 'Silver', 22500, 'RENTED', 'MID-SIZE', 'C', 'CHILLIWACK');
+insert into Vehicles
+    values(190007, 'RL7 69G', 'Hyundai', 'Sonata', '2018', 'Grey', 9000, 'RENTED', 'MID-SIZE', 'C', 'CHILLIWACK');
+insert into Vehicles
+    values(190006, 'RL6 45F', 'Hyundai', 'Sonata', '2017', 'Silver', 35000, 'RENTED', 'MID-SIZE', 'V', 'VANCOUVER');
+insert into Vehicles
+    values(190005, 'RL5 43E', 'Hyundai', 'Sonata', '2018', 'Silver', 23450, 'RENTED', 'MID-SIZE', 'V', 'VANCOUVER');
+
+-- Standard
  insert into Vehicles
-     values(224345, 'AA9 89K', 'Honda', 'Civic', '2016', 'Red', 51200, 'Available', 'Compact', 'N', 'North Vancouver');
+     values(998235, 'GG3 33J', 'Mazda', '3', '2019', 'Silver', 4100, 'AVAILABLE', 'STANDARD', 'A', 'ABBOTSFORD');
  insert into Vehicles
-     values(999333, 'AP3 49K', 'Toyota', 'Carolla', '2017', 'Black', 19200, 'Available', 'Compact', 'N', 'North Vancouver');
+     values(900009, 'GG9 22I', 'Mazda', '3', '2018', 'Blue', 5820, 'AVAILABLE', 'STANDARD', 'A', 'ABBOTSFORD');
  insert into Vehicles
-     values(493443, 'XT6 45G', 'Toyota', 'Carolla', '2018', 'Black', 23200, 'Avaiable', 'Compact', 'W', 'West Vancouver');
+     values(900008, 'XX1 99H', 'Mazda', '3', '2018', 'Silver', 22500, 'AVAILABLE', 'STANDARD', 'C', 'CHILLIWACK');
  insert into Vehicles
-     values(434449, 'XX6 69X', 'Hyundai', 'Elantra', '2018', 'Black', 10200, 'Available', 'Compact', 'W', 'West Vancouver');
- -- Mid-Size
+     values(900007, 'XX2 69G', 'Mazda', '3', '2018', 'Grey', 9000, 'AVAILABLE', 'STANDARD', 'C', 'CHILLIWACK');
  insert into Vehicles
-     values(798975, 'GG3 33H', 'Ford', 'Fusion', '2019', 'Silver', 4500, 'Available', 'Mid-size', 'A', 'Abbotsford');
+     values(900006, 'RR3 45F', 'Mazda', '3', '2017', 'Silver', 35000, 'AVAILABLE', 'STANDARD', 'V', 'VANCOUVER');
  insert into Vehicles
-     values(298275, 'GG9 22H', 'Subaru', 'Legacy', '2018', 'Blue', 3820, 'Rented', 'Mid-size', 'A', 'Abbotsford');
- insert into Vehicles
-     values(286941, 'XX1 99P', 'Subaru', 'Legacy', '2018', 'Silver', 12500, 'Rented', 'Mid-size', 'C', 'Chilliwack');
- insert into Vehicles
-     values(293435, 'XX2 69P', 'Kia', 'Optima', '2018', 'Grey', 9500, 'Available', 'Mid-size', 'C', 'Chilliwack');
- insert into Vehicles
-     values(694201, 'RR3 45H', 'Kia', 'Optima', '2017', 'Silver', 45000, 'Avaiable', 'Mid-size', 'V', 'Vancouver');
- insert into Vehicles
-     values(491420, 'FF9 43H', 'Nissan', 'Altima', '2018', 'Silver', 22450, 'Available', 'Mid-size', 'V', 'Vancouver');
- insert into Vehicles
-     values(224669, 'GG9 89K', 'Subaru', 'Legacy', '2016', 'Red', 66000, 'Available', 'Mid-size', 'N', 'North Vancouver');
- insert into Vehicles
-     values(929223, 'DD3 49K', 'Ford', 'Fusion', '2017', 'Black', 15200, 'Available', 'Mid-size', 'N', 'North Vancouver');
- insert into Vehicles
-     values(493223, 'QQ6 45G', 'Ford', 'Fusion', '2018', 'Black', 40200, 'Avaiable', 'Mid-size', 'W', 'West Vancouver');
- insert into Vehicles
-     values(432229, 'TT6 69X', 'Nissan', 'Altima', '2018', 'Black', 19200, 'Rented', 'Mid-size', 'W', 'West Vancouver');
- -- Standard
- insert into Vehicles
-     values(998235, 'GG3 33J', 'Mazda', '3', '2019', 'Silver', 4100, 'Available', 'Standard', 'A', 'Abbotsford');
- insert into Vehicles
-     values(900009, 'GG9 22I', 'Mazda', '3', '2018', 'Blue', 5820, 'Available', 'Standard', 'A', 'Abbotsford');
- insert into Vehicles
-     values(900008, 'XX1 99H', 'Mazda', '3', '2018', 'Silver', 22500, 'Rented', 'Standard', 'C', 'Chilliwack');
- insert into Vehicles
-     values(900007, 'XX2 69G', 'Mazda', '3', '2018', 'Grey', 9000, 'Available', 'Standard', 'C', 'Chilliwack');
- insert into Vehicles
-     values(900006, 'RR3 45F', 'Mazda', '3', '2017', 'Silver', 35000, 'Rented', 'Standard', 'V', 'Vancouver');
- insert into Vehicles
-     values(900005, 'FF9 43E', 'Mazda', '3', '2018', 'Silver', 23450, 'Available', 'Standard', 'V', 'Vancouver');
- insert into Vehicles
-     values(900004, 'GG9 89D', 'Mazda', '3', '2016', 'Red', 60000, 'Available', 'Standard', 'N', 'North Vancouver');
- insert into Vehicles
-     values(900003, 'DD3 49C', 'Mazda', '3', '2017', 'Black', 21200, 'Available', 'Standard', 'N', 'North Vancouver');
- insert into Vehicles
-     values(900002, 'QQ6 45B', 'Mazda', '3', '2018', 'Black', 34200, 'Avaiable', 'Standard', 'W', 'West Vancouver');
- insert into Vehicles
-     values(900001, 'TT6 69A', 'Mazda', '3', '2018', 'Black', 33200, 'Available', 'Standard', 'W', 'West Vancouver');
- --Mid-Size
- insert into Vehicles
-     values(998000, 'LD1 33J', 'Hyundai', 'Sonata', '2019', 'Silver', 4100, 'Available', 'Mid-size', 'A', 'Abbotsford');
- insert into Vehicles
-     values(990009, 'LL9 22I', 'Hyundai', 'Sonata', '2018', 'Blue', 5820, 'Available', 'Mid-size', 'A', 'Abbotsford');
- insert into Vehicles
-     values(990008, 'LL8 99H', 'Hyundai', 'Sonata', '2018', 'Silver', 22500, 'Rented', 'Mid-size', 'C', 'Chilliwack');
- insert into Vehicles
-     values(990007, 'LL7 69G', 'Hyundai', 'Sonata', '2018', 'Grey', 9000, 'Available', 'Mid-size', 'C', 'Chilliwack');
- insert into Vehicles
-     values(990006, 'LL6 45F', 'Hyundai', 'Sonata', '2017', 'Silver', 35000, 'Rented', 'Mid-size', 'V', 'Vancouver');
- insert into Vehicles
-     values(990005, 'LL5 43E', 'Hyundai', 'Sonata', '2018', 'Silver', 23450, 'Available', 'Mid-size', 'V', 'Vancouver');
- insert into Vehicles
-     values(990004, 'LL4 89D', 'Hyundai', 'Sonata', '2016', 'Red', 60000, 'Available', 'Mid-size', 'N', 'North Vancouver');
- insert into Vehicles
-     values(990003, 'LL3 49C', 'Hyundai', 'Sonata', '2017', 'Black', 21200, 'Available', 'Mid-size', 'N', 'North Vancouver');
- insert into Vehicles
-     values(990002, 'LL2 45B', 'Hyundai', 'Sonata', '2018', 'Black', 34200, 'Available', 'Mid-size', 'W', 'West Vancouver');
- insert into Vehicles
-     values(990001, 'LL1 69A', 'Hyundai', 'Sonata', '2018', 'Black', 33200, 'Available', 'Mid-size', 'W', 'West Vancouver');
+     values(900005, 'FF9 43E', 'Mazda', '3', '2018', 'Silver', 23450, 'AVAILABLE', 'STANDARD', 'V', 'VANCOUVER');
+
+insert into Vehicles
+    values(198235, 'RG3 33J', 'Mazda', '3', '2019', 'Silver', 4100, 'RENTED', 'STANDARD', 'A', 'ABBOTSFORD');
+insert into Vehicles
+    values(100009, 'RG9 22I', 'Mazda', '3', '2018', 'Blue', 5820, 'RENTED', 'STANDARD', 'A', 'ABBOTSFORD');
+insert into Vehicles
+    values(100008, 'RX1 99H', 'Mazda', '3', '2018', 'Silver', 22500, 'RENTED', 'STANDARD', 'C', 'CHILLIWACK');
+insert into Vehicles
+    values(100007, 'RX2 69G', 'Mazda', '3', '2018', 'Grey', 9000, 'RENTED', 'STANDARD', 'C', 'CHILLIWACK');
+insert into Vehicles
+    values(100006, 'RR3 45R', 'Mazda', '3', '2017', 'Silver', 35000, 'RENTED', 'STANDARD', 'V', 'VANCOUVER');
+insert into Vehicles
+    values(100005, 'RF9 43E', 'Mazda', '3', '2018', 'Silver', 23450, 'RENTED', 'STANDARD', 'V', 'VANCOUVER');
 
  --Full-Size
  insert into Vehicles
-     values(998000, 'LD1 50X', 'Dodge', 'Charger', '2019', 'Silver', 3100, 'Available', 'Full-size', 'A', 'Abbotsford');
+     values(998000, 'LD1 50X', 'Dodge', 'Charger', '2019', 'Silver', 3100, 'AVAILABLE', 'FULL-SIZE', 'A', 'ABBOTSFORD');
  insert into Vehicles
-     values(990009, 'LL9 50X', 'Dodge', 'Charger', '2018', 'Blue', 7820, 'Available', 'Full-size', 'A', 'Abbotsford');
+     values(990009, 'LL9 50X', 'Dodge', 'Charger', '2018', 'Blue', 7820, 'AVAILABLE', 'FULL-SIZE', 'A', 'ABBOTSFORD');
  insert into Vehicles
-     values(990008, 'LL8 50X', 'Dodge', 'Charger', '2018', 'Silver', 26500, 'Rented', 'Full-size', 'C', 'Chilliwack');
+     values(990008, 'LL8 50X', 'Dodge', 'Charger', '2018', 'Silver', 26500, 'AVAILABLE', 'FULL-SIZE', 'C', 'CHILLIWACK');
  insert into Vehicles
-     values(990007, 'LL7 50X', 'Dodge', 'Charger', '2018', 'Grey', 6000, 'Available', 'Full-size', 'C', 'Chilliwack');
+     values(990007, 'LL7 50X', 'Dodge', 'Charger', '2018', 'Grey', 6000, 'AVAILABLE', 'FULL-SIZE', 'C', 'CHILLIWACK');
  insert into Vehicles
-     values(990006, 'LL6 50X', 'Dodge', 'Charger', '2017', 'Silver', 45000, 'Rented', 'Full-size', 'V', 'Vancouver');
+     values(990006, 'LL6 50X', 'Dodge', 'Charger', '2017', 'Silver', 45000, 'AVAILABLE', 'FULL-SIZE', 'V', 'VANCOUVER');
  insert into Vehicles
-     values(990005, 'LL5 50X', 'Dodge', 'Charger', '2018', 'Silver', 25450, 'Avaiable', 'Full-size', 'V', 'Vancouver');
- insert into Vehicles
-     values(990004, 'LL4 50X', 'Dodge', 'Charger', '2016', 'Red', 62000, 'Available', 'Full-size', 'N', 'North Vancouver');
- insert into Vehicles
-     values(990003, 'LL3 50X', 'Dodge', 'Charger', '2017', 'Black', 31200, 'Available', 'Full-size', 'N', 'North Vancouver');
- insert into Vehicles
-     values(990002, 'LL2 50X', 'Dodge', 'Charger', '2018', 'Black', 24200, 'Available', 'Full-size', 'W', 'West Vancouver');
- insert into Vehicles
-     values(990001, 'LL1 50X', 'Dodge', 'Charger', '2018', 'Black', 43200, 'Available', 'Full-size', 'W', 'West Vancouver');
+     values(990005, 'LL5 50X', 'Dodge', 'Charger', '2018', 'Silver', 25450, 'AVAILABLE', 'FULL-SIZE', 'V', 'VANCOUVER');
+
+insert into Vehicles
+    values(198000, 'LD1 50R', 'Dodge', 'Charger', '2019', 'Silver', 3100, 'RENTED', 'FULL-SIZE', 'A', 'ABBOTSFORD');
+insert into Vehicles
+    values(190009, 'LL9 50R', 'Dodge', 'Charger', '2018', 'Blue', 7820, 'RENTED', 'FULL-SIZE', 'A', 'ABBOTSFORD');
+insert into Vehicles
+    values(190008, 'LL8 50R', 'Dodge', 'Charger', '2018', 'Silver', 26500, 'RENTED', 'FULL-SIZE', 'C', 'CHILLIWACK');
+insert into Vehicles
+    values(190007, 'LL7 50R', 'Dodge', 'Charger', '2018', 'Grey', 6000, 'RENTED', 'FULL-SIZE', 'C', 'CHILLIWACK');
+insert into Vehicles
+    values(190006, 'LL6 50R', 'Dodge', 'Charger', '2017', 'Silver', 45000, 'RENTED', 'FULL-SIZE', 'V', 'VANCOUVER');
+insert into Vehicles
+    values(190005, 'LL5 50R', 'Dodge', 'Charger', '2018', 'Silver', 25450, 'RENTED', 'FULL-SIZE', 'V', 'VANCOUVER');
 
  --SUV
  insert into Vehicles
-     values(998090, 'TD1 50X', 'Toyota', '4Runner', '2019', 'Silver', 3100, 'Available', 'SUV', 'A', 'Abbotsford');
+     values(998090, 'TD1 50X', 'Toyota', '4Runner', '2019', 'Silver', 3100, 'AVAILABLE', 'SUV', 'A', 'ABBOTSFORD');
  insert into Vehicles
-     values(990099, 'TL9 50X', 'Toyota', '4Runner', '2018', 'Blue', 7820, 'Available', 'SUV', 'A', 'Abbotsford');
+     values(990099, 'TL9 50X', 'Toyota', '4Runner', '2018', 'Blue', 7820, 'AVAILABLE', 'SUV', 'A', 'ABBOTSFORD');
  insert into Vehicles
-     values(990098, 'TL8 50X', 'Toyota', '4Runner', '2018', 'Silver', 26500, 'Rented', 'SUV', 'C', 'Chilliwack');
+     values(990098, 'TL8 50X', 'Toyota', '4Runner', '2018', 'Silver', 26500, 'AVAILABLE', 'SUV', 'C', 'CHILLIWACK');
  insert into Vehicles
-     values(990097, 'TL7 50X', 'Toyota', '4Runner', '2018', 'Grey', 6000, 'Available', 'SUV', 'C', 'Chilliwack');
+     values(990097, 'TL7 50X', 'Toyota', '4Runner', '2018', 'Grey', 6000, 'AVAILABLE', 'SUV', 'C', 'CHILLIWACK');
  insert into Vehicles
-     values(990096, 'TL6 50X', 'Toyota', '4Runner', '2017', 'Silver', 45000, 'Available', 'SUV', 'V', 'Vancouver');
+     values(990096, 'TL6 50X', 'Toyota', '4Runner', '2017', 'Silver', 45000, 'AVAILABLE', 'SUV', 'V', 'VANCOUVER');
  insert into Vehicles
-     values(990095, 'TL5 50X', 'Toyota', '4Runner', '2018', 'Silver', 25450, 'Avaiable', 'SUV', 'V', 'Vancouver');
- insert into Vehicles
-     values(990094, 'TL4 50X', 'Toyota', '4Runner', '2016', 'Red', 62000, 'Available', 'SUV', 'N', 'North Vancouver');
- insert into Vehicles
-     values(990093, 'TL3 50X', 'Toyota', '4Runner', '2017', 'Black', 31200, 'Available', 'SUV', 'N', 'North Vancouver');
- insert into Vehicles
-     values(990092, 'TL2 50X', 'Toyota', '4Runner', '2018', 'Black', 24200, 'Available', 'SUV', 'W', 'West Vancouver');
- insert into Vehicles
-     values(990091, 'TL1 50X', 'Toyota', '4Runner', '2018', 'Black', 43200, 'Available', 'SUV', 'W', 'West Vancouver');
+     values(990095, 'TL5 50X', 'Toyota', '4Runner', '2018', 'Silver', 25450, 'AVAILABLE', 'SUV', 'V', 'VANCOUVER');
+
+insert into Vehicles
+    values(198090, 'TD1 50R', 'Toyota', '4Runner', '2019', 'Silver', 3100, 'RENTED', 'SUV', 'A', 'ABBOTSFORD');
+insert into Vehicles
+    values(190099, 'TL9 50R', 'Toyota', '4Runner', '2018', 'Blue', 7820, 'RENTED', 'SUV', 'A', 'ABBOTSFORD');
+insert into Vehicles
+    values(190098, 'TL8 50R', 'Toyota', '4Runner', '2018', 'Silver', 26500, 'RENTED', 'SUV', 'C', 'CHILLIWACK');
+insert into Vehicles
+    values(190097, 'TL7 50R', 'Toyota', '4Runner', '2018', 'Grey', 6000, 'RENTED', 'SUV', 'C', 'CHILLIWACK');
+insert into Vehicles
+    values(190096, 'TL6 50R', 'Toyota', '4Runner', '2017', 'Silver', 45000, 'RENTED', 'SUV', 'V', 'VANCOUVER');
+insert into Vehicles
+    values(190095, 'TL5 50R', 'Toyota', '4Runner', '2018', 'Silver', 25450, 'RENTED', 'SUV', 'V', 'VANCOUVER');
 
 --Truck
 insert into Vehicles
-    values(998990, 'TD1 50Z', 'Toyota', 'Tacoma', '2019', 'Silver', 3100, 'Available', 'Truck', 'A', 'Abbotsford');
+    values(998990, 'TR1 50Z', 'Toyota', 'Tacoma', '2019', 'Silver', 3100, 'AVAILABLE', 'TRUCK', 'A', 'ABBOTSFORD');
 insert into Vehicles
-    values(990999, 'TL9 50Z', 'Toyota', 'Tacoma', '2018', 'Blue', 7820, 'Available', 'Truck', 'A', 'Abbotsford');
+    values(990999, 'TR9 50Z', 'Toyota', 'Tacoma', '2018', 'Blue', 7820, 'AVAILABLE', 'TRUCK', 'A', 'ABBOTSFORD');
 insert into Vehicles
-    values(990998, 'TL8 50Z', 'Toyota', 'Tacoma', '2018', 'Silver', 26500, 'Rented', 'Truck', 'C', 'Chilliwack');
+    values(990998, 'TR8 50Z', 'Toyota', 'Tacoma', '2018', 'Silver', 26500, 'AVAILABLE', 'TRUCK', 'C', 'CHILLIWACK');
 insert into Vehicles
-    values(990997, 'TL7 50Z', 'Toyota', 'Tacoma', '2018', 'Grey', 6000, 'Available', 'Truck', 'C', 'Chilliwack');
+    values(990997, 'TR7 50Z', 'Toyota', 'Tacoma', '2018', 'Grey', 6000, 'AVAILABLE', 'TRUCK', 'C', 'CHILLIWACK');
 insert into Vehicles
-    values(990996, 'TL6 50Z', 'Toyota', 'Tacoma', '2017', 'Silver', 45000, 'Rented', 'Truck', 'V', 'Vancouver');
+    values(990996, 'TR6 50Z', 'Toyota', 'Tacoma', '2017', 'Silver', 45000, 'AVAILABLE', 'TRUCK', 'V', 'VANCOUVER');
 insert into Vehicles
-    values(990995, 'TL5 50Z', 'Toyota', 'Tacoma', '2018', 'Silver', 25450, 'Avaiable', 'Truck', 'V', 'Vancouver');
-insert into Vehicles
-    values(990994, 'TL4 50Z', 'Toyota', 'Tacoma', '2016', 'Red', 62000, 'Available', 'Truck', 'N', 'North Vancouver');
-insert into Vehicles
-    values(990993, 'TL3 50Z', 'Toyota', 'Tacoma', '2017', 'Black', 31200, 'Available', 'Truck', 'N', 'North Vancouver');
-insert into Vehicles
-    values(990992, 'TL2 50Z', 'Toyota', 'Tacoma', '2018', 'Black', 24200, 'Available', 'Truck', 'W', 'West Vancouver');
-insert into Vehicles
-    values(990991, 'TL1 50Z', 'Toyota', 'Tacoma', '2018', 'Black', 43200, 'Available', 'Truck', 'W', 'West Vancouver');
+    values(990995, 'TR5 50Z', 'Toyota', 'Tacoma', '2018', 'Silver', 25450, 'AVAILABLE', 'TRUCK', 'V', 'VANCOUVER');
 
--- Rentals
+insert into Vehicles
+    values(198990, 'TR1 50Z', 'Toyota', 'Tacoma', '2019', 'Silver', 3100, 'RENTED', 'TRUCK', 'A', 'ABBOTSFORD');
+insert into Vehicles
+    values(190999, 'TR9 50Z', 'Toyota', 'Tacoma', '2018', 'Blue', 7820, 'RENTED', 'TRUCK', 'A', 'ABBOTSFORD');
+insert into Vehicles
+    values(190998, 'TR8 50Z', 'Toyota', 'Tacoma', '2018', 'Silver', 26500, 'RENTED', 'TRUCK', 'C', 'CHILLIWACK');
+insert into Vehicles
+    values(190997, 'TR7 50Z', 'Toyota', 'Tacoma', '2018', 'Grey', 6000, 'RENTED', 'TRUCK', 'C', 'CHILLIWACK');
+insert into Vehicles
+    values(190996, 'TR6 50Z', 'Toyota', 'Tacoma', '2017', 'Silver', 45000, 'RENTED', 'TRUCK', 'V', 'VANCOUVER');
+insert into Vehicles
+    values(190995, 'TR5 50Z', 'Toyota', 'Tacoma', '2018', 'Silver', 25450, 'RENTED', 'TRUCK', 'V', 'VANCOUVER');
+
+
+
+-- Rentals for today
 insert into Rentals
-    values(2,'TL8 50X', 'A1456BZ', TIMESTAMP '2019-11-29 12:00:00', TIMESTAMP '2019-12-29 12:00:00',0,'Megan Tumaro',2,12,null,0,0,0);
+    values(0001, 'TR1 50Z', 'A1456BZ', SYSDATE, SYSDATE + 5, 3100,
+    'mastercard', 51812375, '2020/02/22', NULL, NULL, NULL, NULL, NULL );
+insert into Rentals
+    values(0002, 'TR9 50Z', 'A1456BZ', SYSDATE, SYSDATE + 3, 3100,
+       'mastercard', 51812375, '2020/02/22', NULL, NULL, NULL, NULL, NULL);
+--Returns for today
+insert into Rentals
+    values(0011, 'TL5 50Z', 'A1456BZ', SYSDATE - 5, SYSDATE, 2800,
+       'mastercard', 51812375, '2020/02/22', NULL, 3100, 'yes', 550, SYSDATE);
+
