@@ -151,43 +151,43 @@ insert into Customers
 --     hirate INTEGER,
 --     krate INTEGER,
 insert into VehicleTypes
-   values('Economy', 'No Heated-seats', 300, 50, 4, 50, 10, 1, 1);
+   values('ECONOMY', 'No Heated-seats', 300, 50, 4, 50, 10, 1, 1);
 insert into VehicleTypes
-   values('Compact', 'Heated-seats', 350, 60, 4, 50, 10, 1, 1);
+   values('COMPACT', 'Heated-seats', 350, 60, 4, 50, 10, 1, 1);
 insert into VehicleTypes
-   values('Standard', 'Heated-seats', 400, 65, 4, 50, 10, 1, 1);
+   values('STANDARD', 'Heated-seats', 400, 65, 4, 50, 10, 1, 1);
 insert into VehicleTypes
-   values('Mid-size', 'Heated-seats', 420, 70, 4, 50, 10, 1, 1);
+   values('MID-SIZE', 'Heated-seats', 420, 70, 4, 50, 10, 1, 1);
 insert into VehicleTypes
-   values('Full-size', 'Heated-seats', 450, 80, 6, 50, 10, 1, 1);
+   values('FULL-SIZE', 'Heated-seats', 450, 80, 6, 50, 10, 1, 1);
 insert into VehicleTypes
    values('SUV', 'Heated-seats', 500, 85, 10, 60, 10, 1, 2);
 insert into VehicleTypes
-   values('Truck', 'Heated-seats', 580, 100, 10, 60, 10, 1, 2);
+   values('TRUCK', 'Heated-seats', 580, 100, 10, 60, 10, 1, 2);
 
 --Reservations
 insert into Reservations
-   values(2456, 'Standard', 'J9456GH', TIMESTAMP '2019-12-22 13:00:00', TIMESTAMP '2019-12-29 13:00:00');
+   values(2456, 'STANDARD', 'J9456GH', TIMESTAMP '2019-12-22 13:00:00', TIMESTAMP '2019-12-29 13:00:00');
 insert into Reservations
-   values(9656, 'Truck', 'J4449KZ', TIMESTAMP '2020-01-02 20:00:00', TIMESTAMP '2020-01-18 11:00:00');
+   values(9656, 'TRUCK', 'J4449KZ', TIMESTAMP '2020-01-02 20:00:00', TIMESTAMP '2020-01-18 11:00:00');
 insert into Reservations
    values(4201, 'SUV', 'Y3456YZ', TIMESTAMP '2020-01-02 20:00:00', TIMESTAMP '2020-01-10 9:00:00');
 insert into Reservations
    values(8230, 'SUV', 'A1443BA', TIMESTAMP '2019-11-29 14:00:00', TIMESTAMP '2020-01-02 8:00:00');
 insert into Reservations
-   values(8234, 'Compact', 'A1443BA', TIMESTAMP '2020-03-15 13:00:00', TIMESTAMP '2020-03-27 10:00:00');
+   values(8234, 'COMPACT', 'A1443BA', TIMESTAMP '2020-03-15 13:00:00', TIMESTAMP '2020-03-27 10:00:00');
 insert into Reservations
-   values(3230, 'Economy', 'Z2366BZ', TIMESTAMP '2019-11-29 13:00:00', TIMESTAMP '2019-12-25 14:00:00');
+   values(3230, 'ECONOMY', 'Z2366BZ', TIMESTAMP '2019-11-29 13:00:00', TIMESTAMP '2019-12-25 14:00:00');
 insert into Reservations
-   values(4269, 'Economy', 'W4456GZ', TIMESTAMP '2020-01-19 12:00:00', TIMESTAMP '2020-01-27 21:00:00');
+   values(4269, 'ECONOMY', 'W4456GZ', TIMESTAMP '2020-01-19 12:00:00', TIMESTAMP '2020-01-27 21:00:00');
 insert into Reservations
-   values(2275, 'Truck', 'X4956ZZ', TIMESTAMP '2020-02-19 12:00:00', TIMESTAMP '2020-02-25 21:00:00');
+   values(2275, 'TRUCK', 'X4956ZZ', TIMESTAMP '2020-02-19 12:00:00', TIMESTAMP '2020-02-25 21:00:00');
 insert into Reservations
-   values(2455, 'Compact', 'J2356BJ', TIMESTAMP '2020-02-19 9:00:00', TIMESTAMP '2020-02-23 8:00:00');
+   values(2455, 'COMPACT', 'J2356BJ', TIMESTAMP '2020-02-19 9:00:00', TIMESTAMP '2020-02-23 8:00:00');
 insert into Reservations
-   values(8445, 'Full-size', 'A1456BZ', TIMESTAMP '2020-04-02 10:00:00', TIMESTAMP '2020-04-07 12:00:00');
+   values(8445, 'FULL-SIZE', 'A1456BZ', TIMESTAMP '2020-04-02 10:00:00', TIMESTAMP '2020-04-07 12:00:00');
 insert into Reservations
-   values(9021, 'Mid-size', 'X1956XZ', TIMESTAMP '2020-01-03 9:00:00', TIMESTAMP '2020-01-10 12:00:00');
+   values(9021, 'MID-SIZE', 'X1956XZ', TIMESTAMP '2020-01-03 9:00:00', TIMESTAMP '2020-01-10 12:00:00');
 
 -- Branch
   insert into Branch values('A', 'Abbotsford' );
