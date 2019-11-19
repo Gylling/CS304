@@ -9,7 +9,11 @@
       <case-sensitivity plain-identifiers="upper" quoted-identifiers="exact" />
       <secret-storage>master_key</secret-storage>
       <user-name>ora_egylling</user-name>
-      <introspection-schemas>*:ORA_EGYLLING</introspection-schemas>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="schema" qname="ORA_EGYLLING" />
+        </introspection-scope>
+      </schema-mapping>
       <ssh-properties>
         <enabled>true</enabled>
         <proxy-host>lulu.students.cs.ubc.ca</proxy-host>
