@@ -54,7 +54,7 @@ public class DatabaseConnectionHandler {
 	}
 
 	public CustomerModel[] getCustomerInfo() {
-		ArrayList<CustomerModel> result = new ArrayList<CustomerModel>();
+		ArrayList<CustomerModel> result = new ArrayList<>();
 		try {
 			Statement stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM Customers");
@@ -126,7 +126,7 @@ public class DatabaseConnectionHandler {
 	}
 
 	public ReservationModel[] getReservationInfo(int confNo) {
-		ArrayList<ReservationModel> result = new ArrayList<ReservationModel>();
+		ArrayList<ReservationModel> result = new ArrayList<>();
 		String query;
 		if(confNo<1)
 		    query="SELECT * FROM Reservations ORDER BY CONFNO";
@@ -192,7 +192,7 @@ public class DatabaseConnectionHandler {
 	}
 	
 	public BranchModel[] getBranchInfo() {
-		ArrayList<BranchModel> result = new ArrayList<BranchModel>();
+		ArrayList<BranchModel> result = new ArrayList<>();
 
 		try {
 			Statement stmt = connection.createStatement();
@@ -226,7 +226,7 @@ public class DatabaseConnectionHandler {
 	}
 
     public VehiclesModel[] getAvailableVehicles(String vLicense, String vtname, String location, String city, Timestamp fromDate, Timestamp toDate) {
-        ArrayList<VehiclesModel> result = new ArrayList<VehiclesModel>();
+        ArrayList<VehiclesModel> result = new ArrayList<>();
 
 
         //Build the query for the vehicles, which meet the vehicletype and branch criteria.
@@ -341,7 +341,7 @@ public class DatabaseConnectionHandler {
     }
 
     public VehiclesModel[] getVehicles(String vLicense){
-        ArrayList<VehiclesModel> result = new ArrayList<VehiclesModel>();
+        ArrayList<VehiclesModel> result = new ArrayList<>();
         String query;
         if(vLicense.equals(""))
             query="SELECT * FROM VEHICLES ORDER BY VTNAME";
@@ -351,7 +351,6 @@ public class DatabaseConnectionHandler {
         try {
             Statement stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery(query);
-            System.out.println(query);
             while(rs.next()) {
                 VehiclesModel model = new VehiclesModel(
                         rs.getInt("vid"),

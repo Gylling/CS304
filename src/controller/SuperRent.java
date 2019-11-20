@@ -16,10 +16,10 @@ import static java.sql.Types.NULL;
  * This is the main controller class that will orchestrate everything.
  */
 public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDelegate {
-    private DatabaseConnectionHandler dbHandler = null;
+    private DatabaseConnectionHandler dbHandler;
     private LoginWindow loginWindow = null;
 
-    public SuperRent() {
+    private SuperRent() {
         dbHandler = new DatabaseConnectionHandler();
     }
 
@@ -102,10 +102,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
         ReservationModel[] models = dbHandler.getReservationInfo(confNo);
 
         if(showDetails) {
-            for (int i = 0; i < models.length; i++) {
-                ReservationModel model = models[i];
-
-                // simplified output formatting; truncation may occur
+            for (ReservationModel model : models) {
                 System.out.printf("%-20.20s", model.getConfNo());
                 System.out.printf("%-20.20s", model.getVtName());
                 System.out.printf("%-20.20s", model.getdLicense());
@@ -145,10 +142,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     public void showBranch() {
         BranchModel[] models = dbHandler.getBranchInfo();
 
-        for (int i = 0; i < models.length; i++) {
-            BranchModel model = models[i];
-
-            // simplified output formatting; truncation may occur
+        for (BranchModel model : models) {
             System.out.printf("%-10.10s", model.getLocation());
             System.out.printf("%-15.15s", model.getCity());
             System.out.println();
@@ -175,10 +169,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     private void printVehicles(VehiclesModel[] models){
         System.out.println("Details:");
 
-        for (int i = 0; i < models.length; i++) {
-            VehiclesModel model = models[i];
-
-            // simplified output formatting; truncation may occur
+        for (VehiclesModel model : models) {
             System.out.printf("%-10.10s", model.getVid());
             System.out.printf("%-15.15s", model.getvLicense());
             System.out.printf("%-10.10s", model.getMake());
@@ -221,6 +212,10 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
             dbHandler.insertRental(model);
             System.out.println("Your rental number is: \t" + model.getRid());
             System.out.println("The vehicle license is: \t" + model.getvLicense());
+            System.out.println("The vehicle make is: \t" + vehiclesModel[0].getMake());
+            System.out.println("The vehicle model is: \t" + vehiclesModel[0].getModel());
+            System.out.println("The year of production is: \t" + vehiclesModel[0].getYear());
+            System.out.println("The vehicle type is: \t" + vehiclesModel[0].getVtname());
             System.out.println("Your driver´s license is: \t" + model.getdLicense());
             System.out.println("Start date is: \t" + model.getFromDate());
             System.out.println("End date is: \t" + model.getToDate());
@@ -249,7 +244,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     /**
      * Main method called at launch time
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         SuperRent superRent = new SuperRent();
         superRent.start();
     }

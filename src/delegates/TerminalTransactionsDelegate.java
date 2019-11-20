@@ -15,26 +15,26 @@ import java.sql.Timestamp;
  */
 public interface TerminalTransactionsDelegate {
 
-	public boolean checkCustomer(String dlicense);
-	public void insertCustomer(CustomerModel model);
+	 boolean checkCustomer(String dlicense);
+	 void insertCustomer(CustomerModel model);
 
 
-	public void deleteReservation(int confNo);
-	public void insertReservation(ReservationModel model);
-	public ReservationModel[] showReservation(int confNo, boolean showDetails);
-	public int lastConfNumber();
+	 void deleteReservation(int confNo);
+	 void insertReservation(ReservationModel model);
+	 ReservationModel[] showReservation(int confNo, boolean showDetails);
+	 int lastConfNumber();
 
-	public void deleteBranch(String location, String city);
-	public void insertBranch(BranchModel model);
-	public void showBranch();
+	 void deleteBranch(String location, String city);
+	 void insertBranch(BranchModel model);
+	 void showBranch();
 
-	public void showAvailableVehicles(String vtname, String location, String city, Timestamp fromDate, Timestamp toDate);
-	public void showNumberVehicles(String vtname, String location, String city, Timestamp fromDate, Timestamp toDate);
-	public VehiclesModel[] showVehicles(String vLicense, boolean show);
-	public boolean checkVLicense(String vLicense);
+	 void showAvailableVehicles(String vtname, String location, String city, Timestamp fromDate, Timestamp toDate);
+	 void showNumberVehicles(String vtname, String location, String city, Timestamp fromDate, Timestamp toDate);
+	 VehiclesModel[] showVehicles(String vLicense, boolean show);
+	 boolean checkVLicense(String vLicense);
 
-	public int lastRid();
-	public void insertRental(RentalModel model);
+	 int lastRid();
+	 void insertRental(RentalModel model);
 
-	public void terminalTransactionsFinished();
+	 void terminalTransactionsFinished();
 }
