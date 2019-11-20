@@ -68,6 +68,7 @@ public class TerminalTransactions {
                                             System.out.println("1. Insert reservation");
                                             System.out.println("2. Delete reservation");
                                             System.out.println("3. Show reservation");
+                                            System.out.println("4. Update reservation");
                                             System.out.println("9. Go back");
                                             System.out.println("Please choose one of the above options: ");
 
@@ -85,6 +86,9 @@ public class TerminalTransactions {
                                                         break;
                                                     case 3:
                                                         showReservation();
+                                                        break;
+                                                    case 4:
+                                                        reservationUpdateOption();
                                                         break;
                                                     case 9:
                                                         break;
@@ -199,7 +203,7 @@ public class TerminalTransactions {
                                                         createRental();
                                                         break;
                                                     case 9:
-                                                        continue;
+                                                        break;
                                                     default:
                                                         System.out.println(WARNING_TAG + " The number that you entered was not a valid option.");
                                                         break;
@@ -334,8 +338,50 @@ public class TerminalTransactions {
 				dLicense,
 				fromDate,
 				toDate);
-		delegate.insertReservation(model);
+		delegate.insertReservation(model, true);
 	}
+
+	private void reservationUpdateOption(){
+        int confNo = INVALID_INPUT;
+        while (confNo == INVALID_INPUT) {
+            System.out.println("Please enter the confirmation number for the reservation you wish to update: ");
+            confNo = readInteger(false);
+        }
+
+        int col = INVALID_INPUT;
+        while (col == INVALID_INPUT) {
+            System.out.println("Please enter the number that represents the column name you wish to update: ");
+            System.out.println("1. Vehicle Type");
+            System.out.println("2. Driver´s License");
+            System.out.println("3. Start Date");
+            System.out.println("4. End Date");
+            System.out.println("5. Cancel update");
+            col = readInteger(false);
+        }
+        if(1 == col ){
+            System.out.println("Please enter the new vehicle type: ");
+            String vtname = readLine().trim().toUpperCase();
+            delegate.updateReservation(confNo, col, vtname, null);
+        }  else if (col == 2){
+            System.out.println("Please enter the new driver´s license: ");
+            String dLicense = readLine().trim().toUpperCase();
+            if(delegate.checkCustomer(dLicense)){
+                newCustomer(dLicense);
+            }
+            delegate.updateReservation(confNo, col, dLicense, null);
+
+        }   else if (col == 3){
+            Timestamp fromDate = createFromDate();
+            delegate.updateReservation(confNo, col, null, fromDate);
+
+        }  else if (col == 4){
+            Timestamp toDate = createToDate();
+            delegate.updateReservation(confNo, col, null, toDate);
+
+        }  else if (col != 5){
+            System.out.println(WARNING_TAG + " The number that you entered was not a valid option.");
+        }
+    }
 	
 	private void branchInsertOption() {
         String location = null;

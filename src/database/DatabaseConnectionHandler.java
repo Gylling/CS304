@@ -36,6 +36,7 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
+
 	public void insertCustomer(CustomerModel model) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("INSERT INTO Customers VALUES (?,?,?)");
@@ -58,17 +59,6 @@ public class DatabaseConnectionHandler {
 		try {
 			Statement stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM Customers");
-
-//    		// get info on ResultSet
-//    		ResultSetMetaData rsmd = rs.getMetaData();
-//
-//    		System.out.println(" ");
-//
-//    		// display column names;
-//    		for (int i = 0; i < rsmd.getColumnCount(); i++) {
-//    			// get column name and print it
-//    			System.out.printf("%-15s", rsmd.getColumnName(i + 1));
-//    		}
 
 			while(rs.next()) {
 				CustomerModel model = new CustomerModel(
@@ -124,6 +114,49 @@ public class DatabaseConnectionHandler {
 			rollbackConnection();
 		}
 	}
+
+	public void updateReservation(ReservationModel model, int col){
+	    String colName;
+	    String newName;
+	    if(col==4){
+	        colName="toDate";
+	        newName = "TIMESTAMP '"+model.getToDate().toString()+"'";
+        } else if (col==3){
+            colName="fromDate";
+            newName = "TIMESTAMP '"+model.getFromDate().toString()+"'";
+        } else if (col==2){
+            colName="dLicense";
+            newName = "'"+model.getdLicense()+"'";
+        } else {
+            colName="vtName";
+            newName = "'"+model.getVtName()+"'";
+        }
+
+        try {
+            String query = "UPDATE RESERVATIONS SET "+ colName+" = "+newName+" WHERE CONFNO = "+model.getConfNo();
+            System.out.println("UPDATE RESERVATIONS SET "+ colName+" = "+newName+" WHERE CONFNO = "+model.getConfNo());
+//            PreparedStatement ps = connection.prepareStatement("UPDATE RESERVATIONS SET ? = ? WHERE CONFNO = ?");
+//            ps.setString(1, colName);
+//            ps.setString(2, newName);
+//            ps.setInt(3, model.getConfNo());
+
+            Statement stmt = connection.createStatement();
+
+
+
+            int rowCount = stmt.executeUpdate(query);
+            if (rowCount == 0) {
+                System.out.println(WARNING_TAG + " Confirmation " + model.getConfNo() + " does not exist!");
+            }
+
+            connection.commit();
+
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+    }
 
 	public ReservationModel[] getReservationInfo(int confNo) {
 		ArrayList<ReservationModel> result = new ArrayList<>();
@@ -197,17 +230,6 @@ public class DatabaseConnectionHandler {
 		try {
 			Statement stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM branch");
-
-//    		// get info on ResultSet
-//    		ResultSetMetaData rsmd = rs.getMetaData();
-//
-//    		System.out.println(" ");
-//
-//    		// display column names;
-//    		for (int i = 0; i < rsmd.getColumnCount(); i++) {
-//    			// get column name and print it
-//    			System.out.printf("%-15s", rsmd.getColumnName(i + 1));
-//    		}
 
 			while(rs.next()) {
 				BranchModel model = new BranchModel(

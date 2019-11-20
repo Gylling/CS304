@@ -26,6 +26,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     private void start() {
         loginWindow = new LoginWindow();
         loginWindow.showFrame(this);
+
     }
 
     /**
@@ -41,7 +42,6 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
         if (didConnect) {
             // Once connected, remove login window and start text transaction flow
             loginWindow.dispose();
-
             TerminalTransactions transaction = new TerminalTransactions();
             transaction.showMainMenu(this);
         } else {
@@ -73,17 +73,19 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
         dbHandler.insertCustomer(model);
     }
 
-    public void insertReservation(ReservationModel model) {
+    public void insertReservation(ReservationModel model, boolean show) {
         VehiclesModel[] vehiclesModel = dbHandler.getAvailableVehicles("",model.getVtName(),"", "", model.getFromDate(), model.getToDate());
         if(vehiclesModel.length<1){
             System.out.println("There is no vehicles available with the given vehicle type on the given dates.");
         } else {
             dbHandler.insertReservation(model);
-            System.out.println("Your confirmation number is: \t" + model.getConfNo());
-            System.out.println("Your driver´s license is: \t" + model.getdLicense());
-            System.out.println("The vehicle type is: \t" + model.getVtName());
-            System.out.println("Start date is: \t" + model.getFromDate());
-            System.out.println("End date is: \t" + model.getToDate());
+            if(show) {
+                System.out.println("Your confirmation number is: \t" + model.getConfNo());
+                System.out.println("Your driver´s license is: \t" + model.getdLicense());
+                System.out.println("The vehicle type is: \t" + model.getVtName());
+                System.out.println("Start date is: \t" + model.getFromDate());
+                System.out.println("End date is: \t" + model.getToDate());
+            }
         }
     }
 
@@ -103,16 +105,115 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 
         if(showDetails) {
             for (ReservationModel model : models) {
-                System.out.printf("%-20.20s", model.getConfNo());
-                System.out.printf("%-20.20s", model.getVtName());
-                System.out.printf("%-20.20s", model.getdLicense());
-                System.out.printf("%-20.20s", model.getFromDate());
-                System.out.printf("%-20.20s", model.getToDate());
-                System.out.println();
+                printReservation(model);
             }
         }
 
         return models;
+    }
+
+    private void printReservation (ReservationModel model){
+        System.out.printf("%-20.20s", model.getConfNo());
+        System.out.printf("%-20.20s", model.getVtName());
+        System.out.printf("%-20.20s", model.getdLicense());
+        System.out.printf("%-20.20s", model.getFromDate());
+        System.out.printf("%-20.20s", model.getToDate());
+        System.out.println();
+    }
+    public void updateReservation (int confNo, int col, String name, Timestamp date){
+        ReservationModel[] model = showReservation(confNo,false);
+        if(model.length<1){
+            System.out.println("The confirmation number is not found");
+        } else {
+            VehiclesModel[] vehiclesModel;
+            ReservationModel resModel;
+            switch (col) {
+                case 1:
+                        /*
+                        Get the new vehicle type
+                        Check if the new vehicle type is available in this time interval
+                        Update vehicle type
+                         */
+                    vehiclesModel = dbHandler.getAvailableVehicles("",name,"", "", model[0].getFromDate(), model[0].getToDate());
+                    if(vehiclesModel.length<1){
+                        System.out.println("There is no vehicles available with the given vehicle type on the given dates.");
+                    } else {
+                        resModel = new ReservationModel(model[0].getConfNo(),name,model[0].getdLicense(),model[0].getFromDate(), model[0].getToDate());
+                        dbHandler.updateReservation(resModel,1);
+                        System.out.println("Update complete");
+                        printReservation(resModel);
+                    }
+                    break;
+                case 2:
+                        /*
+                        Get reservation
+                        Check if customer is new
+                        Update Driver´s License
+                         */
+                    resModel = new ReservationModel(model[0].getConfNo(),model[0].getVtName(),name,model[0].getFromDate(), model[0].getToDate());
+                    dbHandler.updateReservation(resModel,2);
+                    System.out.println("Update complete");
+                    System.out.println();
+                    printReservation(resModel);
+                    break;
+
+                case 3:
+                        /*
+                        Get reservation
+                        Get the new start date
+                        Check if the vehicle type is available in this time interval
+                        Update start date
+                         */
+                    if(date.before(new Timestamp(System.currentTimeMillis()+24*60*60*1000)) || model[0].getToDate().before(new Timestamp(date.getTime()+24*60*60*1000))){
+                        System.out.println("The start day has to be at least 24 hour from now and 24 hour before the end date.");
+                        System.out.println("Update not complete");
+                    } else {
+
+                        deleteReservation(model[0].getConfNo());
+                        vehiclesModel = dbHandler.getAvailableVehicles("", model[0].getVtName(), "", "", date, model[0].getToDate());
+                        if (vehiclesModel.length < 1) {
+                            System.out.println("There is no vehicles available with the given vehicle type on the given dates.");
+                            System.out.println("Update not complete");
+                            insertReservation(model[0], true);
+                        } else {
+                            insertReservation(model[0], false);
+                            resModel = new ReservationModel(model[0].getConfNo(),model[0].getVtName(),model[0].getdLicense(),date, model[0].getToDate());
+                            dbHandler.updateReservation(resModel,3);
+                            System.out.println("Update complete");
+                            printReservation(resModel);
+                        }
+                    }
+                    break;
+                case 4:
+                        /*
+                        Get reservation
+                        Get the new end date
+                        Check if the vehicle type is available in this time interval
+                        Update end date
+                         */
+                    if(date.before(new Timestamp(model[0].getFromDate().getTime()+24*60*60*1000))){
+                        System.out.println("The end day has to be at least 24 after the start date.");
+                        System.out.println("Update not complete");
+                    } else {
+
+                        deleteReservation(model[0].getConfNo());
+                        vehiclesModel = dbHandler.getAvailableVehicles("", model[0].getVtName(), "", "", model[0].getFromDate(), date);
+                        if (vehiclesModel.length < 1) {
+                            System.out.println("There is no vehicles available with the given vehicle type on the given dates.");
+                            System.out.println("Update not complete");
+                            insertReservation(model[0], true);
+                        } else {
+                            insertReservation(model[0], false);
+                            resModel = new ReservationModel(model[0].getConfNo(),model[0].getVtName(),model[0].getdLicense(),model[0].getFromDate(), date);
+                            dbHandler.updateReservation(resModel,4);
+                            System.out.println("Update complete");
+                            printReservation(resModel);
+                        }
+                    }
+                    break;
+            }
+        }
+
     }
 
     /**

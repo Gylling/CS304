@@ -20,8 +20,9 @@ public interface TerminalTransactionsDelegate {
 
 
 	 void deleteReservation(int confNo);
-	 void insertReservation(ReservationModel model);
+	 void insertReservation(ReservationModel model, boolean show);
 	 ReservationModel[] showReservation(int confNo, boolean showDetails);
+	 void updateReservation (int confNo, int col, String name, Timestamp date);
 	 int lastConfNumber();
 
 	 void deleteBranch(String location, String city);
