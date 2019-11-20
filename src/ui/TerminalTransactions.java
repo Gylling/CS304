@@ -4,11 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Timestamp;
-
 import delegates.TerminalTransactionsDelegate;
-import model.BranchModel;
-import model.CustomerModel;
-import model.ReservationModel;
+import model.*;
+
+import static java.sql.Types.NULL;
 
 /**
  * The class is only responsible for handling terminal text inputs. 
@@ -33,96 +32,29 @@ public class TerminalTransactions {
 		
 	    bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 		int choice = INVALID_INPUT;
+        while (choice !=10) {
+            System.out.println("Welcome to SuperRent");
+            System.out.println("Are you a clerk or a customer?");
+            System.out.println();
+            System.out.println("1. Customer");
+            System.out.println("2. Clerk");
+            System.out.println("10. Quit");
+            System.out.println("Please choose one of the above options: ");
 
-		while (choice !=5){
-		    System.out.println("What is your query about?");
-			System.out.println();
-			System.out.println("1. Branch");
-			System.out.println("2. Reservation");
-			System.out.println("3. Vehicles");
-			System.out.println("4. Quit");
-			System.out.println("Please choose one of the above 5 options: ");
+            choice = readInteger(false);
 
-			choice = readInteger(false);
+            System.out.println(" ");
 
-			System.out.println(" ");
-
-			if (choice != INVALID_INPUT) {
-				switch (choice) {
-					case 1:
-						while (choice != 4) {
-							System.out.println();
-							System.out.println("1. Insert branch");
-							System.out.println("2. Delete branch");
-							System.out.println("3. Show branch");
-							System.out.println("4. Quit");
-							System.out.println("Please choose one of the above 4 options: ");
-
-							choice = readInteger(false);
-
-							System.out.println(" ");
-
-							if (choice != INVALID_INPUT) {
-								switch (choice) {
-									case 1:
-										branchInsertOption();
-										break;
-									case 2:
-										branchDeleteOption();
-										break;
-									case 3:
-										delegate.showBranch();
-										break;
-									case 4:
-										handleQuitOption();
-										break;
-									default:
-										System.out.println(WARNING_TAG + " The number that you entered was not a valid option.");
-										break;
-								}
-							}
-						}
-						break;
-					case 2:
-						while (choice != 4) {
-							System.out.println();
-							System.out.println("1. Insert reservation");
-							System.out.println("2. Delete reservation");
-							System.out.println("3. Show reservation");
-							System.out.println("4. Quit");
-							System.out.println("Please choose one of the above 4 options: ");
-
-							choice = readInteger(false);
-
-							System.out.println(" ");
-
-							if (choice != INVALID_INPUT) {
-								switch (choice) {
-									case 1:
-										reservationInsertOption();
-										break;
-									case 2:
-										reservationDeleteOption();
-										break;
-									case 3:
-										delegate.showReservation();
-										break;
-									case 4:
-										handleQuitOption();
-										break;
-									default:
-										System.out.println(WARNING_TAG + " The number that you entered was not a valid option.");
-										break;
-								}
-							}
-						}
-						break;
-                    case 3:
-                        while (choice != 4) {
+            if (choice != INVALID_INPUT) {
+                switch (choice) {
+                    case 1:
+                        while (choice != 9) {
+                            System.out.println("What is your query about?");
                             System.out.println();
-                            System.out.println("1. Search for car");
-                            System.out.println("4. Quit");
-                            System.out.println("Please choose one of the above 2 options: ");
+                            System.out.println("1. Reservation ");
+                            System.out.println("2. Vehicles ");
+                            System.out.println("9. Go Back");
+                            System.out.println("Please choose one of the above options: ");
 
                             choice = readInteger(false);
 
@@ -131,28 +63,170 @@ public class TerminalTransactions {
                             if (choice != INVALID_INPUT) {
                                 switch (choice) {
                                     case 1:
-                                        handleVehicleSearch();
+                                        while (choice != 9) {
+                                            System.out.println();
+                                            System.out.println("1. Insert reservation");
+                                            System.out.println("2. Delete reservation");
+                                            System.out.println("3. Show reservation");
+                                            System.out.println("4. Update reservation");
+                                            System.out.println("9. Go back");
+                                            System.out.println("Please choose one of the above options: ");
+
+                                            choice = readInteger(false);
+
+                                            System.out.println(" ");
+
+                                            if (choice != INVALID_INPUT) {
+                                                switch (choice) {
+                                                    case 1:
+                                                        reservationInsertOption();
+                                                        break;
+                                                    case 2:
+                                                        reservationDeleteOption();
+                                                        break;
+                                                    case 3:
+                                                        showReservation();
+                                                        break;
+                                                    case 4:
+                                                        reservationUpdateOption();
+                                                        break;
+                                                    case 9:
+                                                        break;
+                                                    default:
+                                                        System.out.println(WARNING_TAG + " The number that you entered was not a valid option.");
+                                                        break;
+                                                }
+                                            }
+                                        }
                                         break;
-                                    case 4:
-                                        handleQuitOption();
+                                    case 2:
+                                        while (choice != 9) {
+                                            System.out.println();
+                                            System.out.println("1. Search for vehicles");
+                                            System.out.println("2. Show all vehicles");
+                                            System.out.println("9. Go back");
+                                            System.out.println("Please choose one of the above options: ");
+
+                                            choice = readInteger(false);
+
+                                            System.out.println(" ");
+
+                                            if (choice != INVALID_INPUT) {
+                                                switch (choice) {
+                                                    case 1:
+                                                        handleVehicleSearch();
+                                                        break;
+                                                    case 2:
+                                                        delegate.showVehicles("", true);
+                                                        break;
+                                                    case 9:
+                                                        break;
+                                                    default:
+                                                        System.out.println(WARNING_TAG + " The number that you entered was not a valid option.");
+                                                        break;
+                                                }
+                                            }
+                                        }
+                                        break;
+                                    case 9:
                                         break;
                                     default:
                                         System.out.println(WARNING_TAG + " The number that you entered was not a valid option.");
                                         break;
                                 }
                             }
+
                         }
                         break;
-					case 4:
-						handleQuitOption();
-						break;
-					default:
-						System.out.println(WARNING_TAG + " The number that you entered was not a valid option.");
-						break;
-				}
-			}
+                    case 2:
+                        while (choice != 9) {
+                            System.out.println("What is your query about?");
+                            System.out.println();
+                            System.out.println("1. Branch (CLERK)");
+                            System.out.println("2. Rental (CLERK)");
+                            System.out.println("9. Go Back");
+                            System.out.println("Please choose one of the above options: ");
 
-		}
+                            choice = readInteger(false);
+
+                            System.out.println(" ");
+
+                            if (choice != INVALID_INPUT) {
+                                switch (choice) {
+                                    case 1:
+                                        while (choice != 9) {
+                                            System.out.println();
+                                            System.out.println("1. Insert branch");
+                                            System.out.println("2. Delete branch");
+                                            System.out.println("3. Show branch");
+                                            System.out.println("9. Go back");
+                                            System.out.println("Please choose one of the above options: ");
+
+                                            choice = readInteger(false);
+
+                                            System.out.println(" ");
+
+                                            if (choice != INVALID_INPUT) {
+                                                switch (choice) {
+                                                    case 1:
+                                                        branchInsertOption();
+                                                        break;
+                                                    case 2:
+                                                        branchDeleteOption();
+                                                        break;
+                                                    case 3:
+                                                        delegate.showBranch();
+                                                        break;
+                                                    case 9:
+                                                        break;
+                                                    default:
+                                                        System.out.println(WARNING_TAG + " The number that you entered was not a valid option.");
+                                                        break;
+                                                }
+                                            }
+                                        }
+                                        break;
+                                    case 2:
+                                        while (choice != 9) {
+                                            System.out.println();
+                                            System.out.println("1. Rent a car");
+                                            System.out.println("9. Go back");
+                                            System.out.println("Please choose one of the above options: ");
+
+                                            choice = readInteger(false);
+
+                                            System.out.println(" ");
+
+                                            if (choice != INVALID_INPUT) {
+                                                switch (choice) {
+                                                    case 1:
+                                                        createRental();
+                                                        break;
+                                                    case 9:
+                                                        break;
+                                                    default:
+                                                        System.out.println(WARNING_TAG + " The number that you entered was not a valid option.");
+                                                        break;
+                                                }
+                                            }
+                                        }
+                                        break;
+                                    case 9:
+                                        break;
+                                    default:
+                                        System.out.println(WARNING_TAG + " The number that you entered was not a valid option.");
+                                        break;
+                                }
+                            }
+
+                        }
+                        break;
+                    case 10:
+                        handleQuitOption();
+                        break;
+                }
+            }
+        }
 
 	}
 	
@@ -160,12 +234,12 @@ public class TerminalTransactions {
 		String city = null;
 		String location = null;
 
-		while (location == null  || city == null || location.length() <= 0 || city.length() <= 0) {
+		while (location == null || location.length() <= 0 || city.length() <= 0) {
 			System.out.println("Please enter the location of the branch you wish to delete: ");
 			location = readLine().trim();
             System.out.println("Please enter the city of the branch you wish to delete: ");
             city = readLine().trim();
-			if (city != null && location != null && location.length() > 0 && city.length() > 0) {
+			if (location.length() > 0 && city.length() > 0) {
 				delegate.deleteBranch(location, city);
 			}
 		}
@@ -188,6 +262,18 @@ public class TerminalTransactions {
 		delegate.insertCustomer(model);
 	}
 
+	private void showReservation(){
+        int confNo = INVALID_INPUT;
+        while (confNo == INVALID_INPUT) {
+            System.out.println("Please enter the confirmation number for the reservation: ");
+            confNo = readInteger(false);
+            if (confNo != INVALID_INPUT) {
+                delegate.showReservation(confNo,true);
+            }
+        }
+
+
+    }
 	private void reservationDeleteOption() {
 		int confNo = INVALID_INPUT;
 		while (confNo == INVALID_INPUT) {
@@ -203,7 +289,7 @@ public class TerminalTransactions {
 		String dLicense = null;
 		while (dLicense == null || dLicense.length() <= 0) {
 			System.out.println("Please enter your driver´s license: ");
-			dLicense = readLine().trim();
+			dLicense = readLine().trim().toUpperCase();
 		}
 		if(delegate.checkCustomer(dLicense)){
 			newCustomer(dLicense);
@@ -214,20 +300,35 @@ public class TerminalTransactions {
 		String vtName = null;
 		while (vtName == null || vtName.length() <= 0) {
 			System.out.println("Please enter the vehicletype you wish to insert: ");
-			vtName = readLine().trim();
+			vtName = readLine().trim().toUpperCase();
 		}
 
 
 		Timestamp fromDate =null;
+		boolean checkFromDate = false;
 		while (fromDate == null || fromDate.before(new Timestamp(System.currentTimeMillis()+24*60*60*1000))){
-			System.out.println("Please enter the start date you wish to insert (The start day has to be at least 24 from now):");
+		    if(checkFromDate){
+                System.out.println(WARNING_TAG + " Your start date was not valid");
+                System.out.println("Please enter the start date you wish to insert (The start day has to be at least 24 from now):");
+
+            }else{
+                System.out.println("Please enter the start date you wish to insert (The start day has to be at least 24 from now):");
+            }
+			checkFromDate=true;
 			fromDate = createFromDate();
 		}
 
 
 		Timestamp toDate =null;
+		boolean checkToDate = false;
 		while (toDate == null || toDate.before(new Timestamp(fromDate.getTime()+24*60*60*1000))){
-			System.out.println("Please enter the end date (A reservation has to be at least 24 hours):");
+            if(checkToDate) {
+                System.out.println(WARNING_TAG + " Your end date was not valid");
+                System.out.println("Please enter the start date you wish to insert (The start day has to be at least 24 from now):");
+            }else{
+                System.out.println("Please enter the end date (A reservation has to be at least 24 hours):");
+            }
+            checkToDate=true;
 			toDate = createToDate();
 		}
 
@@ -237,8 +338,50 @@ public class TerminalTransactions {
 				dLicense,
 				fromDate,
 				toDate);
-		delegate.insertReservation(model);
+		delegate.insertReservation(model, true);
 	}
+
+	private void reservationUpdateOption(){
+        int confNo = INVALID_INPUT;
+        while (confNo == INVALID_INPUT) {
+            System.out.println("Please enter the confirmation number for the reservation you wish to update: ");
+            confNo = readInteger(false);
+        }
+
+        int col = INVALID_INPUT;
+        while (col == INVALID_INPUT) {
+            System.out.println("Please enter the number that represents the column name you wish to update: ");
+            System.out.println("1. Vehicle Type");
+            System.out.println("2. Driver´s License");
+            System.out.println("3. Start Date");
+            System.out.println("4. End Date");
+            System.out.println("5. Cancel update");
+            col = readInteger(false);
+        }
+        if(1 == col ){
+            System.out.println("Please enter the new vehicle type: ");
+            String vtname = readLine().trim().toUpperCase();
+            delegate.updateReservation(confNo, col, vtname, null);
+        }  else if (col == 2){
+            System.out.println("Please enter the new driver´s license: ");
+            String dLicense = readLine().trim().toUpperCase();
+            if(delegate.checkCustomer(dLicense)){
+                newCustomer(dLicense);
+            }
+            delegate.updateReservation(confNo, col, dLicense, null);
+
+        }   else if (col == 3){
+            Timestamp fromDate = createFromDate();
+            delegate.updateReservation(confNo, col, null, fromDate);
+
+        }  else if (col == 4){
+            Timestamp toDate = createToDate();
+            delegate.updateReservation(confNo, col, null, toDate);
+
+        }  else if (col != 5){
+            System.out.println(WARNING_TAG + " The number that you entered was not a valid option.");
+        }
+    }
 	
 	private void branchInsertOption() {
         String location = null;
@@ -262,13 +405,13 @@ public class TerminalTransactions {
 	private void handleVehicleSearch(){
 
         System.out.println("Please enter the vehicletype you wish to search for (Press enter for all vehicletypes): ");
-        String vtName = readLine().trim();
+        String vtName = readLine().trim().toUpperCase();
 
         System.out.println("Please enter the loctaion you wish to search for (Press enter for all locations): ");
-        String location = readLine().trim();
+        String location = readLine().trim().toUpperCase();
 
         System.out.println("Please enter the city you wish to search for (Press enter for all cities): ");
-        String city = readLine().trim();
+        String city = readLine().trim().toUpperCase();
 
         System.out.println("Please enter the start date you wish to search for (Press enter for all dates): ");
 		Timestamp fromDate = createFromDate();
@@ -278,14 +421,112 @@ public class TerminalTransactions {
 
         delegate.showNumberVehicles(vtName, location, city, fromDate, toDate);
         String command = "";
+        boolean checkCommand = false;
 		while(!command.equals("SHOW") && !command.equals("EXIT")) {
-			System.out.println("Enter \"Show\" to show details of the cars.");
-			System.out.println("Enter \"Exit\" to exit search.");
+		    if(checkCommand) {
+                System.out.println(WARNING_TAG + " Your input was \"Show\" or \"Exit\"");
+                System.out.println("Enter \"Show\" to show details of the cars.");
+                System.out.println("Enter \"Exit\" to exit search.");
+            }
+		    else{
+                System.out.println("Enter \"Show\" to show details of the cars.");
+                System.out.println("Enter \"Exit\" to exit search.");
+            }
+		    checkCommand=true;
 			command=readLine().trim().toUpperCase();
 			if (command.equals("SHOW")) {
-				delegate.showVehicles(vtName, location, city, fromDate, toDate);
+				delegate.showAvailableVehicles(vtName, location, city, fromDate, toDate);
 			}
 		}
+    }
+
+    private void createRental(){
+	    int rid = delegate.lastRid();
+
+        int confNo = INVALID_INPUT;
+        while (confNo == INVALID_INPUT ) {
+            System.out.println("Please enter the confirmation number if a reservation was made prior: ");
+            confNo = readInteger(true);
+        }
+        String dLicense = null;
+        Timestamp fromDate =null;
+        Timestamp toDate =null;
+
+        //If a reservation has been made prior. Fetch information.
+        if(confNo>0){
+            ReservationModel resModel = delegate.showReservation(confNo, false)[0];
+            dLicense = resModel.getdLicense();
+            fromDate = resModel.getFromDate();
+            toDate = resModel.getToDate();
+
+        } else {
+
+            while (dLicense == null || dLicense.length() <= 0) {
+                System.out.println("Please enter driver´s license: ");
+                dLicense = readLine().trim();
+            }
+            if(delegate.checkCustomer(dLicense)){
+                newCustomer(dLicense);
+            }
+
+
+            while (fromDate == null || fromDate.before(new Timestamp(System.currentTimeMillis()))){
+                System.out.println("Please enter the start date you wish to insert (The start day has to be at least now):");
+                fromDate = createFromDate();
+            }
+
+
+
+            while (toDate == null || toDate.before(new Timestamp(fromDate.getTime()+24*60*60*1000))){
+                System.out.println("Please enter the end date (The time-interval has to be at least 24 hours):");
+                toDate = createToDate();
+            }
+        }
+
+        String vLicense=null;
+
+        boolean check=false;
+        while (!check) {
+            System.out.println("Please enter the vehicle´s license: ");
+            vLicense = readLine().trim();
+            check = delegate.checkVLicense(vLicense);
+        }
+        int odometer = delegate.showVehicles(vLicense,false)[0].getOdometer();
+
+        String cdName = null;
+        while (cdName == null || cdName.length() <= 0) {
+            System.out.println("Please enter the card name of the credit card ");
+            cdName = readLine().trim();
+        }
+
+        int cdNumber = INVALID_INPUT;
+        while (cdNumber == INVALID_INPUT ) {
+            System.out.println("Please enter the card number of the credit card: ");
+            cdNumber = readInteger(false);
+        }
+
+        String expDate = null;
+        while (expDate == null || expDate.length() <= 0) {
+            System.out.println("Please enter the expiry date of the credit card ");
+            expDate = readLine().trim();
+        }
+
+        RentalModel model = new RentalModel(
+                rid,
+                vLicense,
+                dLicense,
+                fromDate,
+                toDate,
+                odometer,
+                cdName,
+                cdNumber,
+                expDate,
+                confNo,
+                NULL,
+                null,
+                NULL,
+                null);
+        delegate.insertRental(model);
     }
 
 	private void handleQuitOption() {
@@ -330,6 +571,8 @@ public class TerminalTransactions {
 		}
 		return result;
 	}
+
+
 
 	private Timestamp createFromDate(){
 		System.out.println("Year: YYYY");

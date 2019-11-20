@@ -1,8 +1,6 @@
 package delegates;
 
-import model.BranchModel;
-import model.CustomerModel;
-import model.ReservationModel;
+import model.*;
 
 import java.sql.Timestamp;
 
@@ -17,21 +15,27 @@ import java.sql.Timestamp;
  */
 public interface TerminalTransactionsDelegate {
 
-	public boolean checkCustomer(String dlicense);
-	public void insertCustomer(CustomerModel model);
+	 boolean checkCustomer(String dlicense);
+	 void insertCustomer(CustomerModel model);
 
 
-	public void deleteReservation(int confNo);
-	public void insertReservation(ReservationModel model);
-	public void showReservation();
-	public int lastConfNumber();
+	 void deleteReservation(int confNo);
+	 void insertReservation(ReservationModel model, boolean show);
+	 ReservationModel[] showReservation(int confNo, boolean showDetails);
+	 void updateReservation (int confNo, int col, String name, Timestamp date);
+	 int lastConfNumber();
 
-	public void deleteBranch(String location, String city);
-	public void insertBranch(BranchModel model);
-	public void showBranch();
+	 void deleteBranch(String location, String city);
+	 void insertBranch(BranchModel model);
+	 void showBranch();
 
-	public void showVehicles(String vtname, String location, String city, Timestamp fromDate, Timestamp toDate);
-	public void showNumberVehicles(String vtname, String location, String city, Timestamp fromDate, Timestamp toDate);
-	
-	public void terminalTransactionsFinished();
+	 void showAvailableVehicles(String vtname, String location, String city, Timestamp fromDate, Timestamp toDate);
+	 void showNumberVehicles(String vtname, String location, String city, Timestamp fromDate, Timestamp toDate);
+	 VehiclesModel[] showVehicles(String vLicense, boolean show);
+	 boolean checkVLicense(String vLicense);
+
+	 int lastRid();
+	 void insertRental(RentalModel model);
+
+	 void terminalTransactionsFinished();
 }
