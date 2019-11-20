@@ -140,6 +140,28 @@ insert into Customers
 insert into Customers
    values('J9456GH','Lauren Taylor', '1294 150th Street, Abbotsford');
 
+insert into Customers
+    values('AAAA111', 'John Doe', '111 41st Street, Vancouver');
+insert into Customers
+    values('AAAA222', 'Jane Doe', '123 42nd Avenue, Vancouver');
+insert into Customers
+    values('AAAA333', 'James Dohe', '246 150th Street, Abbotsford');
+insert into Customers
+    values('AAAA444', 'Jordan Dowd', '111 53rd Street, Chilliwack');
+insert into Customers
+    values('AAAA555', 'Jane Macleod', '123 43nd Avenue, Vancouver');
+insert into Customers
+    values('AAAA777', 'James Gordan', '256 150th Street, Abbotsford');
+insert into Customers
+    values('AAAA888', 'Julien Dean', '121 41st Street, Vancouver');
+insert into Customers
+    values('AAAA999', 'Marc Anthony', '4523 42nd Avenue, Vancouver');
+insert into Customers
+    values('AAAA100', 'Louis Down', '346 150th Street, Abbotsford');
+insert into Customers
+    values('AAAA000', 'Melanie Down', '5546 150th Street, Abbotsford');
+
+
 -- VehicleTypes
 -- vtname VARCHAR(20),
 --     features VARCHAR(20),
@@ -387,14 +409,43 @@ insert into Vehicles
 
 
 
--- Rentals for today
+-- Rentals for today @ Abbotsford
 insert into Rentals
-    values(0001, 'TR1 50Z', 'A1456BZ', SYSDATE, SYSDATE + 5, 3100,
-    'mastercard', 51812375, '2020/02/22', NULL, NULL, NULL, NULL, NULL );
+    values(0001, 'TR1 51Z', 'AAAA111', SYSDATE, SYSDATE + 5, 3100,
+    'mastercard', 51813344, '2020/02/22', NULL, NULL, NULL, NULL, NULL );
 insert into Rentals
-    values(0002, 'TR9 50Z', 'A1456BZ', SYSDATE, SYSDATE + 3, 3100,
-       'mastercard', 51812375, '2020/02/22', NULL, NULL, NULL, NULL, NULL);
---Returns for today
+    values(0002, 'TR9 51Z', 'AAAA222', SYSDATE, SYSDATE + 3, 7820,
+       'mastercard', 51814444, '2022/02/22', NULL, NULL, NULL, NULL, NULL);
 insert into Rentals
-    values(0011, 'TR5 51Z', 'A1456BZ', SYSDATE - 5, SYSDATE, 2800,
-       'mastercard', 51812375, '2020/02/22', NULL, 3100, 'yes', 550, SYSDATE);
+    values(0003, 'TD1 50R', 'AAAA333', SYSDATE, SYSDATE + 5, 3100,
+       'visa', 57813344, '2020/02/22', NULL, NULL, NULL, NULL, NULL );
+insert into Rentals
+    values(0004, 'TL9 50R', 'AAAA444', SYSDATE, SYSDATE + 7, 7820,
+       'visa', 51814344, '2022/02/22', NULL, NULL, NULL, NULL, NULL);
+insert into Rentals
+    values(0005, 'LD1 50R', 'AAAA555', SYSDATE, SYSDATE + 2, 3100,
+       'mastercard', 51819344, '2020/05/20', NULL, NULL, NULL, NULL, NULL );
+insert into Rentals
+    values(0006, 'LL9 50R', 'AAAA666', SYSDATE, SYSDATE + 4, 7820,
+       'visa', 51814394, '2021/04/22', NULL, NULL, NULL, NULL, NULL);
+insert into Rentals
+    values(0007, 'RG3 33J', 'AAAA777', SYSDATE, SYSDATE + 7, 4100,
+       'visa', 59129344, '2020/03/20', NULL, NULL, NULL, NULL, NULL );
+insert into Rentals
+    values(0008, 'RG9 22I', 'AAAA888', SYSDATE, SYSDATE + 10, 5820,
+       'visa', 51814294, '2021/02/22', NULL, NULL, NULL, NULL, NULL);
+insert into Rentals
+    values(0009, 'RD1 33J', 'AAAA999', SYSDATE, SYSDATE + 2, 4100,
+       'visa', 59129300, '2020/01/20', NULL, NULL, NULL, NULL, NULL );
+insert into Rentals
+    values(0010, 'RL9 22I', 'AAAA000', SYSDATE, SYSDATE + 12, 5820,
+       'visa', 51814004, '2023/02/22', NULL, NULL, NULL, NULL, NULL);
+--Rentals for today @ Chilliwack
+
+--Returns for today @ Abbotsford
+insert into Rentals
+    values(1001, 'TR1 50Z', 'A1456BZ', SYSDATE - 5, SYSDATE, 2800,
+       'mastercard', 51812375, '2021/02/22', NULL, 3100, 'yes', 550, SYSDATE - 2/24);
+insert into Rentals
+    values(1002, 'TR9 50Z', 'A1456BZ', SYSDATE - 6, SYSDATE, 7500,
+       'mastercard', 51812375, '2020/02/22', NULL, 7820, 'yes', 660, SYSDATE - 2/24);
