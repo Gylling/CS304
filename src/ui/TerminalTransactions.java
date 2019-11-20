@@ -142,8 +142,8 @@ public class TerminalTransactions {
                         while (choice != 9) {
                             System.out.println("What is your query about?");
                             System.out.println();
-                            System.out.println("1. Branch (CLERK)");
-                            System.out.println("2. Rental (CLERK)");
+                            System.out.println("1. Branch ");
+                            System.out.println("2. Rental ");
                             System.out.println("9. Go Back");
                             System.out.println("Please choose one of the above options: ");
 

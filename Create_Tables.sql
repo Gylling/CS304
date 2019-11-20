@@ -426,7 +426,7 @@ insert into Rentals
     values(0005, 'LD1 50R', 'AAAA555', SYSDATE, SYSDATE + 2, 3100,
        'mastercard', 51819344, '2020/05/20', NULL, NULL, NULL, NULL, NULL );
 insert into Rentals
-    values(0006, 'LL9 50R', 'AAAA666', SYSDATE, SYSDATE + 4, 7820,
+    values(0006, 'LL9 50R', 'AAAA100', SYSDATE, SYSDATE + 4, 7820,
        'visa', 51814394, '2021/04/22', NULL, NULL, NULL, NULL, NULL);
 insert into Rentals
     values(0007, 'RG3 33J', 'AAAA777', SYSDATE, SYSDATE + 7, 4100,
