@@ -51,10 +51,10 @@ public class TerminalTransactions {
                 switch (choice) {
                     case 1:
                         while (choice != 9) {
-                            System.out.println("What is your query about?");
+                            System.out.println("What would you like to do?");
                             System.out.println();
-                            System.out.println("1. Reservation ");
-                            System.out.println("2. Vehicles ");
+                            System.out.println("1. Make a reservation");
+                            System.out.println("2. Look at available vehicles");
                             System.out.println("9. Go Back");
                             System.out.println("Please choose one of the above options: ");
 
@@ -67,10 +67,10 @@ public class TerminalTransactions {
                                     case 1:
                                         while (choice != 9) {
                                             System.out.println();
-                                            System.out.println("1. Insert reservation");
-                                            System.out.println("2. Delete reservation");
-                                            System.out.println("3. Show reservation");
-                                            System.out.println("4. Update reservation");
+                                            System.out.println("1. Create a reservation");
+                                            System.out.println("2. Delete a reservation");
+                                            System.out.println("3. Show a reservation");
+                                            System.out.println("4. Update your reservation");
                                             System.out.println("9. Go back");
                                             System.out.println("Please choose one of the above options: ");
 
@@ -104,7 +104,7 @@ public class TerminalTransactions {
                                     case 2:
                                         while (choice != 9) {
                                             System.out.println();
-                                            System.out.println("1. Search for vehicles");
+                                            System.out.println("1. Search for available vehicles");
                                             System.out.println("2. Show all vehicles");
                                             System.out.println("9. Go back");
                                             System.out.println("Please choose one of the above options: ");
@@ -142,10 +142,10 @@ public class TerminalTransactions {
                         break;
                     case 2:
                         while (choice != 9) {
-                            System.out.println("What is your query about?");
+                            System.out.println("What would you like to do?");
                             System.out.println();
-                            System.out.println("1. Branch ");
-                            System.out.println("2. Rental ");
+                            System.out.println("1. Look at branches");
+                            System.out.println("2. Create a rental");
                             System.out.println("9. Go Back");
                             System.out.println("Please choose one of the above options: ");
 
@@ -301,7 +301,7 @@ public class TerminalTransactions {
 
 		String vtName = null;
 		while (vtName == null || vtName.length() <= 0) {
-			System.out.println("Please enter the vehicletype you wish to insert: ");
+			System.out.println("Please enter the vehicle type you wish to reserve: ");
 			vtName = readLine().trim().toUpperCase();
 		}
 
@@ -313,7 +313,7 @@ public class TerminalTransactions {
                 System.out.println(WARNING_TAG + " Start date has to be 24 hours from now.");
 
             }else{
-                System.out.println("Please enter the start date you wish to insert (The start day has to be at least 24 from now):");
+                System.out.println("Please enter the start date of your reservation (The start day has to be at least 24 from now):");
             }
 			checkFromDate=true;
 			fromDate = createFromDate();
@@ -326,7 +326,7 @@ public class TerminalTransactions {
             if(checkToDate) {
                 System.out.println(WARNING_TAG + " End date date has to be 24 hours after start date.");
             }else{
-                System.out.println("Please enter the end date (A reservation has to be at least 24 hours):");
+                System.out.println("Please enter the end date of your reservation (A reservation has to be at least 24 hours or 1 day):");
             }
             checkToDate=true;
 			toDate = createToDate();
@@ -414,10 +414,10 @@ public class TerminalTransactions {
 
 	private void handleVehicleSearch(){
 
-        System.out.println("Please enter the vehicletype you wish to search for (Press enter for all vehicletypes): ");
+        System.out.println("Please enter the vehicle type you wish to search for (Press enter for all vehicletypes): ");
         String vtName = readLine().trim().toUpperCase();
 
-        System.out.println("Please enter the loctaion you wish to search for (Press enter for all locations): ");
+        System.out.println("Please enter the location you wish to search for (Press enter for all locations): ");
         String location = readLine().trim().toUpperCase();
 
         System.out.println("Please enter the city you wish to search for (Press enter for all cities): ");
@@ -463,7 +463,7 @@ public class TerminalTransactions {
         int confNo = INVALID_INPUT;
         boolean confNoCheck = false;
         while (!confNoCheck) {
-            System.out.println("Please enter the confirmation number if a reservation was made prior: ");
+            System.out.println("Please enter the confirmation number if you made a reservation prior: ");
             confNo = readInteger(true);
             confNoCheck=delegate.checkConfNo(confNo);
         }
@@ -482,7 +482,7 @@ public class TerminalTransactions {
             confNo = NULL;
 
             while (dLicense == null || dLicense.length() <= 0) {
-                System.out.println("Please enter driver´s license: ");
+                System.out.println("Please enter your driver´s license: ");
                 dLicense = readLine().trim();
             }
             if(delegate.checkCustomer(dLicense)){
@@ -518,19 +518,19 @@ public class TerminalTransactions {
 
         String cdName = null;
         while (cdName == null || cdName.length() <= 0) {
-            System.out.println("Please enter the card name of the credit card ");
+            System.out.println("Please enter the card type of your credit card ");
             cdName = readLine().trim();
         }
 
         int cdNumber = INVALID_INPUT;
         while (cdNumber == INVALID_INPUT ) {
-            System.out.println("Please enter the card number of the credit card: ");
+            System.out.println("Please enter the card number of your credit card: ");
             cdNumber = readInteger(false);
         }
 
         String expDate = null;
         while (expDate == null || expDate.length() <= 0) {
-            System.out.println("Please enter the expiry date of the credit card ");
+            System.out.println("Please enter the expiry date of your credit card ");
             expDate = readLine().trim();
         }
 
