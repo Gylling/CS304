@@ -286,7 +286,9 @@ public class DatabaseConnectionHandler {
 					"WHERE (TIMESTAMP '"+fromDate.toString()+"' < Re.fromDate " +
 					"AND Re.fromDate < TIMESTAMP '"+toDate.toString()+"')" +
 					" OR (TIMESTAMP '"+fromDate.toString()+"' < Re.toDate " +
-					"AND Re.toDate < TIMESTAMP '"+toDate.toString()+"'))) " +
+					"AND Re.toDate < TIMESTAMP '"+toDate.toString()+"') " +
+					" OR (TIMESTAMP '"+fromDate.toString()+"' <= Re.toDate " +
+					"AND Re.fromDate <= TIMESTAMP '"+fromDate.toString()+"'))) " +
 					"<=" +
 					"(SELECT COUNT(*) " +
 					"FROM reservations Rs " +
@@ -301,10 +303,12 @@ public class DatabaseConnectionHandler {
 					"WHERE V.VTNAME = VT.VTNAME AND V.VLICENSE NOT IN (" +
 					"SELECT Re.VLICENSE " +
 					"FROM rentals Re " +
-					"WHERE (TIMESTAMP '"+fromDate.toString()+"' < Re.fromDate " +
-					"AND Re.fromDate < TIMESTAMP '"+toDate.toString()+"')" +
-					" OR (TIMESTAMP '"+fromDate.toString()+"' < Re.toDate " +
-					"AND Re.toDate < TIMESTAMP '"+toDate.toString()+"'))) " +
+					"WHERE (TIMESTAMP '"+fromDate.toString()+"' <= Re.fromDate " +
+					"AND Re.fromDate <= TIMESTAMP '"+toDate.toString()+"')" +
+					" OR (TIMESTAMP '"+fromDate.toString()+"' <= Re.toDate " +
+					"AND Re.toDate <= TIMESTAMP '"+toDate.toString()+"')" +
+					" OR (TIMESTAMP '"+fromDate.toString()+"' <= Re.toDate " +
+					"AND Re.fromDate <= TIMESTAMP '"+fromDate.toString()+"')))" +
 					"= " +
 					"(SELECT COUNT(*) " +
 					"FROM reservations Rs " +
@@ -315,10 +319,12 @@ public class DatabaseConnectionHandler {
 		query += " AND Ve.VLICENSE NOT IN " +
 				"(SELECT R.VLICENSE " +
 				"FROM rentals R " +
-				"WHERE (TIMESTAMP '"+fromDate.toString()+"' < R.fromDate " +
-				"AND R.fromDate < TIMESTAMP '"+toDate.toString()+"') " +
-				"OR (TIMESTAMP '"+fromDate.toString()+"' < R.toDate " +
-				"AND R.toDate < TIMESTAMP '"+toDate.toString()+"'))";
+				"WHERE (TIMESTAMP '"+fromDate.toString()+"' <= R.fromDate " +
+				"AND R.fromDate <= TIMESTAMP '"+toDate.toString()+"') " +
+				"OR (TIMESTAMP '"+fromDate.toString()+"' <= R.toDate " +
+				"AND R.toDate <= TIMESTAMP '"+toDate.toString()+"') " +
+				"OR (TIMESTAMP '"+fromDate.toString()+"' <= R.toDate " +
+				"AND R.fromDate <= TIMESTAMP '"+fromDate.toString()+"'))";
 
 		query += " ORDER BY Ve.VTNAME";
 		try {

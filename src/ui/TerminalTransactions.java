@@ -508,7 +508,7 @@ public class TerminalTransactions {
         boolean check=false;
         while (!check) {
             System.out.println("Please enter the vehicle´s license: ");
-            vLicense = readLine().trim();
+            vLicense = readLine().trim().toUpperCase();
             check = delegate.checkVLicense(vLicense);
             if(!check){
                 System.out.println("Vehicle license could not be found.");
