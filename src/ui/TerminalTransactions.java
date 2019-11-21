@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Timestamp;
+
+import com.sun.deploy.util.Waiter;
 import delegates.TerminalTransactionsDelegate;
 import model.*;
 
@@ -17,7 +19,7 @@ public class TerminalTransactions {
 	private static final String WARNING_TAG = "[WARNING]";
 	private static final int INVALID_INPUT = Integer.MIN_VALUE;
 	private static final int EMPTY_INPUT = 0;
-	
+
 	private BufferedReader bufferedReader = null;
 	private TerminalTransactionsDelegate delegate = null;
 
@@ -26,10 +28,10 @@ public class TerminalTransactions {
 
 	/**
 	 * Displays simple text interface
-	 */ 
+	 */
 	public void showMainMenu(TerminalTransactionsDelegate delegate) {
 		this.delegate = delegate;
-		
+
 	    bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 		int choice = INVALID_INPUT;
         while (choice !=10) {
@@ -229,7 +231,7 @@ public class TerminalTransactions {
         }
 
 	}
-	
+
 	private void branchDeleteOption() {
 		String city = null;
 		String location = null;
@@ -308,8 +310,7 @@ public class TerminalTransactions {
 		boolean checkFromDate = false;
 		while (fromDate == null || fromDate.before(new Timestamp(System.currentTimeMillis()+24*60*60*1000))){
 		    if(checkFromDate){
-                System.out.println(WARNING_TAG + " Your start date was not valid");
-                System.out.println("Please enter the start date you wish to insert (The start day has to be at least 24 from now):");
+                System.out.println(WARNING_TAG + " Start date has to be 24 hours from now.");
 
             }else{
                 System.out.println("Please enter the start date you wish to insert (The start day has to be at least 24 from now):");
@@ -323,8 +324,7 @@ public class TerminalTransactions {
 		boolean checkToDate = false;
 		while (toDate == null || toDate.before(new Timestamp(fromDate.getTime()+24*60*60*1000))){
             if(checkToDate) {
-                System.out.println(WARNING_TAG + " Your end date was not valid");
-                System.out.println("Please enter the start date you wish to insert (The start day has to be at least 24 from now):");
+                System.out.println(WARNING_TAG + " End date date has to be 24 hours after start date.");
             }else{
                 System.out.println("Please enter the end date (A reservation has to be at least 24 hours):");
             }
@@ -372,30 +372,40 @@ public class TerminalTransactions {
 
         }   else if (col == 3){
             Timestamp fromDate = createFromDate();
+            while(fromDate.before(new Timestamp(System.currentTimeMillis()+24*60*60*1000))){
+                System.out.println(WARNING_TAG + " Your start date was not valid");
+                System.out.println("Please enter the start date you wish to insert (The start day has to be at least 24 from now):");
+                fromDate = createFromDate();
+            }
             delegate.updateReservation(confNo, col, null, fromDate);
 
         }  else if (col == 4){
             Timestamp toDate = createToDate();
+            while(toDate.before(new Timestamp(System.currentTimeMillis()+24*60*60*1000))){
+                System.out.println(WARNING_TAG + " Your end date was not valid");
+                System.out.println("Please enter the end date you wish to insert (The end day has to be at least 24 from now):");
+                toDate = createFromDate();
+            }
             delegate.updateReservation(confNo, col, null, toDate);
 
         }  else if (col != 5){
             System.out.println(WARNING_TAG + " The number that you entered was not a valid option.");
         }
     }
-	
+
 	private void branchInsertOption() {
         String location = null;
 		while (location == null || location.length() <= 0) {
 			System.out.print("Please enter the location of the branch you wish to insert: ");
-			location = readLine().trim();
+			location = readLine().trim().toUpperCase();
 		}
-		
 
-		
+
+
 		String city = null;
 		while (city == null || city.length() <= 0) {
 			System.out.print("Please enter the city of the branch you wish to insert: ");
-			city = readLine().trim();
+			city = readLine().trim().toUpperCase();
 		}
 
 		BranchModel model = new BranchModel(location, city);
@@ -413,12 +423,19 @@ public class TerminalTransactions {
         System.out.println("Please enter the city you wish to search for (Press enter for all cities): ");
         String city = readLine().trim().toUpperCase();
 
-        System.out.println("Please enter the start date you wish to search for (Press enter for all dates): ");
+        System.out.println("Please enter the start date you wish to search for (Press enter for today): ");
 		Timestamp fromDate = createFromDate();
+        while(fromDate.before(new Timestamp(System.currentTimeMillis()))){
+            System.out.println(WARNING_TAG + " Start date date can´t be in the past.");
+            fromDate = createFromDate();
+        }
 
         System.out.println("Please enter the end date you wish to search for (Press enter for all dates): ");
 		Timestamp toDate = createToDate();
-
+		while(toDate.before(new Timestamp(fromDate.getTime()+24*60*60*1000))) {
+            System.out.println(WARNING_TAG + " End date date has to be 24 hours after start date.");
+            toDate = createToDate();
+        }
         delegate.showNumberVehicles(vtName, location, city, fromDate, toDate);
         String command = "";
         boolean checkCommand = false;
@@ -444,22 +461,25 @@ public class TerminalTransactions {
 	    int rid = delegate.lastRid();
 
         int confNo = INVALID_INPUT;
-        while (confNo == INVALID_INPUT ) {
+        boolean confNoCheck = false;
+        while (!confNoCheck) {
             System.out.println("Please enter the confirmation number if a reservation was made prior: ");
             confNo = readInteger(true);
+            confNoCheck=delegate.checkConfNo(confNo);
         }
         String dLicense = null;
         Timestamp fromDate =null;
         Timestamp toDate =null;
 
         //If a reservation has been made prior. Fetch information.
-        if(confNo>0){
+        if(confNo>0 ){
             ReservationModel resModel = delegate.showReservation(confNo, false)[0];
             dLicense = resModel.getdLicense();
             fromDate = resModel.getFromDate();
             toDate = resModel.getToDate();
 
         } else {
+            confNo = NULL;
 
             while (dLicense == null || dLicense.length() <= 0) {
                 System.out.println("Please enter driver´s license: ");
@@ -469,16 +489,16 @@ public class TerminalTransactions {
                 newCustomer(dLicense);
             }
 
-
-            while (fromDate == null || fromDate.before(new Timestamp(System.currentTimeMillis()))){
-                System.out.println("Please enter the start date you wish to insert (The start day has to be at least now):");
+            fromDate = createFromDate();
+            while (fromDate.before(new Timestamp(System.currentTimeMillis()))){
+                System.out.println(WARNING_TAG + " Start date can´t be in the past.");
                 fromDate = createFromDate();
             }
 
-
-
-            while (toDate == null || toDate.before(new Timestamp(fromDate.getTime()+24*60*60*1000))){
-                System.out.println("Please enter the end date (The time-interval has to be at least 24 hours):");
+            System.out.println("Please enter the end date (The time-interval has to be at least 24 hours):");
+            toDate = createToDate();
+            while (toDate.before(new Timestamp(fromDate.getTime()+24*60*60*1000))){
+                System.out.println(WARNING_TAG + " End date date has to be 24 hours after start date.");
                 toDate = createToDate();
             }
         }
@@ -490,6 +510,9 @@ public class TerminalTransactions {
             System.out.println("Please enter the vehicle´s license: ");
             vLicense = readLine().trim();
             check = delegate.checkVLicense(vLicense);
+            if(!check){
+                System.out.println("Vehicle license could not be found.");
+            }
         }
         int odometer = delegate.showVehicles(vLicense,false)[0].getOdometer();
 
@@ -531,7 +554,7 @@ public class TerminalTransactions {
 
 	private void handleQuitOption() {
 		System.out.println("Good Bye!");
-		
+
 		if (bufferedReader != null) {
 			try {
 				bufferedReader.close();
@@ -539,11 +562,11 @@ public class TerminalTransactions {
 				System.out.println("IOException!");
 			}
 		}
-		
+
 		delegate.terminalTransactionsFinished();
 	}
 
-	
+
 	private int readInteger(boolean allowEmpty) {
 		String line = null;
 		int input = INVALID_INPUT;
@@ -601,12 +624,7 @@ public class TerminalTransactions {
 			minute="01";
 		}
 
-		Timestamp fromDate = Timestamp.valueOf(year+"-"+month+"-"+day+" "+hour+":"+minute+":00");
-
-		if(fromDate.before(new Timestamp(System.currentTimeMillis()))){
-			fromDate= new Timestamp(System.currentTimeMillis());
-		}
-		return fromDate;
+		return Timestamp.valueOf(year+"-"+month+"-"+day+" "+hour+":"+minute+":00");
 	}
 
 	private Timestamp createToDate(){

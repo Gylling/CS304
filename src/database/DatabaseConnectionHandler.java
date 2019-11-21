@@ -3,8 +3,8 @@ package database;
 import java.sql.*;
 import java.util.ArrayList;
 
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import model.*;
+
 
 /**
  * This class handles all database related transactions
@@ -12,10 +12,9 @@ import model.*;
 public class DatabaseConnectionHandler {
 	private static final String ORACLE_URL = "jdbc:oracle:thin:@localhost:1522:stu";
 	private static final String EXCEPTION_TAG = "[EXCEPTION]";
-	private static final String WARNING_TAG = "[WARNING]";
-	
+
 	private Connection connection = null;
-	
+
 	public DatabaseConnectionHandler() {
 		try {
 			// Load the Oracle JDBC driver
@@ -25,7 +24,7 @@ public class DatabaseConnectionHandler {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
 	}
-	
+
 	public void close() {
 		try {
 			if (connection != null) {
@@ -77,22 +76,23 @@ public class DatabaseConnectionHandler {
 		return result.toArray(new CustomerModel[result.size()]);
 	}
 
-	public void deleteReservation(int confNo) {
+	public boolean deleteReservation(int confNo) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("DELETE FROM Reservations WHERE confNo = ?");
 			ps.setInt(1, confNo);
 
 			int rowCount = ps.executeUpdate();
-			if (rowCount == 0) {
-				System.out.println(WARNING_TAG + " Reservation " + confNo + " does not exist!");
-			}
 
 			connection.commit();
 
 			ps.close();
+			return rowCount>0;
+
+
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
+			return false;
 		}
 	}
 
@@ -135,19 +135,11 @@ public class DatabaseConnectionHandler {
         try {
             String query = "UPDATE RESERVATIONS SET "+ colName+" = "+newName+" WHERE CONFNO = "+model.getConfNo();
             System.out.println("UPDATE RESERVATIONS SET "+ colName+" = "+newName+" WHERE CONFNO = "+model.getConfNo());
-//            PreparedStatement ps = connection.prepareStatement("UPDATE RESERVATIONS SET ? = ? WHERE CONFNO = ?");
-//            ps.setString(1, colName);
-//            ps.setString(2, newName);
-//            ps.setInt(3, model.getConfNo());
 
             Statement stmt = connection.createStatement();
 
+            stmt.executeUpdate(query);
 
-
-            int rowCount = stmt.executeUpdate(query);
-            if (rowCount == 0) {
-                System.out.println(WARNING_TAG + " Confirmation " + model.getConfNo() + " does not exist!");
-            }
 
             connection.commit();
 
@@ -189,26 +181,25 @@ public class DatabaseConnectionHandler {
 	}
 
 
-	public void deleteBranch(String location, String city) {
+	public boolean deleteBranch(String location, String city) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("DELETE FROM branch WHERE location = ? AND city = ?");
 			ps.setString(1, location);
             ps.setString(2, city);
-			
+
 			int rowCount = ps.executeUpdate();
-			if (rowCount == 0) {
-				System.out.println(WARNING_TAG + " Branch " + location + ", " + city + " does not exist!");
-			}
-			
+
 			connection.commit();
-	
+
 			ps.close();
+			return rowCount>0;
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
+			return false;
 		}
 	}
-	
+
 	public void insertBranch(BranchModel model) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("INSERT INTO branch VALUES (?,?)");
@@ -223,7 +214,7 @@ public class DatabaseConnectionHandler {
 			rollbackConnection();
 		}
 	}
-	
+
 	public BranchModel[] getBranchInfo() {
 		ArrayList<BranchModel> result = new ArrayList<>();
 
@@ -410,11 +401,17 @@ public class DatabaseConnectionHandler {
             ps.setString(7, model.getCardName());
             ps.setInt(8, model.getCardNumber());
             ps.setString(9, model.getExpDate());
-            ps.setInt(10, model.getConfNo());
+
             ps.setInt(11, model.getrOdometer());
             ps.setString(12, model.getrFulltank());
             ps.setInt(13, model.getValue());
             ps.setTimestamp(14, model.getrDate());
+
+            if(model.getConfNo()!=0){
+				ps.setInt(10, model.getConfNo());
+			} else {
+				ps.setString(10, null);
+			}
 
             ps.executeUpdate();
             connection.commit();
@@ -430,7 +427,6 @@ public class DatabaseConnectionHandler {
         int res = -1;
         try {
             Statement stmt = connection.createStatement();
-
             ResultSet rs = stmt.executeQuery("SELECT MAX("+ col +") FROM "+table);
             connection.commit();
             if(rs.next()) {
@@ -453,10 +449,10 @@ public class DatabaseConnectionHandler {
 			if (connection != null) {
 				connection.close();
 			}
-	
+
 			connection = DriverManager.getConnection(ORACLE_URL, username, password);
 			connection.setAutoCommit(false);
-	
+
 			System.out.println("\nConnected to Oracle!");
 			return true;
 		} catch (SQLException e) {
@@ -467,7 +463,7 @@ public class DatabaseConnectionHandler {
 
 	private void rollbackConnection() {
 		try  {
-			connection.rollback();	
+			connection.rollback();
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}

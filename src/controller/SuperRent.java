@@ -18,6 +18,7 @@ import static java.sql.Types.NULL;
 public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDelegate {
     private DatabaseConnectionHandler dbHandler;
     private LoginWindow loginWindow = null;
+    private static final String INFO_TAG = "[INFO] ";
 
     private SuperRent() {
         dbHandler = new DatabaseConnectionHandler();
@@ -76,7 +77,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     public void insertReservation(ReservationModel model, boolean show) {
         VehiclesModel[] vehiclesModel = dbHandler.getAvailableVehicles("",model.getVtName(),"", "", model.getFromDate(), model.getToDate());
         if(vehiclesModel.length<1){
-            System.out.println("There is no vehicles available with the given vehicle type on the given dates.");
+            System.out.println(INFO_TAG + "There is no vehicles available with the given vehicle type on the given dates.");
         } else {
             dbHandler.insertReservation(model);
             if(show) {
@@ -95,52 +96,72 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 
 
     public void deleteReservation(int confNo) {
-        dbHandler.deleteReservation(confNo);
+        if(dbHandler.deleteReservation(confNo)){
+            System.out.println("Delete complete");
+        } else {
+            System.out.println(INFO_TAG + "There is no reservation with that confirmation number.");
+        }
     }
 
 
 
     public ReservationModel[] showReservation(int confNo, boolean showDetails) {
         ReservationModel[] models = dbHandler.getReservationInfo(confNo);
-
-        if(showDetails) {
-            for (ReservationModel model : models) {
-                printReservation(model);
+        if(models.length<1){
+            System.out.println(INFO_TAG + "There is no reservation with that confirmation number.");
+        }
+        else {
+            if (showDetails) {
+                System.out.printf("%-20.20s", "Confirmation number");
+                System.out.print("|");
+                System.out.printf("%-20.20s", "Vehicle Type");
+                System.out.print("|");
+                System.out.printf("%-20.20s", "Driver's License");
+                System.out.print("|");
+                System.out.printf("%-30.30s", "Start Date");
+                System.out.print("|");
+                System.out.printf("%-30.30s", "End Date");
+                System.out.println();
+                for (ReservationModel model : models) {
+                    printReservation(model);
+                }
             }
         }
-
         return models;
     }
 
     private void printReservation (ReservationModel model){
         System.out.printf("%-20.20s", model.getConfNo());
+        System.out.print("|");
         System.out.printf("%-20.20s", model.getVtName());
+        System.out.print("|");
         System.out.printf("%-20.20s", model.getdLicense());
-        System.out.printf("%-20.20s", model.getFromDate());
-        System.out.printf("%-20.20s", model.getToDate());
+        System.out.print("|");
+        System.out.printf("%-30.30s", model.getFromDate());
+        System.out.print("|");
+        System.out.printf("%-30.30s", model.getToDate());
         System.out.println();
     }
     public void updateReservation (int confNo, int col, String name, Timestamp date){
         ReservationModel[] model = showReservation(confNo,false);
-        if(model.length<1){
-            System.out.println("The confirmation number is not found");
-        } else {
+        if(model.length>0) {
             VehiclesModel[] vehiclesModel;
             ReservationModel resModel;
             switch (col) {
                 case 1:
                         /*
+                        Get reservation
                         Get the new vehicle type
                         Check if the new vehicle type is available in this time interval
                         Update vehicle type
                          */
-                    vehiclesModel = dbHandler.getAvailableVehicles("",name,"", "", model[0].getFromDate(), model[0].getToDate());
-                    if(vehiclesModel.length<1){
-                        System.out.println("There is no vehicles available with the given vehicle type on the given dates.");
+                    vehiclesModel = dbHandler.getAvailableVehicles("", name, "", "", model[0].getFromDate(), model[0].getToDate());
+                    if (vehiclesModel.length < 1) {
+                        System.out.println(INFO_TAG + "There is no vehicles available with the given vehicle type on the given dates.");
                     } else {
-                        resModel = new ReservationModel(model[0].getConfNo(),name,model[0].getdLicense(),model[0].getFromDate(), model[0].getToDate());
-                        dbHandler.updateReservation(resModel,1);
-                        System.out.println("Update complete");
+                        resModel = new ReservationModel(model[0].getConfNo(), name, model[0].getdLicense(), model[0].getFromDate(), model[0].getToDate());
+                        dbHandler.updateReservation(resModel, 1);
+                        System.out.println(INFO_TAG + "Update complete");
                         printReservation(resModel);
                     }
                     break;
@@ -150,9 +171,9 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
                         Check if customer is new
                         Update Driver´s License
                          */
-                    resModel = new ReservationModel(model[0].getConfNo(),model[0].getVtName(),name,model[0].getFromDate(), model[0].getToDate());
-                    dbHandler.updateReservation(resModel,2);
-                    System.out.println("Update complete");
+                    resModel = new ReservationModel(model[0].getConfNo(), model[0].getVtName(), name, model[0].getFromDate(), model[0].getToDate());
+                    dbHandler.updateReservation(resModel, 2);
+                    System.out.println(INFO_TAG + "Update complete");
                     System.out.println();
                     printReservation(resModel);
                     break;
@@ -164,22 +185,22 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
                         Check if the vehicle type is available in this time interval
                         Update start date
                          */
-                    if(date.before(new Timestamp(System.currentTimeMillis()+24*60*60*1000)) || model[0].getToDate().before(new Timestamp(date.getTime()+24*60*60*1000))){
-                        System.out.println("The start day has to be at least 24 hour from now and 24 hour before the end date.");
-                        System.out.println("Update not complete");
+                    if (date.before(new Timestamp(System.currentTimeMillis() + 24 * 60 * 60 * 1000)) || model[0].getToDate().before(new Timestamp(date.getTime() + 24 * 60 * 60 * 1000))) {
+                        System.out.println(INFO_TAG + "The start day has to be at least 24 hour from now and 24 hour before the end date.");
+                        System.out.println(INFO_TAG + "Update not complete");
                     } else {
 
                         deleteReservation(model[0].getConfNo());
                         vehiclesModel = dbHandler.getAvailableVehicles("", model[0].getVtName(), "", "", date, model[0].getToDate());
                         if (vehiclesModel.length < 1) {
-                            System.out.println("There is no vehicles available with the given vehicle type on the given dates.");
-                            System.out.println("Update not complete");
+                            System.out.println(INFO_TAG + "There is no vehicles available with the given vehicle type on the given dates.");
+                            System.out.println(INFO_TAG + "Update not complete");
                             insertReservation(model[0], true);
                         } else {
                             insertReservation(model[0], false);
-                            resModel = new ReservationModel(model[0].getConfNo(),model[0].getVtName(),model[0].getdLicense(),date, model[0].getToDate());
-                            dbHandler.updateReservation(resModel,3);
-                            System.out.println("Update complete");
+                            resModel = new ReservationModel(model[0].getConfNo(), model[0].getVtName(), model[0].getdLicense(), date, model[0].getToDate());
+                            dbHandler.updateReservation(resModel, 3);
+                            System.out.println(INFO_TAG + "Update complete");
                             printReservation(resModel);
                         }
                     }
@@ -191,22 +212,22 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
                         Check if the vehicle type is available in this time interval
                         Update end date
                          */
-                    if(date.before(new Timestamp(model[0].getFromDate().getTime()+24*60*60*1000))){
-                        System.out.println("The end day has to be at least 24 after the start date.");
-                        System.out.println("Update not complete");
+                    if (date.before(new Timestamp(model[0].getFromDate().getTime() + 24 * 60 * 60 * 1000))) {
+                        System.out.println(INFO_TAG + "The end day has to be at least 24 after the start date.");
+                        System.out.println(INFO_TAG + "Update not complete");
                     } else {
 
                         deleteReservation(model[0].getConfNo());
                         vehiclesModel = dbHandler.getAvailableVehicles("", model[0].getVtName(), "", "", model[0].getFromDate(), date);
                         if (vehiclesModel.length < 1) {
-                            System.out.println("There is no vehicles available with the given vehicle type on the given dates.");
-                            System.out.println("Update not complete");
+                            System.out.println(INFO_TAG + "There is no vehicles available with the given vehicle type on the given dates.");
+                            System.out.println(INFO_TAG + "Update not complete");
                             insertReservation(model[0], true);
                         } else {
                             insertReservation(model[0], false);
-                            resModel = new ReservationModel(model[0].getConfNo(),model[0].getVtName(),model[0].getdLicense(),model[0].getFromDate(), date);
-                            dbHandler.updateReservation(resModel,4);
-                            System.out.println("Update complete");
+                            resModel = new ReservationModel(model[0].getConfNo(), model[0].getVtName(), model[0].getdLicense(), model[0].getFromDate(), date);
+                            dbHandler.updateReservation(resModel, 4);
+                            System.out.println(INFO_TAG + "Update complete");
                             printReservation(resModel);
                         }
                     }
@@ -216,37 +237,44 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 
     }
 
-    /**
-     * TermainalTransactionsDelegate Implementation
-     *
-     * Insert a branch with the given info
-     */
+    public boolean checkConfNo(int confNo){
+        ReservationModel[] models = showReservation(confNo,false);
+        return models.length>0;
+    }
+
+
     public void insertBranch(BranchModel model) {
         dbHandler.insertBranch(model);
+        System.out.println(INFO_TAG + "Insert complete.");
     }
 
-    /**
-     * TermainalTransactionsDelegate Implementation
-     *
-     * Delete branch with given branch ID.
-     */
+
     public void deleteBranch(String location, String city) {
-        dbHandler.deleteBranch(location, city);
+        if(dbHandler.deleteBranch(location, city)){
+            System.out.println(INFO_TAG + "Delete complete.");
+        } else {
+            System.out.println(INFO_TAG + "The branch is not found");
+        }
     }
 
 
-    /**
-     * TermainalTransactionsDelegate Implementation
-     *
-     * Displays information about varies SuperRent branches.
-     */
+
     public void showBranch() {
         BranchModel[] models = dbHandler.getBranchInfo();
-
-        for (BranchModel model : models) {
-            System.out.printf("%-10.10s", model.getLocation());
-            System.out.printf("%-15.15s", model.getCity());
+        if(models.length<1){
+            System.out.println(INFO_TAG + "There is no branch to show.");
+        } else {
+            System.out.printf("%-10.10s", "Location");
+            System.out.print("|");
+            System.out.printf("%-15.15s", "City");
             System.out.println();
+
+            for (BranchModel model : models) {
+                System.out.printf("%-10.10s", model.getLocation());
+                System.out.print("|");
+                System.out.printf("%-15.15s", model.getCity());
+                System.out.println();
+            }
         }
     }
     public void showNumberVehicles(String vtname, String location, String city, Timestamp fromDate, Timestamp toDate) {
@@ -263,26 +291,62 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
         VehiclesModel[] models = dbHandler.getVehicles(vLicense);
         if(show) {
             printVehicles(models);
+            System.out.println("Number of cars shown:\t"+models.length);
         }
         return models;
     }
 
     private void printVehicles(VehiclesModel[] models){
-        System.out.println("Details:");
-
-        for (VehiclesModel model : models) {
-            System.out.printf("%-10.10s", model.getVid());
-            System.out.printf("%-15.15s", model.getvLicense());
-            System.out.printf("%-10.10s", model.getMake());
-            System.out.printf("%-15.15s", model.getModel());
-            System.out.printf("%-10.10s", model.getYear());
-            System.out.printf("%-15.15s", model.getColor());
-            System.out.printf("%-10.10s", model.getOdometer());
-            System.out.printf("%-15.15s", model.getStatus());
-            System.out.printf("%-10.10s", model.getVtname());
-            System.out.printf("%-10.10s", model.getLocation());
-            System.out.printf("%-15.15s", model.getCity());
+        if(models.length<1){
+            System.out.println(INFO_TAG + "There is no vehicles to show.");
+        } else {
+            System.out.printf("%-10.10s", "Vehicle ID");
+            System.out.print("|");
+            System.out.printf("%-15.15s", "Vehicle License");
+            System.out.print("|");
+            System.out.printf("%-10.10s", "Make");
+            System.out.print("|");
+            System.out.printf("%-10.10s", "Model");
+            System.out.print("|");
+            System.out.printf("%-10.10s", "Year");
+            System.out.print("|");
+            System.out.printf("%-10.10s", "Color");
+            System.out.print("|");
+            System.out.printf("%-10.10s", "Odometer");
+            System.out.print("|");
+            System.out.printf("%-10.10s", "Status");
+            System.out.print("|");
+            System.out.printf("%-15.15s", "Vehicle Type");
+            System.out.print("|");
+            System.out.printf("%-10.10s", "Location");
+            System.out.print("|");
+            System.out.printf("%-15.15s", "City");
             System.out.println();
+
+            for (VehiclesModel model : models) {
+                System.out.printf("%-10.10s", model.getVid());
+                System.out.print("|");
+                System.out.printf("%-15.15s", model.getvLicense());
+                System.out.print("|");
+                System.out.printf("%-10.10s", model.getMake());
+                System.out.print("|");
+                System.out.printf("%-10.10s", model.getModel());
+                System.out.print("|");
+                System.out.printf("%-10.10s", model.getYear());
+                System.out.print("|");
+                System.out.printf("%-10.10s", model.getColor());
+                System.out.print("|");
+                System.out.printf("%-10.10s", model.getOdometer());
+                System.out.print("|");
+                System.out.printf("%-10.10s", model.getStatus());
+                System.out.print("|");
+                System.out.printf("%-15.15s", model.getVtname());
+                System.out.print("|");
+                System.out.printf("%-10.10s", model.getLocation());
+                System.out.print("|");
+                System.out.printf("%-15.15s", model.getCity());
+                System.out.println();
+            }
         }
     }
     //Check if there is a vehicle with the vehicle license
@@ -308,7 +372,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     public void insertRental(RentalModel model){
         VehiclesModel[] vehiclesModel = dbHandler.getAvailableVehicles(model.getvLicense(),"", "", "", model.getFromDate(), model.getToDate());
         if(vehiclesModel.length<1){
-            System.out.println("There is no vehicles available with the given vehicle license on the given dates.");
+            System.out.println(INFO_TAG + "There is no vehicles available with the given vehicle license on the given dates.");
         } else {
             dbHandler.insertRental(model);
             System.out.println("Your rental number is: \t" + model.getRid());

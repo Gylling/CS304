@@ -24,6 +24,7 @@ public interface TerminalTransactionsDelegate {
 	 ReservationModel[] showReservation(int confNo, boolean showDetails);
 	 void updateReservation (int confNo, int col, String name, Timestamp date);
 	 int lastConfNumber();
+	 boolean checkConfNo(int confNo);
 
 	 void deleteBranch(String location, String city);
 	 void insertBranch(BranchModel model);
