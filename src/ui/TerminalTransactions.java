@@ -19,6 +19,7 @@ import static java.sql.Types.NULL;
 public class TerminalTransactions {
 	private static final String EXCEPTION_TAG = "[EXCEPTION]";
 	private static final String WARNING_TAG = "[WARNING]";
+    private static final String INFO_TAG = "[INFO] ";
 	private static final int INVALID_INPUT = Integer.MIN_VALUE;
 	private static final int EMPTY_INPUT = 0;
 
@@ -625,8 +626,8 @@ public class TerminalTransactions {
     private void returnRental(){
         int rid = INVALID_INPUT;
         boolean ridCheck = false;
-        while (!ridCheck) {
-            System.out.println("Please enter the reservation number: ");
+        while ( rid==INVALID_INPUT || !ridCheck) {
+            System.out.println("Please enter the rental number: ");
             rid = readInteger(true);
             ridCheck=delegate.checkRid(rid);
         }
@@ -634,6 +635,12 @@ public class TerminalTransactions {
 
         //Fetch information.
         RentalModel rentModel = delegate.showRentedVehicles(rid, false)[0];
+
+        //Check if the vehicle is already rented?
+        if(rentModel.getrDate()!=null){
+            System.out.println(INFO_TAG + "Vehicle is already returned.");
+            return;
+        }
         String vLicense = rentModel.getvLicense();
         String dLicense = rentModel.getdLicense();
         Timestamp fromDate = rentModel.getFromDate();
