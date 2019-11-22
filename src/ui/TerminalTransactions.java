@@ -181,6 +181,7 @@ public class TerminalTransactions {
                             System.out.println("1. Look at branches");
                             System.out.println("2. Edit rental");
                             System.out.println("3. Customer Details ");
+                            System.out.println("4. Print Daily Report");
 
                             System.out.println("9. Go Back");
                             System.out.println("Please choose one of the above options: ");
@@ -276,6 +277,63 @@ public class TerminalTransactions {
                                                 switch (choice) {
                                                     case 1:
                                                         showCustomer();
+                                                        break;
+                                                    case 8:
+                                                        break;
+                                                    default:
+                                                        System.out.println(WARNING_TAG + " The number that you entered was not a valid option.");
+                                                        break;
+                                                }
+                                            }
+                                        }
+                                        break;
+                                    case 4:
+                                        while (choice != 8) {
+                                            System.out.println();
+                                            System.out.println("1. Print Daily Rentals for Branch");
+                                            System.out.println("2. Print Daily Rentals for All");
+                                            System.out.println("8. Go back");
+                                            System.out.println("Please choose one of the above options: ");
+
+                                            choice = readInteger(false);
+
+                                            System.out.println(" ");
+
+                                            if (choice != INVALID_INPUT) {
+                                                switch (choice) {
+                                                    case 1:
+                                                        while (choice != 8) {
+                                                            System.out.println();
+                                                            System.out.println("1. Print Daily Rentals for Abbotsford");
+                                                            System.out.println("2. Print Daily Rentals for Chilliwack");
+                                                            System.out.println("3. Print Daily Rentals for Vancouver");
+                                                            System.out.println("8. Go back");
+                                                            System.out.println("Please choose one of the above options: ");
+
+                                                            choice = readInteger(false);
+
+                                                            System.out.println(" ");
+                                                            if (choice != INVALID_INPUT) {
+                                                                switch (choice) {
+                                                                    case 1:
+                                                                        showReport("A","Abbotsford");
+                                                                        break;
+                                                                    case 2:
+                                                                        showReport("C","Chilliwack");
+                                                                        break;
+                                                                    case 3:
+                                                                        showReport("V","Vancouver");
+                                                                        break;
+                                                                    case 8:
+                                                                        break;
+                                                                    default:
+                                                                        System.out.println(WARNING_TAG + " The number that you entered was not a valid option.");
+                                                                        break;
+                                                                }
+                                                            }
+                                                        }
+                                                    case 2:
+                                                        showReportsAll();
                                                         break;
                                                     case 8:
                                                         break;
@@ -714,6 +772,10 @@ public class TerminalTransactions {
         System.out.println("Please enter the driver´s license for the customer (Press enter for all customers): ");
         String dLicense = readLine().trim().toUpperCase();
         delegate.showCustomer(dLicense);
+    }
+
+    private void showReport(String location, String city){
+	    delegate.showReport(location, city);
     }
 
 	private void handleQuitOption() {

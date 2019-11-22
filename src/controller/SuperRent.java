@@ -565,6 +565,10 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
         System.out.println("Value is calculated by weeks then remaining days plus the weekly and daily insurance rates");
     }
 
+    public void showReport(String Location, String City){
+        dbHandler.getDailyRentalsBranch(location, city);
+    }
+
     /**
      * TerminalTransactionsDelegate Implementation
      *
