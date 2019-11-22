@@ -362,6 +362,77 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
         return check;
     }
 
+    //Show customer
+    public void showCustomer(String dLicense) {
+        CustomerModel[] models = dbHandler.getCustomerInfo(dLicense);
+        if(models.length<1){
+            System.out.println(INFO_TAG + "There is no customer to show.");
+        } else {
+            System.out.printf("%-18.18s", "Driver´s License");
+            System.out.print("|");
+            System.out.printf("%-30.30s", "Name");
+            System.out.print("|");
+            System.out.printf("%-30.30s", "Address");
+            System.out.println();
+
+            for (CustomerModel model : models) {
+                System.out.printf("%-18.18s", model.getdLicense());
+                System.out.print("|");
+                System.out.printf("%-30.30s", model.getName());
+                System.out.print("|");
+                System.out.printf("%-30.30s", model.getAddress());
+                System.out.println();
+            }
+        }
+    }
+
+    //Show vehicletypes
+    public void showVehicleTypes() {
+        VehicleTypesModel[] models = dbHandler.getTypes();
+        if(models.length<1){
+            System.out.println(INFO_TAG + "There is no vehicles types to show.");
+        } else {
+            System.out.printf("%-15.15s", "Vehicle Type");
+            System.out.print("|");
+            System.out.printf("%-20.20s", "Features");
+            System.out.print("|");
+            System.out.printf("%-15.15s", "Weekly rate");
+            System.out.print("|");
+            System.out.printf("%-15.15s", "Daily rate");
+            System.out.print("|");
+            System.out.printf("%-15.15s", "Hourly rate");
+            System.out.print("|");
+            System.out.printf("%-20.20s", "Weekly Ins. rate");
+            System.out.print("|");
+            System.out.printf("%-20.20s", "Daily Ins. rate");
+            System.out.print("|");
+            System.out.printf("%-20.20s", "Hourly Ins. rate");
+            System.out.print("|");
+            System.out.printf("%-10.10s", "K. rate");
+            System.out.println();
+
+            for (VehicleTypesModel model : models) {
+                System.out.printf("%-15.15s", model.getVtName());
+                System.out.print("|");
+                System.out.printf("%-20.20s", model.getFeatures());
+                System.out.print("|");
+                System.out.printf("%-15.15s", model.getwRate());
+                System.out.print("|");
+                System.out.printf("%-15.15s", model.getdRate());
+                System.out.print("|");
+                System.out.printf("%-15.15s", model.gethRate());
+                System.out.print("|");
+                System.out.printf("%-20.20s", model.getwIRate());
+                System.out.print("|");
+                System.out.printf("%-20.20s", model.getdIRate());
+                System.out.print("|");
+                System.out.printf("%-20.20s", model.gethIRate());
+                System.out.print("|");
+                System.out.printf("%-20.20s", model.getkRate());
+                System.out.println();
+            }
+        }
+    }
 
     //Get´s the highest rentalID
     public int lastRid() {
@@ -391,6 +462,94 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
                 System.out.println("Confirmation number is: \t" + model.getConfNo());
             }
         }
+    }
+
+    //Show rented vehicles
+    public RentalModel[] showRentedVehicles(int rid, boolean showDetails) {
+        RentalModel[] models = dbHandler.getRentalInfo(rid);
+        if(models.length<1){
+            System.out.println(INFO_TAG + "There is no rental with that rental number.");
+        }
+        else {
+            if (showDetails) {
+                System.out.printf("%-10.10s", "Rental No.");
+                System.out.print("|");
+                System.out.printf("%-18.18s", "Vehicle's License");
+                System.out.print("|");
+                System.out.printf("%-18.18s", "Driver's License");
+                System.out.print("|");
+                System.out.printf("%-20.20s", "Start Date");
+                System.out.print("|");
+                System.out.printf("%-20.20s", "End Date");
+                System.out.print("|");
+                System.out.printf("%-10.10s", "Odometer");
+                System.out.print("|");
+                System.out.printf("%-10.10s", "Cardname");
+                System.out.print("|");
+                System.out.printf("%-10.10s", "Card No.");
+                System.out.print("|");
+                System.out.printf("%-10.10s", "Exp. date");
+                System.out.print("|");
+                System.out.printf("%-10.10s", "Conf. No.");
+                System.out.print("|");
+                System.out.printf("%-10.10s", "R.Odometer");
+                System.out.print("|");
+                System.out.printf("%-10.10s", "R.FullTank");
+                System.out.print("|");
+                System.out.printf("%-10.10s", "Value");
+                System.out.print("|");
+                System.out.printf("%-20.20s", "Rdate");
+                System.out.println();
+                for (RentalModel model : models) {
+                    printRental(model);
+                }
+            }
+        }
+        return models;
+    }
+
+    private void printRental (RentalModel model){
+        System.out.printf("%-10.10s", model.getRid());
+        System.out.print("|");
+        System.out.printf("%-18.18s", model.getvLicense());
+        System.out.print("|");
+        System.out.printf("%-18.18s", model.getdLicense());
+        System.out.print("|");
+        System.out.printf("%-20.20s", model.getFromDate());
+        System.out.print("|");
+        System.out.printf("%-20.20s", model.getToDate());
+        System.out.print("|");
+        System.out.printf("%-10.10s", model.getOdometer());
+        System.out.print("|");
+        System.out.printf("%-10.10s", model.getCardName());
+        System.out.print("|");
+        System.out.printf("%-10.10s", model.getCardNumber());
+        System.out.print("|");
+        System.out.printf("%-10.10s", model.getExpDate());
+        System.out.print("|");
+        if(model.getConfNo()<1){
+            System.out.printf("%-10.10s", "null");
+        } else {
+            System.out.printf("%-10.10s", model.getConfNo());
+        }
+        System.out.print("|");
+        if(model.getrOdometer()<1 ){
+            System.out.printf("%-10.10s", "null");
+        } else {
+            System.out.printf("%-10.10s", model.getrOdometer());
+
+        }
+        System.out.print("|");
+        System.out.printf("%-10.10s", model.getrFulltank());
+        System.out.print("|");
+        if(model.getValue()<1){
+            System.out.printf("%-10.10s", "null");
+        } else {
+            System.out.printf("%-10.10s", model.getValue());
+        }
+        System.out.print("|");
+        System.out.printf("%-20.20s", model.getrDate());
+        System.out.println();
     }
 
     /**

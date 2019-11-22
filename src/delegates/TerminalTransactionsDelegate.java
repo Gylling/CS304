@@ -34,9 +34,13 @@ public interface TerminalTransactionsDelegate {
 	 void showNumberVehicles(String vtname, String location, String city, Timestamp fromDate, Timestamp toDate);
 	 VehiclesModel[] showVehicles(String vLicense, boolean show);
 	 boolean checkVLicense(String vLicense);
+	 void showVehicleTypes();
+
+	void showCustomer(String dLicense);
 
 	 int lastRid();
 	 void insertRental(RentalModel model);
+	 RentalModel[] showRentedVehicles(int rid, boolean showDetails);
 
 	 void terminalTransactionsFinished();
 }

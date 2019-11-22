@@ -1,6 +1,6 @@
 package model;
 
-public class VehicleTypes {
+public class VehicleTypesModel {
     private final String vtName;
     private final String features;
     private final int wRate;
@@ -11,7 +11,7 @@ public class VehicleTypes {
     private final int hIRate;
     private final int kRate;
 
-    public VehicleTypes(String vtName, String features, int wRate, int dRate, int hRate, int wIRate, int dIRate, int hIRate, int kRate) {
+    public VehicleTypesModel(String vtName, String features, int wRate, int dRate, int hRate, int wIRate, int dIRate, int hIRate, int kRate) {
         this.vtName = vtName;
         this.features = features;
         this.wRate = wRate;

@@ -395,6 +395,64 @@ public class DatabaseConnectionHandler {
         return result.toArray(new VehiclesModel[result.size()]);
     }
 
+	public VehicleTypesModel[] getTypes() {
+		ArrayList<VehicleTypesModel> result = new ArrayList<>();
+		String query="SELECT * FROM VEHICLETYPES";
+		try {
+			Statement stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+
+			while(rs.next()) {
+				VehicleTypesModel model = new VehicleTypesModel(
+						rs.getString("vtname"),
+						rs.getString("features"),
+						rs.getInt("wrate"),
+						rs.getInt("drate"),
+						rs.getInt("hrate"),
+						rs.getInt("wirate"),
+						rs.getInt("dirate"),
+						rs.getInt("hirate"),
+						rs.getInt("krate"));
+				result.add(model);
+			}
+
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+
+		return result.toArray(new VehicleTypesModel[result.size()]);
+	}
+
+	public CustomerModel[] getCustomerInfo(String dLicense){
+		ArrayList<CustomerModel> result = new ArrayList<>();
+		String query;
+		if(dLicense.equals(""))
+			query="SELECT * FROM CUSTOMERS ORDER BY DLICENSE";
+		else{
+			query="SELECT * FROM CUSTOMERS WHERE '"+ dLicense +"' = DLICENSE ORDER BY NAME";
+		}
+		try {
+			Statement stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			while(rs.next()) {
+				CustomerModel model = new CustomerModel(
+						rs.getString("dLicense"),
+						rs.getString("name"),
+						rs.getString("address"));
+				result.add(model);
+			}
+
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+
+		return result.toArray(new CustomerModel[result.size()]);
+	}
+
     public void insertRental(RentalModel model) {
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO RENTALS VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
@@ -428,6 +486,46 @@ public class DatabaseConnectionHandler {
             rollbackConnection();
         }
     }
+
+	public RentalModel[] getRentalInfo(int rid) {
+		ArrayList<RentalModel> result = new ArrayList<>();
+		String query;
+		if(rid<1)
+			query="SELECT * FROM RENTALS ORDER BY RID";
+		else{
+			query="SELECT * FROM RENTALS WHERE "+rid +" = RID ORDER BY RID";
+		}
+		try {
+			Statement stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+
+			while(rs.next()) {
+				RentalModel model = new RentalModel(
+						rs.getInt("rid"),
+						rs.getString("vLicense"),
+						rs.getString("dLicense"),
+						rs.getTimestamp("fromDate"),
+						rs.getTimestamp("toDate"),
+						rs.getInt("odometer"),
+						rs.getString("cardname"),
+						rs.getInt("cardno"),
+						rs.getString("expdate"),
+						rs.getInt("confno"),
+						rs.getInt("rodometer"),
+						rs.getString("rfulltank"),
+						rs.getInt("value"),
+						rs.getTimestamp("rdate")
+						);
+				result.add(model);
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+
+		return result.toArray(new RentalModel[result.size()]);
+	}
 
     public int last(String col, String table){
         int res = -1;
