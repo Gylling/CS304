@@ -387,11 +387,11 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     }
 
     //Show vehicletypes
-    public void showVehicleTypes() {
-        VehicleTypesModel[] models = dbHandler.getTypes();
+    public VehicleTypesModel[] showVehicleTypes(String vtname, boolean showDetails) {
+        VehicleTypesModel[] models = dbHandler.getTypes(vtname);
         if(models.length<1){
             System.out.println(INFO_TAG + "There is no vehicles types to show.");
-        } else {
+        } else if (showDetails) {
             System.out.printf("%-15.15s", "Vehicle Type");
             System.out.print("|");
             System.out.printf("%-20.20s", "Features");
@@ -432,6 +432,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
                 System.out.println();
             }
         }
+        return models;
     }
 
     //Get´s the highest rentalID
@@ -462,6 +463,11 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
                 System.out.println("Confirmation number is: \t" + model.getConfNo());
             }
         }
+    }
+
+    public boolean checkRid(int rid){
+        RentalModel[] models = showRentedVehicles(rid,false);
+        return models.length>0;
     }
 
     //Show rented vehicles
@@ -550,6 +556,11 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
         System.out.print("|");
         System.out.printf("%-20.20s", model.getrDate());
         System.out.println();
+    }
+
+    public void returnRental (RentalModel model){
+        dbHandler.deleteRental(model.getRid());
+        dbHandler.insertRental(model);
     }
 
     /**

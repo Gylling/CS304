@@ -395,9 +395,15 @@ public class DatabaseConnectionHandler {
         return result.toArray(new VehiclesModel[result.size()]);
     }
 
-	public VehicleTypesModel[] getTypes() {
+	public VehicleTypesModel[] getTypes(String vtname) {
 		ArrayList<VehicleTypesModel> result = new ArrayList<>();
-		String query="SELECT * FROM VEHICLETYPES";
+		String query;
+		if(vtname.equals(""))
+			query= "SELECT * FROM VEHICLETYPES";
+		else{
+			query="SELECT * FROM VEHICLETYPES WHERE '"+ vtname +"' = VTNAME ORDER BY FEATURES";
+		}
+
 		try {
 			Statement stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
@@ -486,6 +492,26 @@ public class DatabaseConnectionHandler {
             rollbackConnection();
         }
     }
+
+	public boolean deleteRental(int rid) {
+		try {
+			PreparedStatement ps = connection.prepareStatement("DELETE FROM RENTALS WHERE rid = ?");
+			ps.setInt(1, rid);
+
+			int rowCount = ps.executeUpdate();
+
+			connection.commit();
+
+			ps.close();
+			return rowCount>0;
+
+
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+			return false;
+		}
+	}
 
 	public RentalModel[] getRentalInfo(int rid) {
 		ArrayList<RentalModel> result = new ArrayList<>();

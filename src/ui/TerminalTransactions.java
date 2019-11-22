@@ -3,6 +3,8 @@ package ui;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
 
 import com.sun.deploy.util.Waiter;
@@ -150,7 +152,7 @@ public class TerminalTransactions {
                                             if (choice != INVALID_INPUT) {
                                                 switch (choice) {
                                                     case 1:
-                                                        delegate.showVehicleTypes();
+                                                        delegate.showVehicleTypes("",true);
                                                         break;
                                                     case 8:
                                                         break;
@@ -176,7 +178,7 @@ public class TerminalTransactions {
                             System.out.println("What would you like to do?");
                             System.out.println();
                             System.out.println("1. Look at branches");
-                            System.out.println("2. Create a rental");
+                            System.out.println("2. Edit rental");
                             System.out.println("3. Customer Details ");
 
                             System.out.println("9. Go Back");
@@ -225,8 +227,9 @@ public class TerminalTransactions {
                                         while (choice != 8) {
                                             System.out.println();
                                             System.out.println("1. Rent a vehicle");
-                                            System.out.println("2. Show specific rented vehicle");
-                                            System.out.println("3. Show rented vehicles");
+                                            System.out.println("2. Return a vehicle");
+                                            System.out.println("3. Show specific rented vehicle");
+                                            System.out.println("4. Show rented vehicles");
                                             System.out.println("8. Go back");
                                             System.out.println("Please choose one of the above options: ");
 
@@ -240,9 +243,12 @@ public class TerminalTransactions {
                                                         createRental();
                                                         break;
                                                     case 2:
-                                                        showRentedVehicle();
+                                                        returnRental();
                                                         break;
                                                     case 3:
+                                                        showRentedVehicle();
+                                                        break;
+                                                    case 4:
                                                         delegate.showRentedVehicles(0,true);
                                                         break;
                                                     case 8:
@@ -616,10 +622,81 @@ public class TerminalTransactions {
         delegate.insertRental(model);
     }
 
+    private void returnRental(){
+        int rid = INVALID_INPUT;
+        boolean ridCheck = false;
+        while (!ridCheck) {
+            System.out.println("Please enter the reservation number: ");
+            rid = readInteger(true);
+            ridCheck=delegate.checkRid(rid);
+        }
+
+
+        //Fetch information.
+        RentalModel rentModel = delegate.showRentedVehicles(rid, false)[0];
+        String vLicense = rentModel.getvLicense();
+        String dLicense = rentModel.getdLicense();
+        Timestamp fromDate = rentModel.getFromDate();
+        Timestamp toDate = rentModel.getToDate();
+        int odometer = rentModel.getOdometer();
+        String cdName = rentModel.getCardName();
+        int cdNumber = rentModel.getCardNumber();
+        String expDate = rentModel.getExpDate();
+        int confNo = rentModel.getConfNo();
+        int noDays = (int) ((toDate.getTime())- fromDate.getTime()) / (1000*60*60*24);
+
+        VehiclesModel vecModel = delegate.showVehicles(vLicense,false)[0];
+        VehicleTypesModel typeModel = delegate.showVehicleTypes(vecModel.getVtname(),false)[0];
+        int value = noDays%7*(typeModel.getwRate()+typeModel.getwIRate())+
+                noDays/7*(typeModel.getdRate()+typeModel.getdIRate())+
+                (noDays/7)/(typeModel.gethRate()+typeModel.gethIRate());
+
+        Timestamp rdate = new Timestamp(System.currentTimeMillis());
+
+        String rFullTank = null;
+        boolean checkTank = false;
+        while (rFullTank==null || (!rFullTank.equals("YES") && !rFullTank.equals("NO"))) {
+            if(checkTank){
+                System.out.println(WARNING_TAG + " Your input has to be yes or no");
+            }
+            System.out.println("Please enter yes if the vehicle was returned with fulltank otherwise no ");
+            rFullTank = readLine().trim();
+            checkTank=true;
+        }
+
+        int rodometer = INVALID_INPUT;
+        boolean checkOdo = false;
+        while (rodometer == INVALID_INPUT || rodometer <= odometer) {
+            if(checkOdo){
+                System.out.println(WARNING_TAG + " Your input has to be bigger than the start value of odometer which is: "+odometer);
+            }
+            System.out.println("Please enter the value of the odometer: ");
+            rodometer = readInteger(false);
+            checkOdo=true;
+        }
+
+        RentalModel model = new RentalModel(
+                rid,
+                vLicense,
+                dLicense,
+                fromDate,
+                toDate,
+                odometer,
+                cdName,
+                cdNumber,
+                expDate,
+                confNo,
+                rodometer,
+                rFullTank,
+                value,
+                rdate);
+        delegate.returnRental(model);
+    }
+
     private void showRentedVehicle(){
         int rid = INVALID_INPUT;
         while (rid == INVALID_INPUT) {
-            System.out.println("Please enter the rental number for the reservation: ");
+            System.out.println("Please enter the rental number: ");
             rid = readInteger(false);
             if (rid != INVALID_INPUT) {
                 delegate.showRentedVehicles(rid,true);
