@@ -561,6 +561,8 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     public void returnRental (RentalModel model){
         dbHandler.deleteRental(model.getRid());
         dbHandler.insertRental(model);
+        printRental(model);
+        System.out.println("Value is calculated by weeks then remaining days plus the weekly and daily insurance rates");
     }
 
     /**

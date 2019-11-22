@@ -654,9 +654,8 @@ public class TerminalTransactions {
 
         VehiclesModel vecModel = delegate.showVehicles(vLicense,false)[0];
         VehicleTypesModel typeModel = delegate.showVehicleTypes(vecModel.getVtname(),false)[0];
-        int value = noDays%7*(typeModel.getwRate()+typeModel.getwIRate())+
-                noDays/7*(typeModel.getdRate()+typeModel.getdIRate())+
-                (noDays/7)/(typeModel.gethRate()+typeModel.gethIRate());
+        int value = noDays%7*(typeModel.getdRate()+typeModel.getdIRate())+
+                noDays/7*(typeModel.getwRate()+typeModel.getwIRate());
 
         Timestamp rdate = new Timestamp(System.currentTimeMillis());
 
