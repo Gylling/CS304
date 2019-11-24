@@ -561,14 +561,14 @@ public class DatabaseConnectionHandler {
 			Statement stmt = connection.createStatement();
 			query = "SELECT COUNT(vtName) as vtcount, VTNAME" +
 					" FROM RENTALS R, VEHICLES V" +
-							" WHERE R.VLICENSE = V.VLICENSE and R.FROMDATE = SYSDATE and '"+ city +"' = V.CITY and '"+ location +"' = V.LOCATION" +
+							" WHERE R.VLICENSE = V.VLICENSE and TO_CHAR(R.FROMDATE, 'yyyy/mm/dd') = TO_CHAR(SYSDATE, 'yyyy/mm/dd') and '"+ city +"' = V.CITY and '"+ location +"' = V.LOCATION" +
 							" GROUP BY VTNAME ";
 			ResultSet rs = stmt.executeQuery(query);
 
 			Statement stmt2 = connection.createStatement();
 			query2 =  "SELECT COUNT(*) as total" +
 						" FROM RENTALS R, VEHICLES V" +
-						" WHERE R.VLICENSE = V.VLICENSE and R.FROMDATE = SYSDATE and '"+ city +"' = V.CITY and '"+ location +"' = V.LOCATION";
+						" WHERE R.VLICENSE = V.VLICENSE and TO_CHAR(R.FROMDATE, 'yyyy/mm/dd') = TO_CHAR(SYSDATE, 'yyyy/mm/dd') and '"+ city +"' = V.CITY and '"+ location +"' = V.LOCATION";
 			ResultSet rs2 = stmt2.executeQuery(query2);
 
 			int total=0;
@@ -603,7 +603,7 @@ public class DatabaseConnectionHandler {
 			Statement stmt = connection.createStatement();
 			query = "SELECT *" +
 					" FROM RENTALS R, VEHICLES V" +
-					" WHERE R.VLICENSE = V.VLICENSE and R.FROMDATE = SYSDATE and '"+ city +"' = V.CITY and '"+ location +"' = V.LOCATION";
+					" WHERE R.VLICENSE = V.VLICENSE and TO_CHAR(R.FROMDATE, 'yyyy/mm/dd') = TO_CHAR(SYSDATE, 'yyyy/mm/dd') and '"+ city +"' = V.CITY and '"+ location +"' = V.LOCATION";
 			ResultSet rs = stmt.executeQuery(query);
 
 			while(rs.next()) {
@@ -637,7 +637,7 @@ public class DatabaseConnectionHandler {
 			Statement stmt = connection.createStatement();
 			query = "SELECT Count(*) as total" +
 					" FROM RENTALS R, VEHICLES V" +
-					" WHERE R.VLICENSE = V.VLICENSE and R.FROMDATE = SYSDATE ";
+					" WHERE R.VLICENSE = V.VLICENSE and TO_CHAR(R.FROMDATE, 'yyyy/mm/dd') = TO_CHAR(SYSDATE, 'yyyy/mm/dd') ";
 			ResultSet rs = stmt.executeQuery(query);
 			if(rs.next()) {
 				total = rs.getInt("total");
