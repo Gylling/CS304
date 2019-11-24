@@ -633,7 +633,9 @@ public class DatabaseConnectionHandler {
 					" FROM RENTALS R, VEHICLES V" +
 					" WHERE R.VLICENSE = V.VLICENSE and R.FROMDATE = SYSDATE ";
 			ResultSet rs = stmt.executeQuery(query);
-			total = rs.getInt("total");
+            while(rs.next()) {
+                total = rs.getInt("total");
+            }
 			rs.close();
 			stmt.close();
 			}
