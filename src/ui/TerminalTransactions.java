@@ -302,12 +302,12 @@ public class TerminalTransactions {
                                             if (choice != INVALID_INPUT) {
                                                 switch (choice) {
                                                     case 1:
-                                                        while (choice != 8) {
+                                                        while (choice != 7) {
                                                             System.out.println();
                                                             System.out.println("1. Print Daily Rentals for Abbotsford");
                                                             System.out.println("2. Print Daily Rentals for Chilliwack");
                                                             System.out.println("3. Print Daily Rentals for Vancouver");
-                                                            System.out.println("8. Go back");
+                                                            System.out.println("7. Go back");
                                                             System.out.println("Please choose one of the above options: ");
 
                                                             choice = readInteger(false);
@@ -324,7 +324,7 @@ public class TerminalTransactions {
                                                                     case 3:
                                                                         showReport("V","Vancouver");
                                                                         break;
-                                                                    case 8:
+                                                                    case 7:
                                                                         break;
                                                                     default:
                                                                         System.out.println(WARNING_TAG + " The number that you entered was not a valid option.");
@@ -332,6 +332,7 @@ public class TerminalTransactions {
                                                                 }
                                                             }
                                                         }
+                                                        break;
                                                     case 2:
                                                         showReportsAll();
                                                         break;

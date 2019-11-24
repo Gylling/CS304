@@ -561,20 +561,26 @@ public class DatabaseConnectionHandler {
 			Statement stmt = connection.createStatement();
 			query = "SELECT COUNT(vtName) as vtcount, VTNAME" +
 					" FROM RENTALS R, VEHICLES V" +
-							" WHERE R.VLICENSE = V.VLICENSE and R.FROMDATE = SYSDATE and "+ city +" = V.CITY and "+ location +" = V.LOCATION" +
+							" WHERE R.VLICENSE = V.VLICENSE and R.FROMDATE = SYSDATE and '"+ city +"' = V.CITY and '"+ location +"' = V.LOCATION" +
 							" GROUP BY VTNAME ";
 			ResultSet rs = stmt.executeQuery(query);
 
+			Statement stmt2 = connection.createStatement();
 			query2 =  "SELECT COUNT(*) as total" +
 						" FROM RENTALS R, VEHICLES V" +
-						" WHERE R.VLICENSE = V.VLICENSE and R.FROMDATE = SYSDATE and "+ city +" = V.CITY and "+ location +" = V.LOCATION";
-			ResultSet rs2 = stmt.executeQuery(query2);
+						" WHERE R.VLICENSE = V.VLICENSE and R.FROMDATE = SYSDATE and '"+ city +"' = V.CITY and '"+ location +"' = V.LOCATION";
+			ResultSet rs2 = stmt2.executeQuery(query2);
+
+			int total=0;
+			if(rs2.next()){
+				total=rs2.getInt("total");
+			}
 
 			while(rs.next()) {
 				ReportModel model = new ReportModel(
 						location,
 						city,
-						rs2.getInt("total"),
+						total,
 						rs.getInt("vtcount"),
 						rs.getString("vtname")
 				);
@@ -597,7 +603,7 @@ public class DatabaseConnectionHandler {
 			Statement stmt = connection.createStatement();
 			query = "SELECT *" +
 					" FROM RENTALS R, VEHICLES V" +
-					" WHERE R.VLICENSE = V.VLICENSE and R.FROMDATE = SYSDATE and "+ city +" = V.CITY and "+ location +" = V.LOCATION";
+					" WHERE R.VLICENSE = V.VLICENSE and R.FROMDATE = SYSDATE and '"+ city +"' = V.CITY and '"+ location +"' = V.LOCATION";
 			ResultSet rs = stmt.executeQuery(query);
 
 			while(rs.next()) {
@@ -633,7 +639,9 @@ public class DatabaseConnectionHandler {
 					" FROM RENTALS R, VEHICLES V" +
 					" WHERE R.VLICENSE = V.VLICENSE and R.FROMDATE = SYSDATE ";
 			ResultSet rs = stmt.executeQuery(query);
-			total = rs.getInt("total");
+			if(rs.next()) {
+				total = rs.getInt("total");
+			}
 			rs.close();
 			stmt.close();
 			}
