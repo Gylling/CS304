@@ -775,7 +775,11 @@ public class TerminalTransactions {
     }
 
     private void showReport(String location, String city){
-	    delegate.showReport(location, city);
+	    delegate.showReportLocation(location, city);
+    }
+
+    private void showReportsAll(){
+	    delegate.showReportsAll();
     }
 
 	private void handleQuitOption() {

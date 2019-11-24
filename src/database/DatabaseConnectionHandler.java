@@ -553,6 +553,96 @@ public class DatabaseConnectionHandler {
 		return result.toArray(new RentalModel[result.size()]);
 	}
 
+	public ReportModel[] getDailyRentalsBranch(String location, String city){
+		String query;
+		String query2;
+		ArrayList<ReportModel> result = new ArrayList<>();
+		try {
+			Statement stmt = connection.createStatement();
+			query = "SELECT COUNT(vtName) as vtcount, VTNAME" +
+					" FROM RENTALS R, VEHICLES V" +
+							" WHERE R.VLICENSE = V.VLICENSE and R.FROMDATE = SYSDATE and "+ city +" = V.CITY and "+ location +" = V.LOCATION" +
+							" GROUP BY VTNAME ";
+			ResultSet rs = stmt.executeQuery(query);
+
+			query2 =  "SELECT COUNT(*) as total" +
+						" FROM RENTALS R, VEHICLES V" +
+						" WHERE R.VLICENSE = V.VLICENSE and R.FROMDATE = SYSDATE and "+ city +" = V.CITY and "+ location +" = V.LOCATION";
+			ResultSet rs2 = stmt.executeQuery(query2);
+
+			while(rs.next()) {
+				ReportModel model = new ReportModel(
+						location,
+						city,
+						rs2.getInt("total"),
+						rs.getInt("vtcount"),
+						rs.getString("vtname")
+				);
+				result.add(model);
+			}
+			rs.close();
+			rs2.close();
+			stmt.close();
+
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+		return result.toArray(new ReportModel[result.size()]);
+	}
+
+	public VehiclesModel[] getDailyRentedVehicles(String location, String city){
+		ArrayList<VehiclesModel> result = new ArrayList<>();
+		String query;
+		try {
+			Statement stmt = connection.createStatement();
+			query = "SELECT *" +
+					" FROM RENTALS R, VEHICLES V" +
+					" WHERE R.VLICENSE = V.VLICENSE and R.FROMDATE = SYSDATE and "+ city +" = V.CITY and "+ location +" = V.LOCATION";
+			ResultSet rs = stmt.executeQuery(query);
+
+			while(rs.next()) {
+				VehiclesModel model = new VehiclesModel(
+						rs.getInt("vid"),
+						rs.getString("vLicense"),
+						rs.getString("make"),
+						rs.getString("model"),
+						rs.getInt("year"),
+						rs.getString("color"),
+						rs.getInt("odometer"),
+						rs.getString("status"),
+						rs.getString("vtname"),
+						rs.getString("location"),
+						rs.getString("city")
+				);
+				result.add(model);
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+		return result.toArray(new VehiclesModel[result.size()]);
+	}
+
+	public int getTotalRentals(){
+		String query;
+		int total = 0;
+		try {
+			Statement stmt = connection.createStatement();
+			query = "SELECT Count(*) as total" +
+					" FROM RENTALS R, VEHICLES V" +
+					" WHERE R.VLICENSE = V.VLICENSE and R.FROMDATE = SYSDATE ";
+			ResultSet rs = stmt.executeQuery(query);
+			total = rs.getInt("total");
+			rs.close();
+			stmt.close();
+			}
+		catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+		return total;
+	}
+
     public int last(String col, String table){
         int res = -1;
         try {

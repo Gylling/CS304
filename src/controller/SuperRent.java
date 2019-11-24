@@ -565,8 +565,36 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
         System.out.println("Value is calculated by weeks then remaining days plus the weekly and daily insurance rates");
     }
 
-    public void showReport(String Location, String City){
-        dbHandler.getDailyRentalsBranch(location, city);
+    public void showReportLocation(String Location, String City){
+       ReportModel[] models = dbHandler.getDailyRentalsBranch(Location, City);
+       VehiclesModel[] vModels = dbHandler.getDailyRentedVehicles(Location, City);
+        if(vModels.length<1){
+            System.out.println(INFO_TAG + "There are no rentals for today");
+        }
+        else {
+            System.out.println("Location is: \t" + models[0].getLocation());
+            System.out.println("City is: \t" + models[0].getCity());
+            System.out.println("Total rentals for location: \t" + models[0].getTotalNumber());
+            System.out.println("Total rentals for vehicle types:");
+            System.out.println();
+            for (ReportModel model : models) {
+                System.out.printf("%-15.15s", model.getVtType());
+                System.out.print("|");
+                System.out.printf("%-10.10s", model.getVtCount());
+                System.out.println();
+            }
+            printVehicles(vModels);
+        }
+    }
+
+    public void showReportsAll(){
+        int total = dbHandler.getTotalRentals();
+
+        System.out.println("Total Rentals: \t" + total);
+        showReportLocation("A","Abbotsford");
+        showReportLocation("C","Chilliwack");
+        showReportLocation("V","Vancouver");
+
     }
 
     /**

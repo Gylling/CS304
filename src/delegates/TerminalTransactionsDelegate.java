@@ -37,7 +37,8 @@ public interface TerminalTransactionsDelegate {
 	VehicleTypesModel[] showVehicleTypes(String vtname, boolean showDetails);
 
 	void showCustomer(String dLicense);
-	void showReport(String location, String city);
+	void showReportLocation(String location, String city);
+	void showReportsAll();
 
 	 int lastRid();
 	boolean checkRid(int rid);
