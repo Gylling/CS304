@@ -455,3 +455,17 @@ insert into Rentals
 insert into Rentals
     values(1001, 'TR9 50Z', 'AAAB777', SYSDATE - 3, SYSDATE, 7320,
        'visa', 51914374, '2021/04/22', NULL, 7820, NULL, 360, SYSDATE);
+
+insert into Rentals
+    values(1002, 'TL8 50X', 'AAAB888', SYSDATE - 5, SYSDATE, 26000,
+       'visa', 51914374, '2021/04/22', NULL, 26500, NULL, 560, SYSDATE);
+insert into Rentals
+    values(1003, 'LL7 50X', 'AAAB999', SYSDATE - 3, SYSDATE, 5800,
+       'visa', 51914374, '2021/04/22', NULL, 6000, NULL, 295, SYSDATE);
+
+insert into Rentals
+    values(1004, 'TL6 50X', 'AAAB000', SYSDATE - 7, SYSDATE, 44300,
+       'visa', 51914374, '2021/04/22', NULL, 45000, NULL, 860, SYSDATE);
+insert into Rentals
+    values(1005, 'TG3 45R', 'AAAB100', SYSDATE - 3, SYSDATE, 22500,
+       'visa', 51914374, '2021/04/22', NULL, 23000, NULL, 295, SYSDATE);
