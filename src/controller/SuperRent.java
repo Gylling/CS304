@@ -625,18 +625,18 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
             System.out.println("Total revenue for location: \t" + models[0].getTRevenue());
             System.out.println("Total returns for vehicle types:");
             System.out.println();
-            System.out.printf("%-10.10s", "Vehicle Type.");
+            System.out.printf("%-15.15s", "Vehicle Type.");
             System.out.print("|");
-            System.out.printf("%-18.18s", "Vehicle Return Count");
+            System.out.printf("%-25.25s", "Vehicle Return Count");
             System.out.print("|");
-            System.out.printf("%-18.18s", "Category Revenue");
+            System.out.printf("%-20.20s", "Category Revenue");
             System.out.println();
             for (ReportModel model : models) {
                 System.out.printf("%-15.15s", model.getVtType());
                 System.out.print("|");
-                System.out.printf("%-10.10s", model.getVtCount());
+                System.out.printf("%-25.25s", model.getVtCount());
                 System.out.print("|");
-                System.out.printf("%-10.10s", model.getCRevenue());
+                System.out.printf("%-20.20s", model.getCRevenue());
                 System.out.println();
             }
             printVehicles(vModels);
