@@ -453,5 +453,5 @@ insert into Rentals
     values(1000, 'TR1 50Z', 'AAAB666', SYSDATE - 5, SYSDATE, 2100,
        'visa', 51914374, '2021/04/22', NULL, 3100, NULL, 560, SYSDATE);
 insert into Rentals
-    values(1000, 'TR9 50Z', 'AAAB777', SYSDATE - 3, SYSDATE, 7320,
+    values(1001, 'TR9 50Z', 'AAAB777', SYSDATE - 3, SYSDATE, 7320,
        'visa', 51914374, '2021/04/22', NULL, 7820, NULL, 360, SYSDATE);

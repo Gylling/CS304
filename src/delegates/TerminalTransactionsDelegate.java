@@ -41,6 +41,7 @@ public interface TerminalTransactionsDelegate {
 	void showReportsAll();
 
 	void showReturnsLocation(String location, String city);
+	void showReturnsAll();
 
 
 	int lastRid();

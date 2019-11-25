@@ -291,7 +291,8 @@ public class TerminalTransactions {
                                         while (choice != 8) {
                                             System.out.println();
                                             System.out.println("1. Print Daily Rentals/Returns for Branch");
-                                            System.out.println("2. Print Daily Rentals/Returns for All");
+                                            System.out.println("2. Print Daily Rentals for All");
+                                            System.out.println("3. Print Daily Returns for All");
                                             System.out.println("8. Go back");
                                             System.out.println("Please choose one of the above options: ");
 
@@ -347,6 +348,9 @@ public class TerminalTransactions {
                                                         break;
                                                     case 2:
                                                         showReportsAll();
+                                                        break;
+                                                    case 3:
+                                                        showReturnsAll();
                                                         break;
                                                     case 8:
                                                         break;
@@ -798,6 +802,10 @@ public class TerminalTransactions {
     private void showReturns(String location, String city){
         delegate.showReturnsLocation(location, city);
     }
+
+    private void showReturnsAll(){
+        delegate.showReturnsAll();
+    };
 
 	private void handleQuitOption() {
 		System.out.println("Good Bye!");

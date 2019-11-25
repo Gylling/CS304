@@ -703,6 +703,28 @@ public class DatabaseConnectionHandler {
 		return result.toArray(new ReportModel[result.size()]);
 	}
 
+	public int[] getTotalReturns(){
+		String query;
+		int arr [] = {0,0};
+		try {
+			Statement stmt = connection.createStatement();
+			query = "SELECT Count(*) as total, SUM(value) as totalrevenue" +
+					" FROM RENTALS R, VEHICLES V" +
+					" WHERE R.VLICENSE = V.VLICENSE and TO_CHAR(R.RDATE, 'yyyy/mm/dd') = TO_CHAR(SYSDATE, 'yyyy/mm/dd') ";
+			ResultSet rs = stmt.executeQuery(query);
+			if(rs.next()) {
+				arr[0] = rs.getInt("total");
+				arr[1] = rs.getInt("totalrevenue");
+			}
+			rs.close();
+			stmt.close();
+		}
+		catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+		return arr;
+	}
+
 	public VehiclesModel[] getDailyReturnedVehicles(String location, String city){
 		ArrayList<VehiclesModel> result = new ArrayList<>();
 		String query;

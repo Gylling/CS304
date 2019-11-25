@@ -587,6 +587,19 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
         }
     }
 
+    public void showReturnsAll(){
+        int[] totals = dbHandler.getTotalReturns();
+
+        System.out.println("Total Rentals: \t" + totals[0]);
+        System.out.println("Total Revenue: \t" + totals[1]);
+        showReturnsLocation("A","ABBOTSFORD");
+        System.out.println();
+        showReturnsLocation("C","CHILLIWACK");
+        System.out.println();
+        showReturnsLocation("V","VANCOUVER");
+
+    }
+
     public void showReportsAll(){
         int total = dbHandler.getTotalRentals();
 
@@ -611,6 +624,12 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
             System.out.println("Total returns for location: \t" + models[0].getTotalNumber());
             System.out.println("Total revenue for location: \t" + models[0].getTRevenue());
             System.out.println("Total returns for vehicle types:");
+            System.out.println();
+            System.out.printf("%-10.10s", "Vehicle Type.");
+            System.out.print("|");
+            System.out.printf("%-18.18s", "Vehicle Return Count");
+            System.out.print("|");
+            System.out.printf("%-18.18s", "Category Revenue");
             System.out.println();
             for (ReportModel model : models) {
                 System.out.printf("%-15.15s", model.getVtType());
