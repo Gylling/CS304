@@ -591,9 +591,9 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
         int total = dbHandler.getTotalRentals();
 
         System.out.println("Total Rentals: \t" + total);
-        showReportLocation("A","Abbotsford");
-        showReportLocation("C","Chilliwack");
-        showReportLocation("V","Vancouver");
+        showReportLocation("A","ABBOTSFORD");
+        showReportLocation("C","CHILLIWACK");
+        showReportLocation("V","VANCOUVER");
 
     }
 
