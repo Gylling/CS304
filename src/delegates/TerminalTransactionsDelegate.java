@@ -40,7 +40,10 @@ public interface TerminalTransactionsDelegate {
 	void showReportLocation(String location, String city);
 	void showReportsAll();
 
-	 int lastRid();
+	void showReturnsLocation(String location, String city);
+
+
+	int lastRid();
 	boolean checkRid(int rid);
 	 void insertRental(RentalModel model);
 	 RentalModel[] showRentedVehicles(int rid, boolean showDetails);

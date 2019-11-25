@@ -599,6 +599,31 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 
     }
 
+    public void showReturnsLocation(String Location, String City){
+        ReportModel[] models = dbHandler.getDailyReturnsBranch(Location, City);
+        VehiclesModel[] vModels = dbHandler.getDailyReturnedVehicles(Location, City);
+        if(vModels.length<1){
+            System.out.println(INFO_TAG + "There are no returns for today at: \t" + Location);
+        }
+        else {
+            System.out.println("Location is: \t" + models[0].getLocation());
+            System.out.println("City is: \t" + models[0].getCity());
+            System.out.println("Total returns for location: \t" + models[0].getTotalNumber());
+            System.out.println("Total revenue for location: \t" + models[0].getTRevenue());
+            System.out.println("Total returns for vehicle types:");
+            System.out.println();
+            for (ReportModel model : models) {
+                System.out.printf("%-15.15s", model.getVtType());
+                System.out.print("|");
+                System.out.printf("%-10.10s", model.getVtCount());
+                System.out.print("|");
+                System.out.printf("%-10.10s", model.getCRevenue());
+                System.out.println();
+            }
+            printVehicles(vModels);
+        }
+    }
+
     /**
      * TerminalTransactionsDelegate Implementation
      *

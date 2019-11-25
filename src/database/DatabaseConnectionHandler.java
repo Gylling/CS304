@@ -582,7 +582,9 @@ public class DatabaseConnectionHandler {
 						city,
 						total,
 						rs.getInt("vtcount"),
-						rs.getString("vtname")
+						rs.getString("vtname"),
+						0,
+						0
 				);
 				result.add(model);
 			}
@@ -600,11 +602,13 @@ public class DatabaseConnectionHandler {
 		ArrayList<VehiclesModel> result = new ArrayList<>();
 		String query;
 		try {
-			Statement stmt = connection.createStatement();
-			query = "SELECT *" +
+            Statement stmt = connection.createStatement();
+
+            query = "SELECT *" +
 					" FROM RENTALS R, VEHICLES V" +
 					" WHERE R.VLICENSE = V.VLICENSE and TO_CHAR(R.FROMDATE, 'yyyy/mm/dd') = TO_CHAR(SYSDATE, 'yyyy/mm/dd') and '"+ city +"' = V.CITY and '"+ location +"' = V.LOCATION";
-			ResultSet rs = stmt.executeQuery(query);
+
+            ResultSet rs = stmt.executeQuery(query);
 
 			while(rs.next()) {
 				VehiclesModel model = new VehiclesModel(
@@ -649,6 +653,90 @@ public class DatabaseConnectionHandler {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
 		return total;
+	}
+
+	public ReportModel[] getDailyReturnsBranch(String location, String city){
+		String query;
+		String query2;
+		ArrayList<ReportModel> result = new ArrayList<>();
+		try {
+			Statement stmt = connection.createStatement();
+			query = "SELECT COUNT(vtName) as vtcount, VTNAME, SUM(VALUE) as revenueCategory" +
+					" FROM RENTALS R, VEHICLES V" +
+					" WHERE R.VLICENSE = V.VLICENSE and TO_CHAR(R.RDATE, 'yyyy/mm/dd') = TO_CHAR(SYSDATE, 'yyyy/mm/dd') and '"+ city +"' = V.CITY and '"+ location +"' = V.LOCATION" +
+					" GROUP BY VTNAME ";
+			ResultSet rs = stmt.executeQuery(query);
+
+			Statement stmt2 = connection.createStatement();
+			query2 =  "SELECT COUNT(*) as total, SUM(VALUE) as totalRevenue" +
+					" FROM RENTALS R, VEHICLES V" +
+					" WHERE R.VLICENSE = V.VLICENSE and TO_CHAR(R.RDATE, 'yyyy/mm/dd') = TO_CHAR(SYSDATE, 'yyyy/mm/dd') and '"+ city +"' = V.CITY and '"+ location +"' = V.LOCATION";
+			ResultSet rs2 = stmt2.executeQuery(query2);
+
+			int total=0;
+			int totalRevenue = 0;
+			if(rs2.next()){
+				total=rs2.getInt("total");
+				totalRevenue=rs2.getInt("totalRevenue");
+
+			}
+
+			while(rs.next()) {
+				ReportModel model = new ReportModel(
+						location,
+						city,
+						total,
+						rs.getInt("vtcount"),
+						rs.getString("vtname"),
+						rs.getInt("revenueCategory"),
+						totalRevenue
+				);
+				result.add(model);
+			}
+			rs.close();
+			rs2.close();
+			stmt.close();
+
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+		return result.toArray(new ReportModel[result.size()]);
+	}
+
+	public VehiclesModel[] getDailyReturnedVehicles(String location, String city){
+		ArrayList<VehiclesModel> result = new ArrayList<>();
+		String query;
+		try {
+			Statement stmt = connection.createStatement();
+
+			query = "SELECT *" +
+					" FROM RENTALS R, VEHICLES V" +
+					" WHERE R.VLICENSE = V.VLICENSE and TO_CHAR(R.RDATE, 'yyyy/mm/dd') = TO_CHAR(SYSDATE, 'yyyy/mm/dd') and '"+ city +"' = V.CITY and '"+ location +"' = V.LOCATION";
+
+			ResultSet rs = stmt.executeQuery(query);
+
+			while(rs.next()) {
+				VehiclesModel model = new VehiclesModel(
+						rs.getInt("vid"),
+						rs.getString("vLicense"),
+						rs.getString("make"),
+						rs.getString("model"),
+						rs.getInt("year"),
+						rs.getString("color"),
+						rs.getInt("odometer"),
+						rs.getString("status"),
+						rs.getString("vtname"),
+						rs.getString("location"),
+						rs.getString("city")
+				);
+				result.add(model);
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+		return result.toArray(new VehiclesModel[result.size()]);
 	}
 
     public int last(String col, String table){

@@ -290,8 +290,8 @@ public class TerminalTransactions {
                                     case 4:
                                         while (choice != 8) {
                                             System.out.println();
-                                            System.out.println("1. Print Daily Rentals for Branch");
-                                            System.out.println("2. Print Daily Rentals for All");
+                                            System.out.println("1. Print Daily Rentals/Returns for Branch");
+                                            System.out.println("2. Print Daily Rentals/Returns for All");
                                             System.out.println("8. Go back");
                                             System.out.println("Please choose one of the above options: ");
 
@@ -307,6 +307,9 @@ public class TerminalTransactions {
                                                             System.out.println("1. Print Daily Rentals for Abbotsford");
                                                             System.out.println("2. Print Daily Rentals for Chilliwack");
                                                             System.out.println("3. Print Daily Rentals for Vancouver");
+                                                            System.out.println("4. Print Daily Returns for Abbotsford");
+                                                            System.out.println("5. Print Daily Returns for Chilliwack");
+                                                            System.out.println("6. Print Daily Returns for Vancouver");
                                                             System.out.println("7. Go back");
                                                             System.out.println("Please choose one of the above options: ");
 
@@ -323,6 +326,15 @@ public class TerminalTransactions {
                                                                         break;
                                                                     case 3:
                                                                         showReport("V","VANCOUVER");
+                                                                        break;
+                                                                    case 4:
+                                                                        showReturns("A","ABBOTSFORD");
+                                                                        break;
+                                                                    case 5:
+                                                                        showReturns("C","CHILLIWACK");
+                                                                        break;
+                                                                    case 6:
+                                                                        showReturns("V","VANCOUVER");
                                                                         break;
                                                                     case 7:
                                                                         break;
@@ -781,6 +793,10 @@ public class TerminalTransactions {
 
     private void showReportsAll(){
 	    delegate.showReportsAll();
+    }
+
+    private void showReturns(String location, String city){
+        delegate.showReturnsLocation(location, city);
     }
 
 	private void handleQuitOption() {

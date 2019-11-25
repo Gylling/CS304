@@ -163,6 +163,19 @@ insert into Customers
 insert into Customers
     values('AAAA000', 'Melanie Down', '5546 150th Street, Abbotsford');
 
+insert into Customers
+    values('AAAB666', 'Alex Macleod', '1235 41st Avenue, Vancouver');
+insert into Customers
+    values('AAAB777', 'Alex Gordan', '26 152th Street, Abbotsford');
+insert into Customers
+    values('AAAB888', 'Alex Dean', '1211 41st Street, Vancouver');
+insert into Customers
+    values('AAAB999', 'Alex Anthony', '523 42nd Avenue, Vancouver');
+insert into Customers
+    values('AAAB100', 'Alex Down', '3463 150th Street, Abbotsford');
+insert into Customers
+    values('AAAB000', 'Alex Down', '5546 150th Street, Abbotsford');
+
 
 -- VehicleTypes
 -- vtname VARCHAR(20),
@@ -436,4 +449,6 @@ insert into Rentals
        'visa', 51914374, '2021/04/22', NULL, NULL, NULL, NULL, NULL);
 
 --Returns for today @ Abbotsford
-
+insert into Rentals
+    values(1000, 'TR1 50Z', 'AAAB666', SYSDATE - 5, SYSDATE, 2100,
+       'visa', 51914374, '2021/04/22', NULL, 2100, NULL, 560, SYSDATE);
