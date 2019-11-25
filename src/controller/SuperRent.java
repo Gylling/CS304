@@ -569,7 +569,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
        ReportModel[] models = dbHandler.getDailyRentalsBranch(Location, City);
        VehiclesModel[] vModels = dbHandler.getDailyRentedVehicles(Location, City);
         if(vModels.length<1){
-            System.out.println(INFO_TAG + "There are no rentals for today");
+            System.out.println(INFO_TAG + "There are no rentals for today at: \t" + Location);
         }
         else {
             System.out.println("Location is: \t" + models[0].getLocation());

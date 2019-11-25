@@ -316,13 +316,13 @@ public class TerminalTransactions {
                                                             if (choice != INVALID_INPUT) {
                                                                 switch (choice) {
                                                                     case 1:
-                                                                        showReport("A","Abbotsford");
+                                                                        showReport("A","ABBOTSFORD");
                                                                         break;
                                                                     case 2:
-                                                                        showReport("C","Chilliwack");
+                                                                        showReport("C","CHILLIWACK");
                                                                         break;
                                                                     case 3:
-                                                                        showReport("V","Vancouver");
+                                                                        showReport("V","VANCOUVER");
                                                                         break;
                                                                     case 7:
                                                                         break;
